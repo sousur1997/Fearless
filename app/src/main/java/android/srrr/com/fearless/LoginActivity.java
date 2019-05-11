@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar login_progress;
     private FirebaseAuth mAuth;
     private ConstraintLayout login_layout;
+    private TextView skip_text_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         login_layout = findViewById(R.id.login_layout);
 
+        skip_text_view = findViewById(R.id.skip_tv_log);
+
         //set the click events
         register_tv.setOnClickListener(this);
         forget_tv.setOnClickListener(this);
@@ -60,6 +63,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login_progress.setVisibility(View.INVISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
+
+        skip_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        });
     }
 
     private void loginUser(){

@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
     private ConstraintLayout register_layout;
     private PreferenceManager prefManager;
+    private TextView skip_text_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         register_btn = findViewById(R.id.sign_up_btn);
         register_progress = findViewById(R.id.register_prog);
         register_layout = findViewById(R.id.register_layout);
+        skip_text_view = findViewById(R.id.skip_tv_reg);
+
         prefManager = new PreferenceManager(getApplicationContext());
 
         //set the click events
@@ -65,6 +68,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         register_progress.setVisibility(View.INVISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
+
+        skip_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        });
     }
 
     private void registerUser(){

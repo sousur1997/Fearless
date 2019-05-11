@@ -14,7 +14,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/nav_header_imageView"
+        android:id="@+id/profile_image_view"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@mipmap/user_icon"

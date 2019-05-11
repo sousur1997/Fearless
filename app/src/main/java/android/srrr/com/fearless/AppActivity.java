@@ -35,6 +35,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +51,8 @@ import com.luseen.spacenavigation.SpaceOnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -70,6 +73,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private boolean logged_in = false;
     private PreferenceManager prefManager;
     private boolean firstTime = false;
+    private CircleImageView profile_image;
+    private View HeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,15 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
         viewPager = findViewById(R.id.view_pager);
         viewPager = findViewById(R.id.view_pager);
+
+        HeaderView = navView.getHeaderView(0);
+        profile_image = HeaderView.findViewById(R.id.profile_image_view);
+        profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AppActivity.this, ProfilePage.class));
+            }
+        });
 
         setupViewPager(viewPager);
 
