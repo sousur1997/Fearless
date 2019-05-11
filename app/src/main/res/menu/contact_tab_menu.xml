@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/add_new_contact_menu_item"
+        android:orderInCategory="200"
+        android:icon="@drawable/add_contact_icon"
+        android:title="Add Contact"
+        app:showAsAction="always"/>
+</menu>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "179809652182",
+    "firebase_url": "https://fearless-238805.firebaseio.com",
+    "project_id": "fearless-238805",
+    "storage_bucket": "fearless-238805.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179809652182:android:8d9fbe1fb6e88a75",
+        "android_client_info": {
+          "package_name": "android.srrr.com.fearless"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179809652182-0s23dtbjpmsg2bp57k35qiab2bt4an41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.srrr.com.fearless",
+            "certificate_hash": "c416623557d0a4db9a29b38e28a02248e55e062b"
+          }
+        },
+        {
+          "client_id": "179809652182-2a9iqr219b675dfeimrts4js5eud35d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvEEUj2y7nBdGz4_t8lGM6bT_Ncheoa9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179809652182-2a9iqr219b675dfeimrts4js5eud35d3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

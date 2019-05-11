@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">Fearless</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Emergency!</string>
+    <string name="slide_1_desc">One tap SMS and Call for Emergency Condition!</string>
+
+    <string name="slide_2_title">Police Station!</string>
+    <string name="slide_2_desc">Get Nearest Police Station Information!</string>
+
+    <string name="slide_3_title">Hospitals</string>
+    <string name="slide_3_desc">Get Nearest Hospitals Information When you Need!</string>
+
+    <string name="slide_4_title">Easy SOS Features</string>
+    <string name="slide_4_desc">Easy to Access SOS Numbers and Other Help!</string>
+
+    <string name="slide_5_title">Track Location</string>
+    <string name="slide_5_desc">Track Location when Feeling Unsafe to Inform!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="gmap_api_key">AIzaSyAVhWF7kmLWVm4uny71NxOWfCME7P6Diow</string>
+    <string name="firebase_project_id">fearless-238805</string>
+
+    <string-array name="help_line_numbers">
+        <item>112</item>
+        <item>100</item>
+        <item>101</item>
+        <item>102</item>
+        <item>108</item>
+        <item>1091</item>
+        <item>181</item>
+        <item>1072</item>
+        <item>1906</item>
+    </string-array>
+
+    <string-array name="help_line_labels">
+        <item>NATIONAL EMERGENCY NUMBER</item>
+        <item>Police</item>
+        <item>Fire</item>
+        <item>Ambulance</item>
+        <item>Disaster Management Services</item>
+        <item>Women Helpline</item>
+        <item>Women Helpline (Domestic Abuse)</item>
+        <item>Railway Accident Emergency Service</item>
+        <item>LPG Leak Helpline</item>
+    </string-array>
+</resources>

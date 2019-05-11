@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/profile_background"
+                app:collapsedTitleTextAppearance="@style/title_color"
+                app:contentScrim="@color/app_theme_blue"
+                app:expandedTitleTextAppearance="@style/title_color_expand"
+                app:layout_scrollFlags="exitUntilCollapsed|scroll"
+                app:title="Profile">
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin">
+
+                </android.support.v7.widget.Toolbar>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <include
+                        layout="@layout/profile_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </RelativeLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:id="@+id/menu_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/phone_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/phone_number" />
+
+                    <TextView
+                        android:id="@+id/phone_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/phone_icon"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Phone"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/phone_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/phone_header"
+                        android:layout_below="@+id/phone_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="+91 9876543210"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/res_addr_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/home_address" />
+
+                    <TextView
+                        android:id="@+id/res_addr_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/res_addr_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Residence Address"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/res_addr_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/res_addr_header"
+                        android:layout_below="@+id/res_addr_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="11/44 A Some Place Lane. 700035"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/dob_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/date_of_birth" />
+
+                    <TextView
+                        android:id="@+id/dob_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/dob_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Date of Birth"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/dob_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/dob_header"
+                        android:layout_below="@+id/dob_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="1st Jan, 1970"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/occupation_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/occupation" />
+
+                    <TextView
+                        android:id="@+id/occupation_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/occupation_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Occupation"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/occupation_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/occupation_header"
+                        android:layout_below="@+id/occupation_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Social Worker"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/workplace_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/workplace" />
+
+                    <TextView
+                        android:id="@+id/workplace_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/workplace_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Workplace"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/workplace_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/workplace_header"
+                        android:layout_below="@+id/workplace_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Some Company"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/wp_phone_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/workplace_phone" />
+
+                    <TextView
+                        android:id="@+id/wp_phone_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/wp_phone_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Workplace Phone"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/wp_phone_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/wp_phone_header"
+                        android:layout_below="@+id/wp_phone_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="+91 8564120321"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/wp_address_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/workplace_address" />
+
+                    <TextView
+                        android:id="@+id/wp_address_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toEndOf="@+id/wp_address_image"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="Workplace Address"
+                        android:textColor="@color/profile_header_text_color" />
+
+                    <TextView
+                        android:id="@+id/wp_address_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignStart="@+id/wp_address_header"
+                        android:layout_below="@+id/wp_address_header"
+                        android:fontFamily="@font/comforta_font"
+                        android:text="74/5/A Some Workplace Street, West Bengal 700001"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        app:layout_anchor="@+id/nestedScrollView"
+        app:layout_anchorGravity="right|bottom"
+        app:layout_constraintBottom_toTopOf="@+id/guideline48"
+        app:layout_constraintEnd_toStartOf="@+id/guideline46"
+        app:layout_constraintStart_toStartOf="@+id/guideline47"
+        app:layout_constraintTop_toTopOf="@+id/guideline49"
+        app:srcCompat="@drawable/contact_edit_fab_icon" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline46"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline47"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.80" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline48"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.98" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline49"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp"
+        app:layout_constraintGuide_percent="0.90" />
+
+</android.support.constraint.ConstraintLayout>

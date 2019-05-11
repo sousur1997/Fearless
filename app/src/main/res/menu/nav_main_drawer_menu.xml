@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
+        <item android:id="@+id/nav_item_one"
+            android:icon="@mipmap/menu_icon_test"
+            android:title="Item 1" />
+        <item android:id="@+id/nav_item_two"
+            android:icon="@drawable/contact_edit_fab_icon"
+            android:title="Item 2" />
+        <item android:id="@+id/nav_item_three"
+            android:icon="@mipmap/menu_icon_test"
+            android:title="Item 3" />
+    </group>
+
+    <item android:id="@+id/acc_setup_group_item" android:title="Add more details">
+        <menu android:id="@+id/group_menu">
+            <item android:id="@+id/account_setup_item"
+                android:icon="@drawable/account_setup_menu_icon"
+                android:title="Account Setup"
+                app:actionViewClass="android.widget.TextView"/>
+            <item android:id="@+id/workplace_setup_item"
+                android:icon="@drawable/work_setup_menu_icon"
+                android:title="Workplace Setup"
+                app:actionViewClass="android.widget.TextView"/>
+        </menu>
+    </item>
+
+    <item android:title="Registration / Login">
+        <menu>
+            <item android:id="@+id/sign_up_item"
+                android:icon="@drawable/ic_add_account"
+                android:title="Create new Account" />
+            <item android:id="@+id/signout_item"
+                android:icon="@drawable/ic_logout"
+                android:title="Sign Out" />
+        </menu>
+    </item>
+</menu>

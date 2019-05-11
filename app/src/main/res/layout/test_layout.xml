@@ -1,0 +1,27 @@
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- Other components and views -->
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:centre_button_icon="@drawable/ic_alert_new_fab_icon"
+        app:space_background_color="@color/menu_bar_color"
+        app:centre_button_color="@android:color/background_light"
+        app:inactive_centre_button_icon_color="@android:color/background_light"
+        app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
+
+    <TextView
+        android:id="@+id/count_text_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="30sp" />
+
+</android.support.design.widget.CoordinatorLayout>
+
