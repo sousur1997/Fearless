@@ -33,11 +33,11 @@ public class EmailVerification extends AppCompatActivity {
         if(user.isEmailVerified()){
             smiley.setImageDrawable(getDrawable(R.mipmap.smile));
             verify_text_tv.setText("Email is already verified");
-            verify.setEnabled(true);
+            verify.setEnabled(false);
         }else{
             smiley.setImageDrawable(getDrawable(R.mipmap.sad));
             verify_text_tv.setText("This email is not verified.");
-            verify.setEnabled(false);
+            verify.setEnabled(true);
         }
 
         skip_btn.setOnClickListener(new View.OnClickListener() {
