@@ -92,9 +92,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="mail_varified" />
-                            <entry key="sourceFile" value="D:\Safety app Design\add_account.svg" />
+                            <entry key="outputName" value="ic_not_verified_icon" />
+                            <entry key="sourceFile" value="D:\Safety app Design\not_verified_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>
