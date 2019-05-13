@@ -61,7 +61,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     TabLayout tabLayout;
     ViewPager viewPager;
     private int[] tab_icons = {R.mipmap.history, R.mipmap.home_icon, R.mipmap.call_icon};
-    private TextView acc_badge, work_badge;
+    private TextView acc_badge, work_badge, profile_email;
 
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -101,6 +101,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
         HeaderView = navView.getHeaderView(0);
         profile_image = HeaderView.findViewById(R.id.profile_image_view);
+        profile_email = HeaderView.findViewById(R.id.nav_header_textView);
+
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,12 +139,18 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             login_menu_item.setTitle("Sign Out");
             register_item.setVisible(false); //When logged in hide the sign up item
             acc_setu_grp_item.setVisible(true); //when logged in, show the account update group
+            profile_image.setEnabled(true); //we can click on the image icon
+            profile_email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
             logged_in = true;
         }else{
             login_menu_item.setIcon(R.drawable.ic_login);
             login_menu_item.setTitle("Login");
             register_item.setVisible(true); //When logged out or newly started app show the sign up item
             acc_setu_grp_item.setVisible(false); //when not logged in, hide the account update group
+            profile_image.setEnabled(false); //we cannot click on the image icon
+            profile_email.setText(getResources().getString(R.string.please_login));
+
             logged_in = false;
         }
 
@@ -224,6 +232,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 if(logged_in) {
                     Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
                     FirebaseAuth.getInstance().signOut();
+                    //Clear the preference variables:
+                    prefManager.setBool("verify_email_sent", false);
 
                     //after signing out, restart the current activity
                     Intent loginIntent = getIntent();

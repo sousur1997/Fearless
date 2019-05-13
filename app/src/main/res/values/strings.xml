@@ -55,4 +55,6 @@
         <item>Railway Accident Emergency Service</item>
         <item>LPG Leak Helpline</item>
     </string-array>
+
+    <string name="please_login">Please login to get user details</string>
 </resources>

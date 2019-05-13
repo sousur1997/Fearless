@@ -36,9 +36,18 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilePage.this, EmailVerification.class).putExtra("caller", "Profile");
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, 101);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == 1){
+            if(requestCode == 101){
+                finish();
+                startActivity(getIntent());
+            }
+        }
     }
 }
