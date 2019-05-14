@@ -100,9 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     //user successfully logged in
                     Snackbar.make(login_layout, "Successfully Logged In", Snackbar.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(LoginActivity.this, AppActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    Intent intent = new Intent(LoginActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
 

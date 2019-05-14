@@ -124,11 +124,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if(task.isSuccessful()){
                     //Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_LONG).show();
                     Snackbar.make(register_layout, "Registration Successful", Snackbar.LENGTH_LONG).show();
-
+                    
                     Intent intent = new Intent(RegisterActivity.this, EmailVerification.class);
-                    intent.putExtra("caller", "Registration");
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.putExtra("caller", "Registration").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
 
