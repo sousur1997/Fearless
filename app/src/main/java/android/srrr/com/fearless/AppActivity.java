@@ -1,6 +1,7 @@
 package android.srrr.com.fearless;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.bottomappbar.BottomAppBar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -75,6 +77,9 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private boolean firstTime = false;
     private CircleImageView profile_image;
     private View HeaderView;
+    private FloatingActionButton alert_fab;
+
+    private boolean alert_initiator = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
         navView = findViewById(R.id.nav_menu);
+
+        alert_fab = findViewById(R.id.alert_fab);
 
         setSupportActionBar(toolbar);
         setSupportActionBar(bAppBar);
@@ -163,6 +170,29 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             drawerLayout.openDrawer(Gravity.LEFT);
             prefManager.setBool("sign_up_flag", false); //reset the flag after opening drawer
         }
+
+        alert_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(alert_initiator == false){
+                    startService();
+                    alert_initiator = true;
+                }else{
+                    stopService();
+                    alert_initiator = false;
+                }
+            }
+        });
+    }
+
+    public void startService(){
+        Intent alert_init_intent = new Intent(this, AlertInitiator.class);
+        ContextCompat.startForegroundService(this, alert_init_intent);
+    }
+
+    public void stopService(){
+        Intent alert_init_stop = new Intent(this, AlertInitiator.class);
+        stopService(alert_init_stop);
     }
 
     @Override
