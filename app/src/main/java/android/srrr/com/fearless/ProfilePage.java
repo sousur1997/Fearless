@@ -1,8 +1,10 @@
 package android.srrr.com.fearless;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfilePage extends AppCompatActivity {
     private ImageView verified_badge_iv;
     private FirebaseUser user;
+    private FloatingActionButton image_select_btn, image_upload_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,11 @@ public class ProfilePage extends AppCompatActivity {
         setContentView(R.layout.profile_page);
 
         verified_badge_iv = findViewById(R.id.verified_badge);
+        image_select_btn = findViewById(R.id.image_select_fab);
+        image_select_btn.setColorFilter(getResources().getColor(R.color.alert_fab_icon_color), PorterDuff.Mode.SRC_IN);
+
+        image_upload_btn = findViewById(R.id.image_upload_fab);
+        image_upload_btn.setColorFilter(getResources().getColor(R.color.alert_fab_icon_color), PorterDuff.Mode.SRC_IN);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         //check whether the user is email verified or not.

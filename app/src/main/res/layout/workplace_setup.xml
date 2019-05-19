@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/workplace_setup_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back_drawable">
@@ -89,7 +90,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
     <EditText
-        android:id="@+id/address_street.ed"
+        android:id="@+id/wp_address_street.ed"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -112,7 +113,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <EditText
-        android:id="@+id/city_ed"
+        android:id="@+id/wp_city_ed"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -136,7 +137,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/pin_ed"
+        android:id="@+id/wp_pin_ed"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -158,7 +159,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline15" />
 
     <EditText
-        android:id="@+id/phone_ed"
+        android:id="@+id/wp_phone_ed"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -254,16 +255,24 @@
         app:layout_constraintGuide_begin="20dp"
         app:layout_constraintGuide_percent="0.75" />
 
-    <Spinner
-        android:id="@+id/state_spinner"
+    <EditText
+        android:id="@+id/wp_state_ed"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
-        android:layout_height="36dp"
-        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@mipmap/spinner_bar"
+        android:drawableLeft="@mipmap/address_ed_icon"
+        android:drawableRight="@drawable/selector_icon"
+        android:ems="10"
+        android:focusable="false"
+        android:fontFamily="@font/comforta_font"
+        android:hint="Select State"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/background_light"
+        android:textColorHint="#c6c6c6"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline7"

@@ -56,6 +56,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
+import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
+import static android.srrr.com.fearless.FearlessConstant.getAlertInit;
+import static android.srrr.com.fearless.FearlessConstant.getAlreadyAlerted;
+import static android.srrr.com.fearless.FearlessConstant.setAlertInitiator;
+import static android.srrr.com.fearless.FearlessConstant.setAlreadyAlerted;
+import static android.srrr.com.fearless.FearlessConstant.toggleAlertInitiator;
+import static android.srrr.com.fearless.FearlessConstant.toggleAlreadtAlerted;
+
 public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -79,14 +88,15 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private View HeaderView;
     private FloatingActionButton alert_fab;
 
-    private boolean alert_initiator = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
+
+        setAlertInitiator(false);
+        setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
@@ -174,12 +184,16 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(alert_initiator == false){
-                    startService();
-                    alert_initiator = true;
+                if(getAlertInit() == false){
+                    if(getAlreadyAlerted() == false){
+                        startService();
+                        toggleAlertInitiator();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "One alert is active", Toast.LENGTH_LONG).show();
+                    }
                 }else{
                     stopService();
-                    alert_initiator = false;
+                    toggleAlertInitiator();
                 }
             }
         });
@@ -187,12 +201,14 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
     public void startService(){
         Intent alert_init_intent = new Intent(this, AlertInitiator.class);
+        alert_init_intent.setAction(START_ALERT);
         ContextCompat.startForegroundService(this, alert_init_intent);
     }
 
     public void stopService(){
         Intent alert_init_stop = new Intent(this, AlertInitiator.class);
-        stopService(alert_init_stop);
+        alert_init_stop.setAction(STOP_ALERT);
+        ContextCompat.startForegroundService(this, alert_init_stop);
     }
 
     @Override

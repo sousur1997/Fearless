@@ -42,7 +42,43 @@
                         android:layout_height="match_parent" />
                 </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
+
         </android.support.design.widget.AppBarLayout>
+
+        <android.support.design.widget.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_select_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:theme="@style/profile_fab_style"
+            fab:layout_anchor="@id/app_bar_layout"
+            app:layout_anchorGravity="bottom|end"
+            android:layout_margin="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline62"
+            app:layout_constraintEnd_toStartOf="@+id/guideline16"
+            app:layout_constraintStart_toStartOf="@+id/guideline83"
+            app:layout_constraintTop_toTopOf="@+id/guideline82"
+            app:srcCompat="@drawable/image_add_camera" />
+
+        <android.support.design.widget.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_upload_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:theme="@style/profile_fab_style"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_constraintBottom_toTopOf="@+id/guideline62"
+            app:layout_constraintEnd_toStartOf="@+id/guideline16"
+            app:layout_constraintStart_toStartOf="@+id/guideline83"
+            app:layout_constraintTop_toTopOf="@+id/guideline82"
+            app:srcCompat="@drawable/upload"
+            fab:layout_anchor="@id/app_bar_layout"/>
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"

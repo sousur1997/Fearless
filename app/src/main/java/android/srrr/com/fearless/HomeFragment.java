@@ -81,6 +81,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CALL_PHONE;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -169,6 +170,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         if(runtime_permission()) { //check for runtime permissions
             new LocationUpdateTask().execute();
         }
+        runtime_call_permission();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.g_map);
         mapFragment.getMapAsync(this);
 
@@ -238,6 +240,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         return false;
     }
 
+    private boolean runtime_call_permission() {
+        if (Build.VERSION.SDK_INT >= 21 && ContextCompat.checkSelfPermission(
+                getActivity().getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{CALL_PHONE}, 200);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -246,6 +257,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
             } else {
                 runtime_permission(); //if the permissions are not available, ask for the permission
+            }
+        }
+
+        if(requestCode == 200){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+            }else{
+                runtime_call_permission();
             }
         }
     }

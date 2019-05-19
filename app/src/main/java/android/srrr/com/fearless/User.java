@@ -4,18 +4,10 @@ public class User {
     private String email, name, phone, street, city, state, pin, dob;
     private Workplace workplace;
 
-    public Workplace getWorkplace() {
-        return workplace;
-    }
-
-    public void setWorkplace(Workplace workplace) {
-        this.workplace = workplace;
-    }
-
     public User(){ //The non parameterized constructor, set all strings as blank
-        this("", "", "", "", "","", "", "", new Workplace());
+        this("", "", "", "", "","", "", "");
     }
-    public User(String email, String name, String phone, String street, String city, String state, String pin, String dob, Workplace workplace) {
+    public User(String email, String name, String phone, String street, String city, String state, String pin, String dob) {
         this.email = email;
         this.name = name;
         this.phone = phone;
@@ -24,6 +16,13 @@ public class User {
         this.state = state;
         this.pin = pin;
         this.dob = dob;
+    }
+
+    public Workplace getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(Workplace workplace) {
         this.workplace = workplace;
     }
 

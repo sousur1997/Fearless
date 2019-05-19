@@ -72,4 +72,8 @@
         <item name="android:textColor">@android:color/background_light</item>
         <item name="android:fontFamily">@font/comforta_font</item>
     </style>
+
+    <style name="profile_fab_style">
+        <item name="colorAccent">@color/alert_fab_color</item>
+    </style>
 </resources>

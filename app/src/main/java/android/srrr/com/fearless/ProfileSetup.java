@@ -191,14 +191,14 @@ public class ProfileSetup extends AppCompatActivity {
         String state = this.select_st.getText().toString();
         String pin = this.pin.getText().toString();
         String dob = this.dob.getText().toString();
-        User newUser = new User(mAuth.getCurrentUser().getEmail(), name, phone, street, city, state, pin, dob, new Workplace());
+        User newUser = new User(mAuth.getCurrentUser().getEmail(), name, phone, street, city, state, pin, dob);
 
         mDatabase.child("users").child(userId).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //success
-                    Snackbar.make(prof_layout, "Updated Successfully", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(prof_layout, "Profile details updated Successfully", Snackbar.LENGTH_LONG).show();
                 }else{
                     Snackbar.make(prof_layout, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                 }
