@@ -21,11 +21,11 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_BROADCAST;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
-import static android.srrr.com.fearless.FearlessConstant.toggleAlreadtAlerted;
 
 public class AlertService extends Service {
     private NotificationActionReceiver receiver;
     private String message = "Press CALL to call <First Contact>";
+    private AlertControl alertControl;
 
     @Override
     public void onCreate() {
@@ -35,6 +35,8 @@ public class AlertService extends Service {
         filter.setPriority(100);
         receiver = new NotificationActionReceiver();
         registerReceiver(receiver, filter);
+
+        alertControl = AlertControl.getInstance(getApplicationContext());
     }
 
     @SuppressLint("MissingPermission")
@@ -43,7 +45,7 @@ public class AlertService extends Service {
         if(intent != null) {
             if (intent.getAction().equals(ACTUAL_STOP_ALERT)) {
                 //when alert end
-                toggleAlreadtAlerted();
+                alertControl.toggleAlreadyAlerted();
                 stopForeground(true);
                 stopSelf();
             }else if(intent.getAction().equals(ACTUAL_START_ALERT)){

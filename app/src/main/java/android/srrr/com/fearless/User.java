@@ -2,7 +2,6 @@ package android.srrr.com.fearless;
 
 public class User {
     private String email, name, phone, street, city, state, pin, dob;
-    private Workplace workplace;
 
     public User(){ //The non parameterized constructor, set all strings as blank
         this("", "", "", "", "","", "", "");
@@ -16,14 +15,6 @@ public class User {
         this.state = state;
         this.pin = pin;
         this.dob = dob;
-    }
-
-    public Workplace getWorkplace() {
-        return workplace;
-    }
-
-    public void setWorkplace(Workplace workplace) {
-        this.workplace = workplace;
     }
 
     public String getStreet() {

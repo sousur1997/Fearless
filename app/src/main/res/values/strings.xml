@@ -57,4 +57,7 @@
     </string-array>
 
     <string name="please_login">Please login to get user details</string>
+
+    <string name="FIRESTORE_USERINFO_COLLECTION">UserInformation</string>
+    <string name="FIRESTORE_WORKPLACE_COLLECTION">WorkplaceInformation</string>
 </resources>

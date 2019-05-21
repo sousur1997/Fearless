@@ -20,14 +20,14 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_BROADCAST;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
-import static android.srrr.com.fearless.FearlessConstant.toggleAlertInitiator;
-import static android.srrr.com.fearless.FearlessConstant.toggleAlreadtAlerted;
 
 public class AlertInitiator extends Service {
     private Vibrator alertVibrator;
     private NotificationActionReceiver receiver;
     private AsyncTask<Void, Void, Void> alertTask;
     private boolean flag_canceled = false;
+
+    private AlertControl alertControl;
 
     public AlertInitiator() {
     }
@@ -42,11 +42,14 @@ public class AlertInitiator extends Service {
         registerReceiver(receiver, filter);
 
         alertVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        alertControl = AlertControl.getInstance(getApplicationContext());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         alertTask = new NotificationVibrate();
+
         if(intent != null) {
             if (intent.getAction().equals(STOP_ALERT)) {
                 alertTask.cancel(true);
@@ -114,8 +117,8 @@ public class AlertInitiator extends Service {
                 Toast.makeText(getApplicationContext(), "Service Done", Toast.LENGTH_LONG).show();
                 stopForeground(true);
                 stopSelf();
-                toggleAlertInitiator();
-                toggleAlreadtAlerted();
+                alertControl.toggleAlertInitiator();
+                alertControl.toggleAlreadyAlerted();
                 startAlert();
             }else{
                 Toast.makeText(getApplicationContext(), "Interrupted", Toast.LENGTH_LONG).show();

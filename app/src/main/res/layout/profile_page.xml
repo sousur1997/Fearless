@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/profile_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -49,19 +50,19 @@
             android:id="@+id/image_select_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:clickable="true"
             android:theme="@style/profile_fab_style"
-            fab:layout_anchor="@id/app_bar_layout"
             app:layout_anchorGravity="bottom|end"
-            android:layout_margin="20dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline62"
             app:layout_constraintEnd_toStartOf="@+id/guideline16"
             app:layout_constraintStart_toStartOf="@+id/guideline83"
             app:layout_constraintTop_toTopOf="@+id/guideline82"
-            app:srcCompat="@drawable/image_add_camera" />
+            app:srcCompat="@drawable/image_add_camera"
+            fab:layout_anchor="@id/app_bar_layout" />
 
         <android.support.design.widget.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:id="@+id/image_upload_fab"
@@ -78,7 +79,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline83"
             app:layout_constraintTop_toTopOf="@+id/guideline82"
             app:srcCompat="@drawable/upload"
-            fab:layout_anchor="@id/app_bar_layout"/>
+            fab:layout_anchor="@id/app_bar_layout" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
@@ -127,7 +128,7 @@
                         android:layout_alignStart="@+id/phone_header"
                         android:layout_below="@+id/phone_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="+91 9876543210"
+                        android:text="Your Phone Number"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -163,7 +164,7 @@
                         android:layout_alignStart="@+id/res_addr_header"
                         android:layout_below="@+id/res_addr_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="11/44 A Some Place Lane. 700035"
+                        android:text="Your Address"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -199,7 +200,7 @@
                         android:layout_alignStart="@+id/dob_header"
                         android:layout_below="@+id/dob_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="1st Jan, 1970"
+                        android:text="Your Date of Birth"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -235,7 +236,7 @@
                         android:layout_alignStart="@+id/occupation_header"
                         android:layout_below="@+id/occupation_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="Social Worker"
+                        android:text="Yout Occupation"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -271,7 +272,7 @@
                         android:layout_alignStart="@+id/workplace_header"
                         android:layout_below="@+id/workplace_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="Some Company"
+                        android:text="Your Workplace"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -307,7 +308,7 @@
                         android:layout_alignStart="@+id/wp_phone_header"
                         android:layout_below="@+id/wp_phone_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="+91 8564120321"
+                        android:text="Your Workplace Phone"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -343,7 +344,7 @@
                         android:layout_alignStart="@+id/wp_address_header"
                         android:layout_below="@+id/wp_address_header"
                         android:fontFamily="@font/comforta_font"
-                        android:text="74/5/A Some Workplace Street, West Bengal 700001"
+                        android:text="Your Workplace Address"
                         android:textSize="16sp" />
                 </RelativeLayout>
             </LinearLayout>
@@ -352,7 +353,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -360,6 +361,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
+        android:elevation="5dp"
         app:layout_anchor="@+id/nestedScrollView"
         app:layout_anchorGravity="right|bottom"
         app:layout_constraintBottom_toTopOf="@+id/guideline48"

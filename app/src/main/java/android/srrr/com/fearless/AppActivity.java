@@ -51,6 +51,7 @@ import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,12 +59,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
-import static android.srrr.com.fearless.FearlessConstant.getAlertInit;
-import static android.srrr.com.fearless.FearlessConstant.getAlreadyAlerted;
-import static android.srrr.com.fearless.FearlessConstant.setAlertInitiator;
-import static android.srrr.com.fearless.FearlessConstant.setAlreadyAlerted;
-import static android.srrr.com.fearless.FearlessConstant.toggleAlertInitiator;
-import static android.srrr.com.fearless.FearlessConstant.toggleAlreadtAlerted;
 
 public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -88,15 +83,17 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private View HeaderView;
     private FloatingActionButton alert_fab;
 
+    private AlertControl aControl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
+        aControl = AlertControl.getInstance(getApplicationContext());
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
-        setAlertInitiator(false);
-        setAlreadyAlerted(false);
+        aControl.setAlertInitiator(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
@@ -184,16 +181,16 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getAlertInit() == false){
-                    if(getAlreadyAlerted() == false){
+                if(aControl.getAlertInit() == false){
+                    if(aControl.getAlreadyAlerted() == false){
                         startService();
-                        toggleAlertInitiator();
+                        aControl.toggleAlertInitiator();
                     }else{
                         Toast.makeText(getApplicationContext(), "One alert is active", Toast.LENGTH_LONG).show();
                     }
                 }else{
                     stopService();
-                    toggleAlertInitiator();
+                    aControl.toggleAlertInitiator();
                 }
             }
         });
@@ -271,20 +268,42 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         viewPager.setAdapter(adapter);
     }
 
+    private void signOut(){
+        if(aControl.getAlreadyAlerted() == true){ //when alert is already active, does not signout
+            AlertDialog dialog;
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle("Sign out Failed");
+            dialogBuilder.setMessage("One alert is active now. Please close it before signing out");
+            dialogBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog = dialogBuilder.create();
+            dialog.setCancelable(false);
+            dialog.show();
+        }else {
+            FirebaseAuth.getInstance().signOut();
+            //Clear the preference variables:
+            prefManager.setBool("verify_email_sent", false);
+            Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
+
+            //after signing out, restart the current activity
+            Intent loginIntent = getIntent();
+            finish();
+            startActivity(loginIntent);
+        }
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.signout_item:
                 if(logged_in) {
-                    Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
-                    FirebaseAuth.getInstance().signOut();
-                    //Clear the preference variables:
-                    prefManager.setBool("verify_email_sent", false);
-
-                    //after signing out, restart the current activity
-                    Intent loginIntent = getIntent();
-                    finish();
-                    startActivity(loginIntent);
+                    signOut();
                 }else{
                     startActivity(new Intent(AppActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
