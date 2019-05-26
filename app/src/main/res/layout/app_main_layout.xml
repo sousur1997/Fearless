@@ -13,7 +13,11 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintBottom_toTopOf="@+id/view_pager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,15 +51,6 @@
             app:layout_constraintVertical_bias="0.0">
 
         </android.support.v4.view.ViewPager>
-
-        <LinearLayout
-            android:id="@+id/bottom_panel"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/menu_bar_color"
-            android:orientation="horizontal">
-
-        </LinearLayout>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline3"
@@ -147,10 +142,9 @@
         app:backgroundTint="@color/menu_bar_color"
         app:buttonGravity="bottom|top"
         app:fabAlignmentMode="center"
-        app:fabAttached="true"
         app:fabCradleRoundedCornerRadius="15dp"
         app:navigationIcon="@drawable/arrow_icon"
-        app:fabCradleDiameter="0dp"/>
+        app:fabCradleMargin="5dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/alert_fab"

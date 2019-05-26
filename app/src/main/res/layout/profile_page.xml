@@ -51,9 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
             android:theme="@style/profile_fab_style"
             app:layout_anchorGravity="bottom|end"
@@ -61,8 +61,8 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline16"
             app:layout_constraintStart_toStartOf="@+id/guideline83"
             app:layout_constraintTop_toTopOf="@+id/guideline82"
-            app:srcCompat="@drawable/image_add_camera"
-            fab:layout_anchor="@id/app_bar_layout" />
+            fab:layout_anchor="@id/app_bar_layout"
+            fab:srcCompat="@drawable/add_image" />
 
         <android.support.design.widget.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:id="@+id/image_upload_fab"
@@ -362,7 +362,6 @@
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:elevation="5dp"
-        app:layout_anchor="@+id/nestedScrollView"
         app:layout_anchorGravity="right|bottom"
         app:layout_constraintBottom_toTopOf="@+id/guideline48"
         app:layout_constraintEnd_toStartOf="@+id/guideline46"

@@ -1,19 +1,13 @@
 package android.srrr.com.fearless;
 
-import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,12 +15,10 @@ import android.support.design.bottomappbar.BottomAppBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,25 +30,23 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.luseen.spacenavigation.SpaceItem;
-import com.luseen.spacenavigation.SpaceNavigationView;
-import com.luseen.spacenavigation.SpaceOnClickListener;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 
@@ -82,6 +72,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private CircleImageView profile_image;
     private View HeaderView;
     private FloatingActionButton alert_fab;
+    private FirebaseUser user;
+    private String userId;
+    private StorageReference storage;
+    private StorageReference profileImageReference;
+    private View profile_image_prog;
 
     private AlertControl aControl;
 
@@ -116,11 +111,18 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         HeaderView = navView.getHeaderView(0);
         profile_image = HeaderView.findViewById(R.id.profile_image_view);
         profile_email = HeaderView.findViewById(R.id.nav_header_textView);
+        profile_image_prog = HeaderView.findViewById(R.id.load_image_progress);
+
+        profile_image_prog.setVisibility(View.INVISIBLE); //at first it will not be shown.
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            userId = user.getUid();
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AppActivity.this, ProfilePage.class));
+                startActivityForResult(new Intent(AppActivity.this, ProfilePage.class), PROFILE_ACTIVITY_CODE);
             }
         });
 
@@ -154,7 +156,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             register_item.setVisible(false); //When logged in hide the sign up item
             acc_setu_grp_item.setVisible(true); //when logged in, show the account update group
             profile_image.setEnabled(true); //we can click on the image icon
-            profile_email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            profile_email.setText(user.getEmail());
+            retrieveImageToImageView(); //retrieve image and set as profile image
 
             logged_in = true;
         }else{
@@ -192,6 +195,27 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                     stopService();
                     aControl.toggleAlertInitiator();
                 }
+            }
+        });
+    }
+
+    private void retrieveImageToImageView(){
+        storage = FirebaseStorage.getInstance().getReference();
+        profileImageReference = storage.child("ProfileImages/" + userId + ".jpg"); //store image with <userId>.jpg
+
+        profile_image_prog.setVisibility(View.VISIBLE);
+        profileImageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profile_image.setImageBitmap(bitmap);
+                profile_image_prog.setVisibility(View.INVISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                profile_image.setImageDrawable(getDrawable(R.mipmap.user_icon)); //if it fails to load image, set the image as default image
+                profile_image_prog.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -349,6 +373,13 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         @Override
         public CharSequence getPageTitle(int position) {
             return null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == PROFILE_ACTIVITY_CODE){
+            retrieveImageToImageView();
         }
     }
 }

@@ -12,5 +12,8 @@ public class FearlessConstant {
     public static final String ALERT_BROADCAST_STOP = "alert_broadcast_stop";
     public static final String ALERT_BROADCAST_CALL = "alert_broadcast_call";
     public static final String ALERT_CHANNEL = "AlertServiceChannel";
+    public static final int REQUEST_CAMERA = 1;
+    public static final int SELECT_FILE = 2;
+    public static final int PROFILE_ACTIVITY_CODE = 202;
 
 }

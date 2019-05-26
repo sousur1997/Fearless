@@ -80,4 +80,12 @@
     <style name="fearlessDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="progress_dialog_fragment_style" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="load_image_progress">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 </resources>
