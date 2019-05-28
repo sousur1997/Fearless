@@ -8,9 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature
@@ -27,6 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
+        <activity android:name=".MapPathActivity"
+            android:theme="@style/AppInnerTheme"></activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">
@@ -78,13 +80,17 @@
         <service
             android:name=".AlertInitiator"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".AlertService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
-        <receiver android:name=".NotificationActionReceiver"></receiver>
+        <receiver android:name=".NotificationActionReceiver" />
+
+        <activity
+            android:name=".AlertCloseConfirmActivity"
+            android:theme="@style/profile_setup_theme"></activity>
     </application>
 
 </manifest>

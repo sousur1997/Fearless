@@ -45,7 +45,7 @@
     </string-array>
 
     <string-array name="help_line_labels">
-        <item>NATIONAL EMERGENCY NUMBER</item>
+        <item>National Emergency Number</item>
         <item>Police</item>
         <item>Fire</item>
         <item>Ambulance</item>
@@ -57,7 +57,4 @@
     </string-array>
 
     <string name="please_login">Please login to get user details</string>
-
-    <string name="FIRESTORE_USERINFO_COLLECTION">UserInformation</string>
-    <string name="FIRESTORE_WORKPLACE_COLLECTION">WorkplaceInformation</string>
 </resources>

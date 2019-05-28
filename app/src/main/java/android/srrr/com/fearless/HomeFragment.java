@@ -84,6 +84,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.LOCATION_SERVICE;
+import static android.srrr.com.fearless.FearlessConstant.CALL_PERMISSION;
+import static android.srrr.com.fearless.FearlessConstant.LOCATION_PERMISSION;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
@@ -234,7 +236,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
                 ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
                         ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, 100);
+            requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
             return true;
         }
         return false;
@@ -243,7 +245,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     private boolean runtime_call_permission() {
         if (Build.VERSION.SDK_INT >= 21 && ContextCompat.checkSelfPermission(
                 getActivity().getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{CALL_PHONE}, 200);
+            requestPermissions(new String[]{CALL_PHONE}, CALL_PERMISSION);
             return true;
         }
         return false;
@@ -252,7 +254,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
+        if (requestCode == LOCATION_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
             } else {
@@ -260,7 +262,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             }
         }
 
-        if(requestCode == 200){
+        if(requestCode == CALL_PERMISSION){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
             }else{

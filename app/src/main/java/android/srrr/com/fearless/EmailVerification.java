@@ -20,8 +20,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
-
 public class EmailVerification extends AppCompatActivity {
     ImageView smiley;
     TextView verify_text_tv;
@@ -38,8 +36,8 @@ public class EmailVerification extends AppCompatActivity {
         setContentView(R.layout.activity_email_verification);
 
         smiley = findViewById(R.id.smiley_iv);
-        verify_text_tv = findViewById(R.id.verify_text);
-        verify = findViewById(R.id.verify_btn);
+        verify_text_tv = findViewById(R.id.info_text);
+        verify = findViewById(R.id.alert_close_btn);
         skip_btn = findViewById(R.id.skip_btn);
         ver_layout = findViewById(R.id.verify_layout);
         verify_prog = findViewById(R.id.verify_progress);

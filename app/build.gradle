@@ -1,6 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        SignFearless {
+            storeFile file('D:\\Safety app Design\\Signed APK\\fearless_keystore.jks')
+            storePassword 'Fear$tore$Rrr'
+            keyAlias = 'Fearless'
+            keyPassword 'Fear$tore$Rrr'
+        }
+        debug {
+            storeFile file('D:\\Safety app Design\\Signed APK\\fearless_keystore.jks')
+            storePassword 'Fear$tore$Rrr'
+            keyAlias = 'Fearless'
+            keyPassword 'Fear$tore$Rrr'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "android.srrr.com.fearless"

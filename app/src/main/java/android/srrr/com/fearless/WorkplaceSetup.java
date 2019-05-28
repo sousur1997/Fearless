@@ -36,6 +36,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_WORKPLACE_COLLECTION;
+
 public class WorkplaceSetup extends AppCompatActivity {
     private PreferenceManager prefManager;
 
@@ -170,7 +172,7 @@ public class WorkplaceSetup extends AppCompatActivity {
         String occupation = this.occupation.getText().toString();
         final Workplace newWorkplace = new Workplace(wp_name, phone, street, city, state, pin, occupation);
 
-        firestore.collection(getResources().getString(R.string.FIRESTORE_WORKPLACE_COLLECTION)).document(userId).set(newWorkplace).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firestore.collection(FIRESTORE_WORKPLACE_COLLECTION).document(userId).set(newWorkplace).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -192,7 +194,7 @@ public class WorkplaceSetup extends AppCompatActivity {
         save.setText("");
         save.setEnabled(false);
         if(userId != null) {
-            DocumentReference docRef = firestore.collection(getResources().getString(R.string.FIRESTORE_WORKPLACE_COLLECTION)).document(userId);
+            DocumentReference docRef = firestore.collection(FIRESTORE_WORKPLACE_COLLECTION).document(userId);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

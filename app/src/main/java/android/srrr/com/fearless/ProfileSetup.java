@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_USERINFO_COLLECTION;
+
 public class ProfileSetup extends AppCompatActivity {
 
     private Button skip, save;
@@ -100,7 +102,8 @@ public class ProfileSetup extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        userId = mAuth.getCurrentUser().getUid();
+        if(mAuth != null)
+            userId = mAuth.getCurrentUser().getUid();
 
         dob.setShowSoftInputOnFocus(false);
         select_st.setShowSoftInputOnFocus(false);
@@ -223,7 +226,7 @@ public class ProfileSetup extends AppCompatActivity {
         String dob = this.dob.getText().toString();
         final User newUser = new User(mAuth.getCurrentUser().getEmail(), name, phone, street, city, state, pin, dob);
 
-        firestore.collection(getResources().getString(R.string.FIRESTORE_USERINFO_COLLECTION)).document(userId).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firestore.collection(FIRESTORE_USERINFO_COLLECTION).document(userId).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -245,7 +248,7 @@ public class ProfileSetup extends AppCompatActivity {
         save.setText("");
         save.setEnabled(false);
         if(userId != null) {
-            DocumentReference docRef = firestore.collection(getResources().getString(R.string.FIRESTORE_USERINFO_COLLECTION)).document(userId);
+            DocumentReference docRef = firestore.collection(FIRESTORE_USERINFO_COLLECTION).document(userId);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

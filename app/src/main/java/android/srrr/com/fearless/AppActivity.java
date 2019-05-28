@@ -41,18 +41,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 
 public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -89,6 +90,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
         aControl.setAlertInitiator(false);
+        aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
@@ -116,8 +118,13 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         profile_image_prog.setVisibility(View.INVISIBLE); //at first it will not be shown.
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null)
+        if(user != null) {
             userId = user.getUid();
+        }else{
+            //when user is not logged in, disable alert button
+            alert_fab.setBackgroundColor(Color.GRAY);
+            alert_fab.setImageDrawable(getDrawable(R.drawable.alert_inactive));
+        }
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,16 +191,32 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(aControl.getAlertInit() == false){
-                    if(aControl.getAlreadyAlerted() == false){
-                        startService();
+                if(user != null) {
+                    if (aControl.getAlertInit() == false) {
+                        if (aControl.getAlreadyAlerted() == false) {
+                            startService();
+                            aControl.toggleAlertInitiator();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "One alert is active", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        stopService();
                         aControl.toggleAlertInitiator();
-                    }else{
-                        Toast.makeText(getApplicationContext(), "One alert is active", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    stopService();
-                    aControl.toggleAlertInitiator();
+                    AlertDialog dialog;
+                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AppActivity.this);
+                    dialogBuilder.setTitle("Alert failed");
+                    dialogBuilder.setMessage("Alert feature is not available for Guest Users");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog = dialogBuilder.create();
+                    dialog.show();
                 }
             }
         });
@@ -313,6 +336,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             //Clear the preference variables:
             prefManager.setBool("verify_email_sent", false);
             Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
+
+            //delete the history file:
+            File file = new File(getFilesDir(), HISTORY_LIST_FILE);
+            if(file.exists()){
+                file.delete();
+            }
 
             //after signing out, restart the current activity
             Intent loginIntent = getIntent();

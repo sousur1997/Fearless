@@ -37,6 +37,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
+import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_USERINFO_COLLECTION;
+import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_WORKPLACE_COLLECTION;
 import static android.srrr.com.fearless.FearlessConstant.SELECT_FILE;
 
 public class ProfilePage extends AppCompatActivity {
@@ -206,7 +208,7 @@ public class ProfilePage extends AppCompatActivity {
 
             retrieveImageToImageView();
 
-            DocumentReference docRef = firestore.collection(getResources().getString(R.string.FIRESTORE_USERINFO_COLLECTION)).document(userId);
+            DocumentReference docRef = firestore.collection(FIRESTORE_USERINFO_COLLECTION).document(userId);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -230,7 +232,7 @@ public class ProfilePage extends AppCompatActivity {
                 }
             });
 
-            docRef = firestore.collection(getResources().getString(R.string.FIRESTORE_WORKPLACE_COLLECTION)).document(userId);
+            docRef = firestore.collection(FIRESTORE_WORKPLACE_COLLECTION).document(userId);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

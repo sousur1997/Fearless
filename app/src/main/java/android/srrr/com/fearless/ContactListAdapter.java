@@ -58,8 +58,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
 
-            this.C_Name = itemView.findViewById(R.id.contact_name);
-            this.C_number = itemView.findViewById(R.id.contact_no);
+            this.C_Name = itemView.findViewById(R.id.alert_time_tv);
+            this.C_number = itemView.findViewById(R.id.date_time_tv);
             this.call_btn = itemView.findViewById(R.id.call_list_btn);
             this.message_btn = itemView.findViewById(R.id.message_btn);
         }
