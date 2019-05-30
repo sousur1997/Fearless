@@ -67,7 +67,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         skip_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(login_layout, "Please wait...", Snackbar.LENGTH_LONG).show();
                 startActivity(new Intent(LoginActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                skip_text_view.setClickable(false);
+                finish();
+            }
+        });
+
+        forget_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgetPasswordManage();
+            }
+        });
+    }
+
+    private void forgetPasswordManage(){
+        if(email_ed.getText().toString().isEmpty()){
+            email_ed.setError("Enter email to get recovery email");
+            email_ed.requestFocus();
+            return;
+        }
+        Snackbar.make(login_layout, "Please wait...", Snackbar.LENGTH_LONG).show();
+        mAuth.sendPasswordResetEmail(email_ed.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Snackbar.make(login_layout, "Email sent, please create new password with the given link", Snackbar.LENGTH_LONG).show();
+                }else{
+                    Snackbar.make(login_layout, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }

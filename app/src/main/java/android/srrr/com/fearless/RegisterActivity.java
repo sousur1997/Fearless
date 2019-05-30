@@ -72,7 +72,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         skip_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(register_layout, "Please wait...", Snackbar.LENGTH_LONG).show();
                 startActivity(new Intent(RegisterActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                skip_text_view.setClickable(false);
+                finish();
             }
         });
     }

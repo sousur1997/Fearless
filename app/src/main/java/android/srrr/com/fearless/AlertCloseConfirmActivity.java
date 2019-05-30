@@ -10,26 +10,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,8 +76,6 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         if(mAuth != null)
             userId = mAuth.getCurrentUser().getUid();
 
-        endTask = new ServiceEndTask();
-        endTask.execute();
 
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +86,8 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                         Intent alert_stop = new Intent(AlertCloseConfirmActivity.this, AlertService.class);
                         alert_stop.setAction(ACTUAL_STOP_ALERT);
                         ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
+                        endTask = new ServiceEndTask();
+                        endTask.execute();
                     }
                 }
             }
@@ -115,9 +107,9 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             //check whether alert is ended or not
-            while (aControl.getAlreadyAlerted() == true){
+            /*while (aControl.getAlreadyAlerted() == true){
                 //repeatedly check whether alert is still active or not
-            }
+            }*/
             jsonFileContent = readCacheJson(); //read json after returning back from service
             pendingEventListManage(jsonFileContent);
             return null;
@@ -150,8 +142,10 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
 
             //if the event has at least one location history, then add it to the final list
             for(AlertEvent event : pendingList){
-                if(event.hasLocationHistory()){
-                    finalMap.put(event.getTimestamp(), event);
+                if(event != null) {
+                    if (event.hasLocationHistory()) {
+                        finalMap.put(event.getTimestamp(), event);
+                    }
                 }
             }
             DatabaseReference reference = database.getReference();
@@ -161,6 +155,10 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
                         Snackbar.make(verifyLayout, "Sync Complete", Snackbar.LENGTH_LONG).show();
                         pendingFile.delete();
+                    }else if(task.getException() instanceof FirebaseNetworkException){
+                        Snackbar.make(verifyLayout, "Please check your network connection", Snackbar.LENGTH_LONG).show();
+                    }else{
+                        Snackbar.make(verifyLayout, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -201,7 +199,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
             while((n = fis.read(buffer)) != -1){
                 fileContent.append(new String(buffer, 0, n));
             }
-
+            fis.close();
             pendingListJson = fileContent.toString();
 
         } catch (FileNotFoundException e) {
@@ -240,6 +238,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
             }
 
             json = fileContent.toString();
+            fis.close();
 
             File file = new File(getFilesDir(), ALERT_JSON_FILENAME);
             if(file.exists()){

@@ -48,7 +48,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
     }
 
-    private void setupMapPath(int index){
+    private void setupMapPath(int index) throws IndexOutOfBoundsException{
         AlertEvent[] AlertArr;
         ArrayList<AlertEvent> AlertList = new ArrayList<>();
         String jsonString = readJsonFile(HISTORY_LIST_FILE);

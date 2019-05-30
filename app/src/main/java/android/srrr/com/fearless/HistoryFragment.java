@@ -3,7 +3,6 @@ package android.srrr.com.fearless;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,18 +13,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.utilities.Tree;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -38,10 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_COLLECTION;
@@ -57,6 +55,8 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
     private Gson gson = new Gson();
     private TreeSet<AlertEvent> historyList;
     private DatabaseReference reference;
+    private ImageView historyBack;
+    private TextView historyBackTV;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -81,6 +81,8 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
 
         refreshLayout = getView().findViewById(R.id.refresh_layout);
         history_view = getView().findViewById(R.id.history_list_view);
+        historyBack = getView().findViewById(R.id.history_back_image);
+        historyBackTV = getView().findViewById(R.id.history_back_tv);
 
         historyList = new TreeSet<AlertEvent>(new AlertComparator());
 
@@ -91,15 +93,22 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
             userId = mAuth.getCurrentUser().getUid();
             DatabaseReference reference = database.getReference();
             reference.child(HISTORY_COLLECTION).child(userId).addValueEventListener(this);
+        }else{
+            historyBack.setVisibility(View.VISIBLE);
+            historyBackTV.setVisibility(View.VISIBLE);
+            historyBackTV.setText("Please login to get History details");
         }
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mAuth.getCurrentUser() != null)
-                    syncHistoryTask();
-                else
-                    refreshLayout.setRefreshing(false);
+            if(mAuth.getCurrentUser() != null) {
+                syncHistoryTask();
+                setupListView();
+            }
+            else {
+                refreshLayout.setRefreshing(false);
+            }
             }
         });
 
@@ -118,10 +127,18 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
         try {
             set.addAll(Arrays.asList(AlertArr));
             AlertList = new ArrayList<>(set);
-            HistoryListAdapter adapter = new HistoryListAdapter(AlertList);
-            history_view.setHasFixedSize(true);
-            history_view.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-            history_view.setAdapter(adapter);
+            if(AlertList.size() > 0) {
+                HistoryListAdapter adapter = new HistoryListAdapter(AlertList);
+                history_view.setHasFixedSize(true);
+                history_view.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+                history_view.setAdapter(adapter);
+                historyBack.setVisibility(View.INVISIBLE);
+                historyBackTV.setVisibility(View.INVISIBLE);
+            }else{
+                historyBack.setVisibility(View.VISIBLE);
+                historyBackTV.setVisibility(View.VISIBLE);
+                historyBackTV.setText("No history found. Swipe down to refresh");
+            }
         }catch (NullPointerException e){
             e.printStackTrace();
         }
@@ -143,8 +160,10 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
 
             //if the event has at least one location history, then add it to the final list
             for(AlertEvent event : pendingList){
-                if(event.hasLocationHistory()){
-                    finalMap.put(event.getTimestamp(), event);
+                if(event != null) {
+                    if (event.hasLocationHistory()) {
+                        finalMap.put(event.getTimestamp(), event);
+                    }
                 }
             }
             DatabaseReference ref = database.getReference();
@@ -153,7 +172,12 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         pendingFile.delete();
+                        Toast.makeText(getActivity().getApplicationContext(), "Sync Complete", Toast.LENGTH_LONG).show();
                         syncHistoryTask();
+                    }else if(task.getException() instanceof FirebaseNetworkException){
+                        Toast.makeText(getActivity().getApplicationContext(), "Please check your network connection", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getActivity().getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -166,6 +190,7 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
         try {
             DatabaseReference reference = database.getReference();
             reference.child(HISTORY_COLLECTION).child(userId).addValueEventListener(this);
+
             setupListView();
         }catch (Exception e){
             e.printStackTrace();
@@ -183,7 +208,7 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
             while((n = fis.read(buffer)) != -1){
                 fileContent.append(new String(buffer, 0, n));
             }
-
+            fis.close();
             listJson = fileContent.toString();
 
         } catch (FileNotFoundException e) {

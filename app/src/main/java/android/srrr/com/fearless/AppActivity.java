@@ -42,6 +42,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +91,6 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
         aControl.setAlertInitiator(false);
-        aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
@@ -341,6 +341,17 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             File file = new File(getFilesDir(), HISTORY_LIST_FILE);
             if(file.exists()){
                 file.delete();
+                if(file.exists()){
+                    try {
+                        file.getCanonicalFile().delete();
+                        if(file.exists()){
+                            getApplicationContext().deleteFile(file.getName());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
 
             //after signing out, restart the current activity
