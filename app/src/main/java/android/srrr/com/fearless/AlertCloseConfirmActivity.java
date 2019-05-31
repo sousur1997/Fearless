@@ -106,10 +106,6 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            //check whether alert is ended or not
-            /*while (aControl.getAlreadyAlerted() == true){
-                //repeatedly check whether alert is still active or not
-            }*/
             jsonFileContent = readCacheJson(); //read json after returning back from service
             pendingEventListManage(jsonFileContent);
             return null;

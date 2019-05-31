@@ -15,7 +15,10 @@
     <color name="alert_fab_color">#FAAB1A</color>
     <color name="alert_fab_icon_color">#232F34</color>
     <color name="verify_badge_color">#16B960</color>
+    <color name="action_text_color">#0BD55F</color>
     <color name="not_verified_badge_color">#fc4a56</color>
+    <color name="card_view_color">#FFFFFF</color>
+    <color name="card_view_color_pressed">#E9E8E8</color>
 
     <!-- Screens background color-->
     <color name="bg_screen1">#f64c73</color>

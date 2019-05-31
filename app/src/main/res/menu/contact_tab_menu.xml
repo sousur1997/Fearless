@@ -7,4 +7,9 @@
         android:icon="@drawable/add_contact_icon"
         android:title="Add Contact"
         app:showAsAction="always"/>
+    <item android:id="@+id/contact_upload"
+        android:orderInCategory="100"
+        android:icon="@drawable/upload_light"
+        android:title="Add Contact"
+        app:showAsAction="always"/>
 </menu>

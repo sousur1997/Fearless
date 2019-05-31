@@ -49,6 +49,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
+import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
@@ -420,6 +421,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == PROFILE_ACTIVITY_CODE){
             retrieveImageToImageView();
+        }
+        if(requestCode == PICK_CONTACT){
+            for(Fragment fragment : getSupportFragmentManager().getFragments()){
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 }

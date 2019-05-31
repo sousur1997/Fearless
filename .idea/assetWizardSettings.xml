@@ -191,9 +191,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="alert_inactive" />
-                            <entry key="sourceFile" value="D:\Safety app Design\sync_pressed.svg" />
+                            <entry key="outputName" value="delete_icon" />
+                            <entry key="sourceFile" value="D:\Safety app Design\delete_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

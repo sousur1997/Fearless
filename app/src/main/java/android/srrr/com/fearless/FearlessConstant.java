@@ -14,6 +14,9 @@ public class FearlessConstant {
     public static final int PROFILE_ACTIVITY_CODE = 202;
     public static final int LOCATION_PERMISSION = 100;
     public static final int CALL_PERMISSION = 150;
+    public static final int PICK_CONTACT_PERMISSION = 170;
+    public static int REQUEST_MULTIPLE_PERMISSIONS = 124;
+    public static final int PICK_CONTACT = 200;
     public static final String ALERT_JSON_FILENAME = "Alert_Event_file.json";
     public static final String ALERT_COMPLETE = "Alert_Event_complete";
     public static final String PENDING_FILENAME = "pending_events.json";
@@ -22,4 +25,7 @@ public class FearlessConstant {
     public static final String FIRESTORE_WORKPLACE_COLLECTION = "WorkplaceInformation";
     public static final String HISTORY_LIST_FILE = "History_List.json";
     public static final String HISTORY_INDEX_KEY = "history_index";
+    public static final String CONTACT_LOCAL_FILENAME = "local_contact.json";
+    public static final String CONTACT_UPLOAD_PENDING = "pending_contact_upoad";
+    public static final String CONTACT_COLLECTION = "PersonalContacts";
 }

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
     android:layout_marginEnd="8dp"
@@ -13,19 +13,33 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    app:cardBackgroundColor="@color/card_view_color">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@mipmap/sos_contact_icon"
+            app:layout_constraintBottom_toTopOf="@+id/guideline37"
+            app:layout_constraintEnd_toStartOf="@+id/guideline31"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline30"
+            app:layout_constraintTop_toTopOf="@+id/guideline36" />
+
         <android.support.constraint.Guideline
-            android:id="@+id/guideline33"
+            android:id="@+id/guideline30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="20dp"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.03" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline32"
@@ -34,6 +48,14 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="20dp"
             app:layout_constraintGuide_percent="0.97" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            app:layout_constraintGuide_percent="0.85" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline34"
@@ -51,36 +73,17 @@
             app:layout_constraintGuide_begin="20dp"
             app:layout_constraintGuide_percent="0.18" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp"
-            app:layout_constraintGuide_percent="0.03" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:background="@mipmap/history_menu_alert_icon"
-            app:layout_constraintBottom_toTopOf="@+id/guideline37"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/guideline31"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline30"
-            app:layout_constraintTop_toTopOf="@+id/guideline36" />
-
         <TextView
             android:id="@+id/sos_name_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif"
-            android:text="Alert Time"
-            android:textSize="16sp"
+            android:text="Contact Name"
+            android:textSize="15sp"
+            android:textColor="@color/alert_fab_icon_color"
             app:layout_constraintBottom_toTopOf="@+id/guideline35"
             app:layout_constraintEnd_toStartOf="@+id/guideline33"
             app:layout_constraintStart_toStartOf="@+id/guideline31"
@@ -92,10 +95,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
-            android:text="date time"
+            android:text="9876543210"
+            android:textColor="@color/alert_fab_icon_color"
             android:textAlignment="textStart"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline37"
@@ -104,18 +108,19 @@
             app:layout_constraintTop_toTopOf="@+id/guideline35" />
 
         <ImageView
-            android:id="@+id/message_btn"
+            android:id="@+id/sos_call_list_btn"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/get_map"
             app:layout_constraintBottom_toTopOf="@+id/guideline37"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/guideline32"
             app:layout_constraintStart_toStartOf="@+id/guideline33"
-            app:layout_constraintTop_toTopOf="@+id/guideline36" />
+            app:layout_constraintTop_toTopOf="@+id/guideline36"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/call_btn" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline35"
@@ -123,7 +128,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="20dp"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.45" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline36"
@@ -131,7 +136,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="20dp"
-            app:layout_constraintGuide_percent="0.15" />
+            app:layout_constraintGuide_percent="0.05" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline37"
@@ -139,8 +144,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="20dp"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.87" />
 
     </android.support.constraint.ConstraintLayout>
-
 </android.support.v7.widget.CardView>
