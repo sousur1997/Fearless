@@ -285,8 +285,33 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
             @Override
             public void onRefresh() {
                 if(mAuth.getCurrentUser() != null) {
-                    //refresh contact from server
-                    downloadContacts();
+                    //refresh contact from server if sync is not done, ask to sync.
+                    if(manager.getBool(CONTACT_UPLOAD_PENDING, false) != true) { //if it is updated sync
+                        downloadContacts();
+                    }else{
+                        AlertDialog dialog;
+                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                        dialogBuilder.setTitle("All contacts are not synced");
+                        dialogBuilder.setMessage("Please sync contact lists before refreshing");
+                        dialogBuilder.setCancelable(false);
+                        dialogBuilder.setPositiveButton("Sync Now", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                refreshLayout.setRefreshing(false);
+                                contactSyncWithServer();
+                            }
+                        });
+                        dialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                refreshLayout.setRefreshing(false);
+                            }
+                        });
+                        dialog = dialogBuilder.create();
+                        dialog.show();
+                    }
                 }
                 else {
                     refreshLayout.setRefreshing(false);

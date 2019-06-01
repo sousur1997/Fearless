@@ -389,6 +389,9 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             case R.id.sign_up_item: //by pressing account setup, go to the account setup page, then refresh
                 startActivity(new Intent(AppActivity.this, RegisterActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return true;
+            case R.id.about_us_page: //by pressing account setup, go to the account setup page, then refresh
+                startActivity(new Intent(AppActivity.this, AboutUs.class));
+                return true;
             default:
                 return false;
         }

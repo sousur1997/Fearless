@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import static android.srrr.com.fearless.FearlessConstant.MAX_CONTACT_TO_ADD;
 import static android.srrr.com.fearless.FearlessConstant.SOS_NUMBER_COUNT;
@@ -179,8 +181,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void onItemMove(int fromPos, int toPos){
-        Object previous = listData.remove(fromPos);
-        listData.add(toPos > fromPos ? toPos - 1 : toPos, previous);
+        Collections.swap(listData,fromPos, toPos);
         notifyItemMoved(fromPos, toPos);
         listener.onContactUpdate();
     }

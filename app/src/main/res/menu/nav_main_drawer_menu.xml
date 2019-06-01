@@ -5,12 +5,12 @@
         <item android:id="@+id/nav_item_one"
             android:icon="@mipmap/menu_icon_test"
             android:title="Item 1" />
-        <item android:id="@+id/nav_item_two"
-            android:icon="@drawable/contact_edit_fab_icon"
-            android:title="Item 2" />
-        <item android:id="@+id/nav_item_three"
-            android:icon="@mipmap/menu_icon_test"
-            android:title="Item 3" />
+        <item android:id="@+id/app_settings_menu"
+            android:icon="@drawable/setting_menu_icon"
+            android:title="Settings" />
+        <item android:id="@+id/about_us_page"
+            android:icon="@drawable/about_us_icon"
+            android:title="About Us" />
     </group>
 
     <item android:id="@+id/acc_setup_group_item" android:title="Add more details">

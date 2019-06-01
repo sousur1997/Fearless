@@ -92,6 +92,9 @@
         <activity
             android:name=".AlertCloseConfirmActivity"
             android:theme="@style/profile_setup_theme"></activity>
+
+        <activity android:name=".AboutUs"
+            android:theme="@style/AppInnerTheme"></activity>
     </application>
 
 </manifest>

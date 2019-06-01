@@ -32,6 +32,8 @@
     <string name="gmap_api_key">AIzaSyAVhWF7kmLWVm4uny71NxOWfCME7P6Diow</string>
     <string name="firebase_project_id">fearless-238805</string>
 
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+
     <string-array name="help_line_numbers">
         <item>112</item>
         <item>100</item>
