@@ -28,4 +28,6 @@ public class FearlessConstant {
     public static final String CONTACT_LOCAL_FILENAME = "local_contact.json";
     public static final String CONTACT_UPLOAD_PENDING = "pending_contact_upoad";
     public static final String CONTACT_COLLECTION = "PersonalContacts";
+    public static final int MAX_CONTACT_TO_ADD = 10;
+    public static final int SOS_NUMBER_COUNT = 9;
 }

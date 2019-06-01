@@ -9,10 +9,18 @@
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeFragment"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
         map:cameraTargetLat="20.5"
         map:cameraTargetLng="78.9"
-        map:cameraTilt="60"/>
+        map:cameraTilt="60"
+        tools:context=".HomeFragment" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"

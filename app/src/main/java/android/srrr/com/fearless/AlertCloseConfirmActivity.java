@@ -21,6 +21,7 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -29,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,6 +53,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
 
     private AlertControl aControl;
     private FirebaseDatabase database;
+    private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
     private String userId;
 
@@ -72,6 +75,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         if(mAuth != null)
             userId = mAuth.getCurrentUser().getUid();
@@ -96,7 +100,6 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         syncBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(verifyLayout, "Please Wait. Syncing. . .", Snackbar.LENGTH_LONG).show();
                 syncHistory();
             }
         });
@@ -129,6 +132,9 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         List<AlertEvent> pendingList;
         Map<String, AlertEvent> finalMap = new HashMap<>();
 
+        jsonFileContent = readCacheJson(); //read json after returning back from service
+        pendingEventListManage(jsonFileContent);
+
         final File pendingFile = new File(getFilesDir(), PENDING_FILENAME);
         if(pendingFile.exists()){ //if file is present, then there are some pending event history
             pendingFileContent = readPendingListFile(PENDING_FILENAME);
@@ -144,13 +150,19 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            String key = "UpdateTime:" + new Long(System.currentTimeMillis()).toString();
+            Snackbar.make(verifyLayout, "Please Wait. Syncing. . .", Snackbar.LENGTH_LONG).show();
+
             DatabaseReference reference = database.getReference();
-            reference.child(HISTORY_COLLECTION).child(userId).child("UpdateTime:" + new Long(System.currentTimeMillis()).toString()).setValue(finalMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            reference.child(HISTORY_COLLECTION).child(userId).child(key).setValue(finalMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         Snackbar.make(verifyLayout, "Sync Complete", Snackbar.LENGTH_LONG).show();
-                        pendingFile.delete();
+                        if(pendingFile.delete()){
+                            Snackbar.make(verifyLayout, "All pending data synced", Snackbar.LENGTH_LONG).show();
+                        }
                     }else if(task.getException() instanceof FirebaseNetworkException){
                         Snackbar.make(verifyLayout, "Please check your network connection", Snackbar.LENGTH_LONG).show();
                     }else{
@@ -158,6 +170,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                     }
                 }
             });
+
         }else{
             Snackbar.make(verifyLayout, "History list is already updated", Snackbar.LENGTH_LONG).show();
         }
@@ -166,18 +179,22 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
     private void pendingEventListManage(String eventJson){
         Gson gson = new Gson();
         AlertEvent currentEvent = gson.fromJson(eventJson, AlertEvent.class); //convert json string to AlertEvent
-        List<AlertEvent> pendingEventList = new ArrayList<>();
+        AlertEvent[] pendingEventList = null;
+        ArrayList<AlertEvent> finalList = new ArrayList<>();
 
         String pendingJson;
 
         File pendingFile = new File(getFilesDir(), PENDING_FILENAME);
         if(pendingFile.exists()){ //if file is present, then there are some pending event history
             pendingJson = readPendingListFile(PENDING_FILENAME);
-            pendingEventList = gson.fromJson(pendingJson, ArrayList.class);
+            pendingEventList = gson.fromJson(pendingJson, AlertEvent[].class);
         }
 
-        pendingEventList.add(currentEvent); //add current event and make it as json file again
-        pendingJson = gson.toJson(pendingEventList);
+        if(pendingEventList != null){
+            finalList = new ArrayList<>(Arrays.asList(pendingEventList)); //convert pendinglists to array list
+        }
+        finalList.add(currentEvent); //add current event and make it as json file again
+        pendingJson = gson.toJson(finalList);
 
         //write back to the file
         writePendingListFile(PENDING_FILENAME, pendingJson);

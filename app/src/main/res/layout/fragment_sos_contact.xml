@@ -21,6 +21,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:background="@color/list_bg"
             app:layout_constraintBottom_toTopOf="@+id/guideline92"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

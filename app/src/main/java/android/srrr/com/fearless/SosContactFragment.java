@@ -2,10 +2,10 @@ package android.srrr.com.fearless;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,25 +22,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,15 +66,16 @@ import static android.srrr.com.fearless.FearlessConstant.CALL_PERMISSION;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_COLLECTION;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPLOAD_PENDING;
+import static android.srrr.com.fearless.FearlessConstant.MAX_CONTACT_TO_ADD;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT_PERMISSION;
 import static android.srrr.com.fearless.FearlessConstant.REQUEST_MULTIPLE_PERMISSIONS;
 
-public class SosContactFragment extends Fragment {
+public class SosContactFragment extends Fragment implements ContactUpdateListener {
 
     private RecyclerView contact_List_view;
     private ArrayList<Object> contact_item_list;
-    private ColorDrawable swipeBackground = new ColorDrawable(Color.parseColor("#FFF12C39"));
+    private ColorDrawable swipeBackground = new ColorDrawable(Color.parseColor("#FFF7F7F7"));
     private Drawable deleteIcon;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
@@ -79,6 +88,7 @@ public class SosContactFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ArrayList<PersonalContact> contactArrayList;
     private PreferenceManager manager;
+    private ArrayList<PersonalContact> initialList;
 
     public SosContactFragment() {
         // Required empty public constructor
@@ -143,9 +153,8 @@ public class SosContactFragment extends Fragment {
                         String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                         phoneContact.setName(name);
 
-                        adapter.addItem(phoneContact);
+                        adapter.addItem(phoneContact, true);
                         contact_List_view.smoothScrollToPosition(adapter.getItemCount() - 1);
-                        updateLocalContactFile();
                     }
                     catch (Exception ex){
                         ex.printStackTrace();
@@ -277,7 +286,7 @@ public class SosContactFragment extends Fragment {
             public void onRefresh() {
                 if(mAuth.getCurrentUser() != null) {
                     //refresh contact from server
-                    refreshLayout.setRefreshing(false);
+                    downloadContacts();
                 }
                 else {
                     refreshLayout.setRefreshing(false);
@@ -285,7 +294,7 @@ public class SosContactFragment extends Fragment {
             }
         });
 
-        adapter = new ContactListAdapter(getActivity(), contact_item_list);
+        adapter = new ContactListAdapter(getActivity(), contact_item_list, this);
         contact_List_view.setHasFixedSize(true);
         contact_List_view.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         contact_List_view.setAdapter(adapter);
@@ -300,57 +309,122 @@ public class SosContactFragment extends Fragment {
         Gson gson = new Gson();
         String jsonStr = readJsonFile(CONTACT_LOCAL_FILENAME); //read local file from array
         contactArr = gson.fromJson(jsonStr, PersonalContact[].class);
-        Map<String, PersonalContact> psersonalContacts = new HashMap<>();
+        final Map<String, PersonalContact> personalContacts = new HashMap<>();
 
         if(contactArr != null) {
             for (int i = 0; i<contactArr.length; i++) {
                 if (contactArr[i] != null) {
-                    psersonalContacts.put("" + i, contactArr[i]);
+                    personalContacts.put("" + i, contactArr[i]);
                 }
             }
             refreshLayout.setRefreshing(true);
-            firestore.collection(CONTACT_COLLECTION).document(userId).set(psersonalContacts).addOnCompleteListener(new OnCompleteListener<Void>() {
+            firestore.collection(CONTACT_COLLECTION).document(userId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
-                        manager.setBool(CONTACT_UPLOAD_PENDING, false);
-                        refreshLayout.setRefreshing(false);
-                        uploadItem.setVisible(false);
-                        Toast.makeText(getActivity().getApplicationContext(), "Contact Sync Complete", Toast.LENGTH_LONG).show();
+                        firestore.collection(CONTACT_COLLECTION).document(userId).set(personalContacts).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    manager.setBool(CONTACT_UPLOAD_PENDING, false);
+                                    refreshLayout.setRefreshing(false);
+                                    uploadItem.setVisible(false);
+                                    Toast.makeText(getActivity().getApplicationContext(), "Contact Sync Complete", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getActivity().getApplicationContext(), "Unable to Update", Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
     }
 
-    private void updateLocalContactFile(){
+    private void updateLocalContactFile() {
         //List to store only personal contacts
         contactArrayList = new ArrayList<>();
-        for(Object item : adapter.getListItem()){
-            if(item instanceof PersonalContact){
+        for (Object item : adapter.getListItem()) {
+            if (item instanceof PersonalContact) {
                 contactArrayList.add((PersonalContact) item);
             }
         }
 
         Gson gson = new Gson();
         String jsonStr = gson.toJson(contactArrayList);
-        writeHistoryListFile(CONTACT_LOCAL_FILENAME, jsonStr); //store contact into local storage
+        writeContactListFile(CONTACT_LOCAL_FILENAME, jsonStr); //store contact into local storage
 
         manager.setBool(CONTACT_UPLOAD_PENDING, true); //contact is not synced with server
-        uploadItem.setVisible(true);
+        if (uploadItem != null){
+            uploadItem.setVisible(true);
+        }
+    }
+
+    private void downloadContacts(){
+        final Gson gson = new Gson();
+        //download file from server
+
+        initialList = new ArrayList<>();
+        DocumentReference docRef = firestore.collection(CONTACT_COLLECTION).document(userId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if (snapshot != null) {
+                        JsonElement jsonElement = gson.toJsonTree(snapshot.getData());
+                        try {
+                            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                            for (int i = 0; i < MAX_CONTACT_TO_ADD; i++) {
+                                if (jsonObject.get("" + i) != null) {
+                                    PersonalContact contact = gson.fromJson(jsonObject.get("" + i), PersonalContact.class);
+                                    initialList.add(i, contact);
+                                }
+                            }
+
+                            //add fetched contact into list
+                            String jsonStr = gson.toJson(initialList);
+                            writeContactListFile(CONTACT_LOCAL_FILENAME, jsonStr); //store contact into local storage
+
+                            for (PersonalContact ct : initialList) {
+                                adapter.addItem(ct, false);
+                            }
+                        }catch (IllegalStateException e){
+                            e.printStackTrace();
+                        }
+                        refreshLayout.setRefreshing(false);
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void fetchLocalContactFile(){
         PersonalContact[] contactArr;
         Gson gson = new Gson();
-        String jsonStr = readJsonFile(CONTACT_LOCAL_FILENAME); //read local file from array
-        contactArr = gson.fromJson(jsonStr, PersonalContact[].class);
 
-        if(contactArr != null) {
-            for (PersonalContact item : contactArr) {
-                if (item != null) {
-                    adapter.addItem(item);
+        File file = new File(getActivity().getFilesDir(), CONTACT_LOCAL_FILENAME);
+        if(file.exists()) {
+            String jsonStr = readJsonFile(CONTACT_LOCAL_FILENAME); //read local file from array
+            contactArr = gson.fromJson(jsonStr, PersonalContact[].class);
+
+            if (contactArr != null) {
+                for (PersonalContact item : contactArr) {
+                    if (item != null) {
+                        adapter.addItem(item, false);
+                    }
                 }
+            }
+        }else{
+            //if user is valid, then download contact from server
+            if(user != null) {
+                downloadContacts();
+            }else{
+                refreshLayout.setRefreshing(false);
             }
         }
     }
@@ -377,7 +451,7 @@ public class SosContactFragment extends Fragment {
         return listJson;
     }
 
-    private void writeHistoryListFile(String filename, String content){
+    private void writeContactListFile(String filename, String content){
         try {
             File jsonOpFile = new File(getActivity().getFilesDir(), filename);
             FileOutputStream fout = new FileOutputStream(jsonOpFile);
@@ -401,7 +475,6 @@ public class SosContactFragment extends Fragment {
                     return false;
                 }
                 adapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
-                updateLocalContactFile();
                 return true;
             }
 
@@ -431,7 +504,6 @@ public class SosContactFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 if (direction == ItemTouchHelper.LEFT) {
                     adapter.removeItem(viewHolder.getAdapterPosition(), viewHolder);
-                    updateLocalContactFile();
                 }
             }
 
@@ -468,10 +540,16 @@ public class SosContactFragment extends Fragment {
                 }
                 c.restore();
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
             }
         };
 
         ItemTouchHelper helper = new ItemTouchHelper(simpleCallback);
         helper.attachToRecyclerView(contact_List_view);
+    }
+
+    @Override
+    public void onContactUpdate() {
+        updateLocalContactFile();
     }
 }

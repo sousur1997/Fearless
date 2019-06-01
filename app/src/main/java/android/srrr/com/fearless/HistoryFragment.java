@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import static android.srrr.com.fearless.FearlessConstant.ALERT_JSON_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_COLLECTION;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.PENDING_FILENAME;
@@ -57,6 +59,7 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
     private DatabaseReference reference;
     private ImageView historyBack;
     private TextView historyBackTV;
+    private String jsonFileContent;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -144,12 +147,42 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
         }
     }
 
+    private String readCacheJson(){
+        String json = "";
+        int n;
+        try {
+            FileInputStream fis = getActivity().getApplicationContext().openFileInput(ALERT_JSON_FILENAME);
+            StringBuffer fileContent = new StringBuffer("");
+
+            byte[] buffer = new byte[4096];
+            while((n = fis.read(buffer)) != -1){
+                fileContent.append(new String(buffer, 0, n));
+            }
+
+            json = fileContent.toString();
+            fis.close();
+
+            File file = new File(getActivity().getFilesDir(), ALERT_JSON_FILENAME);
+            if(file.exists()){
+                file.delete(); //delete the file after reading
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
     private void syncHistory(){
         Gson gson = new Gson();
         String pendingFileContent;
         AlertEvent[] pendingArr;
         List<AlertEvent> pendingList;
         Map<String, AlertEvent> finalMap = new HashMap<>();
+
+        jsonFileContent = readCacheJson(); //read json after returning back from service
+        pendingEventListManage(jsonFileContent);
 
         final File pendingFile = new File(getActivity().getFilesDir(), PENDING_FILENAME);
         if(pendingFile.exists()){ //if file is present, then there are some pending event history
@@ -195,6 +228,68 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void writePendingListFile(String filename, String content){
+        try {
+            File jsonOpFile = new File(getActivity().getFilesDir(), filename);
+            FileOutputStream fout = new FileOutputStream(jsonOpFile);
+            OutputStreamWriter writer = new OutputStreamWriter(fout);
+
+            writer.append(content); //add json into file
+            writer.close();
+            fout.flush();
+            fout.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void pendingEventListManage(String eventJson){
+        Gson gson = new Gson();
+        AlertEvent currentEvent = gson.fromJson(eventJson, AlertEvent.class); //convert json string to AlertEvent
+        AlertEvent[] pendingEventList = null;
+        ArrayList<AlertEvent> finalList = new ArrayList<>();
+
+        String pendingJson;
+
+        File pendingFile = new File(getActivity().getFilesDir(), PENDING_FILENAME);
+        if(pendingFile.exists()){ //if file is present, then there are some pending event history
+            pendingJson = readPendingListFile(PENDING_FILENAME);
+            pendingEventList = gson.fromJson(pendingJson, AlertEvent[].class);
+        }
+
+        if(pendingEventList != null){
+            finalList = new ArrayList<>(Arrays.asList(pendingEventList)); //convert pendinglists to array list
+        }
+        finalList.add(currentEvent); //add current event and make it as json file again
+        pendingJson = gson.toJson(finalList);
+
+        //write back to the file
+        writePendingListFile(PENDING_FILENAME, pendingJson);
+        Log.e("Pending Json Data: ", pendingJson);
+    }
+
+    private String readPendingListFile(String filename){
+        String pendingListJson = "";
+        int n;
+        try {
+            FileInputStream fis = getActivity().getApplicationContext().openFileInput(filename);
+            StringBuffer fileContent = new StringBuffer();
+
+            byte[] buffer = new byte[4096];
+            while((n = fis.read(buffer)) != -1){
+                fileContent.append(new String(buffer, 0, n));
+            }
+            fis.close();
+            pendingListJson = fileContent.toString();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pendingListJson;
     }
 
     private String readJsonFile(String filename){

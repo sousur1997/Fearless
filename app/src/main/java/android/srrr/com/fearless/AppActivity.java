@@ -48,6 +48,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
@@ -338,29 +339,34 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             prefManager.setBool("verify_email_sent", false);
             Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
 
-            //delete the history file:
-            File file = new File(getFilesDir(), HISTORY_LIST_FILE);
-            if(file.exists()){
-                file.delete();
-                if(file.exists()){
-                    try {
-                        file.getCanonicalFile().delete();
-                        if(file.exists()){
-                            getApplicationContext().deleteFile(file.getName());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            //delete the history file, and contact file:
+            fileDelete(HISTORY_LIST_FILE);
+            fileDelete(CONTACT_LOCAL_FILENAME);
 
-                }
-            }
 
             //after signing out, restart the current activity
             Intent loginIntent = getIntent();
             finish();
             startActivity(loginIntent);
         }
+    }
 
+    private void fileDelete(String filename){
+        File file = new File(getFilesDir(), filename);
+        if(file.exists()){
+            file.delete();
+            if(file.exists()){
+                try {
+                    file.getCanonicalFile().delete();
+                    if(file.exists()){
+                        getApplicationContext().deleteFile(file.getName());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     @Override
