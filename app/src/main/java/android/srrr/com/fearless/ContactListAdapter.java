@@ -61,7 +61,6 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.context = context;
         this.listData = list;
         this.listener = listener; //set up the contact listener
-
     }
 
     @Override

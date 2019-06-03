@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature
@@ -28,8 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".MapPathActivity"
-            android:theme="@style/AppInnerTheme"></activity>
+        <activity android:name=".SettingsActivity"
+            android:theme="@style/AppInnerTheme">
+        </activity>
+        <activity
+            android:name=".MapPathActivity"
+            android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">
@@ -91,10 +95,10 @@
 
         <activity
             android:name=".AlertCloseConfirmActivity"
-            android:theme="@style/profile_setup_theme"></activity>
-
-        <activity android:name=".AboutUs"
-            android:theme="@style/AppInnerTheme"></activity>
+            android:theme="@style/profile_setup_theme" />
+        <activity
+            android:name=".AboutUs"
+            android:theme="@style/AppInnerTheme" />
     </application>
 
 </manifest>

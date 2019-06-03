@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="General">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_automatic_message_repeat"
+            android:summary="Enable this to send Alert Messages Repeatedly"
+            android:title="Automatic Message Repeat" />
+
+        <ListPreference
+            android:defaultValue="5"
+            android:dialogTitle="Select duration"
+            android:entries="@array/settings_sms_duration_time"
+            android:entryValues="@array/settings_sms_duration_time_values"
+            android:key="automatic_message_repeat_duration"
+            android:summary="Select time interval to send SMS"
+            android:title="Select SMS Duration Time"
+            android:dependency="key_automatic_message_repeat"/>
+
+        <ListPreference
+            android:defaultValue="3"
+            android:dialogTitle="Select number of contacts"
+            android:entries="@array/settings_top_contacts"
+            android:entryValues="@array/settings_top_contacts"
+            android:key="key_select_top_contacts"
+            android:summary="Click to select number of preferred contacts"
+            android:title="Select Top Contacts" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_call_enabled"
+            android:summary="Click to enable calling the most prioritized contact"
+            android:title="CALL Enabled" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="automatic_call"
+            android:summary="Check this to enable automatic call to the most prioritized contact during alert"
+            android:title="Automatic Call"
+            android:dependency="key_call_enabled"/>
+
+        <ListPreference
+            android:defaultValue="30"
+            android:dialogTitle="Select History Update Interval"
+            android:entries="@array/settings_history_update_interval"
+            android:entryValues="@array/settings_history_update_interval_values"
+            android:key="key_history_update_interval"
+            android:summary="Select the time interval to store location history"
+            android:title="Location Update Interval" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

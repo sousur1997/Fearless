@@ -12,14 +12,14 @@ import java.util.Locale;
 
 public class AlertEvent {
     private String timestamp;
-    private int minuteOffset;
+    private int Offset;
     private List<LocationLatLng> locationArray;
 
     //create an event with current timestamp, minute offset
-    public AlertEvent(int minuteOffset){
+    public AlertEvent(int Offset){
         Long timestampLong = new Long(System.currentTimeMillis());
         this.timestamp = timestampLong.toString(); //get the UNIX timestamp
-        this.minuteOffset = minuteOffset;
+        this.Offset = Offset;
         locationArray = new ArrayList<>();
     }
 
@@ -32,11 +32,11 @@ public class AlertEvent {
     }
 
     public int getMinuteOffset() {
-        return minuteOffset;
+        return Offset;
     }
 
-    public void setMinuteOffset(int minuteOffset) {
-        this.minuteOffset = minuteOffset;
+    public void setMinuteOffset(int Offset) {
+        this.Offset = Offset;
     }
 
     public List<LocationLatLng> getLocationArray() {
@@ -56,7 +56,7 @@ public class AlertEvent {
     @Override
     public String toString() {
         String AlertStr = "";
-        AlertStr += "{\n\ttimestamp:"+timestamp+"\n\toffset:"+minuteOffset+"\n\tLocation:"+locationArray.toString()+"\n}";
+        AlertStr += "{\n\ttimestamp:"+timestamp+"\n\toffset:"+Offset+"\n\tLocation:"+locationArray.toString()+"\n}";
         return AlertStr;
     }
 

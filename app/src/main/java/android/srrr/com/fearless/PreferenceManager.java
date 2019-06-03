@@ -38,4 +38,8 @@ public class PreferenceManager {
     public boolean isFirstTimeLaunch(){
         return sp.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
+
+    public SharedPreferences getSharedPref(){
+        return sp;
+    }
 }

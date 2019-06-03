@@ -93,6 +93,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
         aControl.setAlertInitiator(false);
+        aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
@@ -379,18 +380,21 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                     startActivity(new Intent(AppActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
                 return true;
-            case R.id.account_setup_item: //by pressing account setup, go to the account setup page, then refresh
+            case R.id.account_setup_item:
                 startActivity(new Intent(AppActivity.this, ProfileSetup.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
                 return true;
-            case R.id.workplace_setup_item: //by pressing account setup, go to the account setup page, then refresh
+            case R.id.workplace_setup_item:
                 startActivity(new Intent(AppActivity.this, WorkplaceSetup.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return true;
-            case R.id.sign_up_item: //by pressing account setup, go to the account setup page, then refresh
+            case R.id.sign_up_item:
                 startActivity(new Intent(AppActivity.this, RegisterActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return true;
-            case R.id.about_us_page: //by pressing account setup, go to the account setup page, then refresh
+            case R.id.about_us_page:
                 startActivity(new Intent(AppActivity.this, AboutUs.class));
+                return true;
+            case R.id.app_settings_menu:
+                startActivity(new Intent(AppActivity.this, SettingsActivity.class));
                 return true;
             default:
                 return false;
