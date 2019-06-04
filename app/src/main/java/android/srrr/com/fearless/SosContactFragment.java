@@ -106,7 +106,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sos_contact, container, false);
     }
-
+/*
     private boolean runtime_contact_permission() {
         if (Build.VERSION.SDK_INT >= 21 && ContextCompat.checkSelfPermission(
                 getActivity().getApplicationContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -114,8 +114,8 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
             return true;
         }
         return false;
-    }
-
+    }*/
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -126,7 +126,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
                 runtime_contact_permission();
             }
         }
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

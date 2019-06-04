@@ -114,14 +114,14 @@ public class AlertInitiator extends Service {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (!(isCancelled() || flag_canceled == true)) {
-                Toast.makeText(getApplicationContext(), "Service Done", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "New Alert Raised", Toast.LENGTH_LONG).show();
                 stopForeground(true);
                 stopSelf();
                 alertControl.toggleAlertInitiator();
                 alertControl.toggleAlreadyAlerted();
                 startAlert();
             }else{
-                Toast.makeText(getApplicationContext(), "Interrupted", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Alert is canceled", Toast.LENGTH_LONG).show();
             }
         }
     }

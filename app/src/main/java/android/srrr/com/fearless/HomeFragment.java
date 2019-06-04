@@ -1,10 +1,9 @@
 package android.srrr.com.fearless;
 
-import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,10 +25,6 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,9 +37,10 @@ import com.google.firebase.auth.FirebaseUser;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.SEND_SMS;
 import static android.content.Context.LOCATION_SERVICE;
-import static android.srrr.com.fearless.FearlessConstant.CALL_PERMISSION;
-import static android.srrr.com.fearless.FearlessConstant.LOCATION_PERMISSION;
+import static android.srrr.com.fearless.FearlessConstant.ALL_PERMISSION;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
@@ -52,20 +48,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     FloatingActionButton pol_fab, hos_fab;
     private GoogleMap gMap;
     private LocationManager locationManager;
-    private Location locaton;
     private Double lat, lng;
-    private Boolean permission = false;
     private FirebaseAuth mAuth;
-    private boolean firstTime = true;
     private CoordinatorLayout main_coord;
     private SharedPreferences sharedPref;
 
     private LocationFetch loc_fetch;
 
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
-    PendingResult<LocationSettingsResult> result;
-    final static int REQUEST_LOCATION = 199;
+    String[] Permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, CALL_PHONE, READ_CONTACTS, SEND_SMS};
 
     public HomeFragment() {
         // Required empty public constructor
@@ -131,10 +121,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             Toast.makeText(getActivity().getApplicationContext(), "You are not logged in", Toast.LENGTH_LONG).show();
         }
 
-        if(runtime_permission()) { //check for runtime permissions
+        if(!hasPermission(getActivity().getApplicationContext(), Permissions)){
+            requestPermissions(Permissions, ALL_PERMISSION);
             new LocationUpdateTask().execute();
         }
-        runtime_call_permission();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.g_map);
         mapFragment.getMapAsync(this);
 
@@ -158,9 +149,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         loc_fetch.fetchCurrentLocation();
         lat = loc_fetch.fetchLatitude();
         lng = loc_fetch.fetchLongitude();
-        /*Toast.makeText(getActivity().getApplicationContext(), "Search:Police Station" +
-                        "\nLat:" + lat + "\nLng:"+lng,
-                Toast.LENGTH_LONG).show();*/
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showGPSDisabledAlertToUser();
@@ -192,49 +180,31 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    private boolean runtime_permission() {
-        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(
-                getActivity().getApplicationContext(),
-                ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                        ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
-            return true;
+    private static boolean hasPermission(Context context, String... Permissions){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && Permissions != null){
+            for(String permission : Permissions){
+                if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
+                    return false;
+                }
+            }
         }
-        return false;
-    }
-
-    private boolean runtime_call_permission() {
-        if (Build.VERSION.SDK_INT >= 21 && ContextCompat.checkSelfPermission(
-                getActivity().getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{CALL_PHONE}, CALL_PERMISSION);
-            return true;
-        }
-        return false;
+        return true;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-            } else {
-                runtime_permission(); //if the permissions are not available, ask for the permission
-            }
-        }
-
-        if(requestCode == CALL_PERMISSION){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-            }else{
-                runtime_call_permission();
+        if(requestCode == ALL_PERMISSION){
+            for(int i = 0; i<grantResults.length; i++){
+                if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                    hasPermission(getActivity().getApplicationContext(), Permissions);
+                }
             }
         }
     }
 
     public void centreMapOnLocation(Double lat, Double lng, String title) {
-
         LatLng userLocation = new LatLng(lat, lng);
         gMap.clear();
         gMap.addMarker(new MarkerOptions().position(userLocation).title(title));

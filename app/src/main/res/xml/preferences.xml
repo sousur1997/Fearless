@@ -29,7 +29,7 @@
             android:defaultValue="true"
             android:key="key_call_enabled"
             android:summary="Click to enable calling the most prioritized contact"
-            android:title="CALL Enabled" />
+            android:title="Calling Top Most Contact" />
 
         <CheckBoxPreference
             android:defaultValue="true"

@@ -36,14 +36,5 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             context.sendBroadcast(it);
         }
-
-        /*if (intent.getAction().equals(ALERT_BROADCAST_STOP)) {
-            Intent alert_stop = new Intent(context, AlertService.class);
-            alert_stop.setAction(ACTUAL_STOP_ALERT);
-            ContextCompat.startForegroundService(context, alert_stop);
-
-            Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            context.sendBroadcast(it);
-        }*/
     }
 }

@@ -93,7 +93,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
         aControl.setAlertInitiator(false);
-        aControl.setAlreadyAlerted(false);
+        //aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
         bAppBar = findViewById(R.id.bottomAppBar);
