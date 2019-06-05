@@ -39,6 +39,7 @@ import java.util.Map;
 
 import static android.srrr.com.fearless.FearlessConstant.ACTUAL_STOP_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_STOP;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_RESULT_CODE;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_JSON_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_COLLECTION;
 import static android.srrr.com.fearless.FearlessConstant.PENDING_FILENAME;
@@ -89,6 +90,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                     if (intent.getAction().equals(ALERT_BROADCAST_STOP)) {
                         Intent alert_stop = new Intent(AlertCloseConfirmActivity.this, AlertService.class);
                         alert_stop.setAction(ACTUAL_STOP_ALERT);
+                        setResult(ALERT_CLOSE_RESULT_CODE, intent);
                         ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
                         endTask = new ServiceEndTask();
                         endTask.execute();

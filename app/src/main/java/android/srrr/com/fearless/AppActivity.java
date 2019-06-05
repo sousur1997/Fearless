@@ -1,13 +1,21 @@
 package android.srrr.com.fearless;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,6 +35,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,16 +50,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_STOP;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_REQUEST_CODE;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_RESULT_CODE;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
+import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
@@ -81,13 +98,17 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private StorageReference storage;
     private StorageReference profileImageReference;
     private View profile_image_prog;
+    private ArrayList<PersonalContact> contactList;
 
     private AlertControl aControl;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
+        contactList = new ArrayList<>();
+
         aControl = AlertControl.getInstance(getApplicationContext());
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
@@ -100,6 +121,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         navView = findViewById(R.id.nav_menu);
 
         alert_fab = findViewById(R.id.alert_fab);
+
+        if(aControl.getAlreadyAlerted() == false){
+            alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+        }else{
+            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+        }
 
         setSupportActionBar(toolbar);
         setSupportActionBar(bAppBar);
@@ -132,7 +159,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(AppActivity.this, ProfilePage.class), PROFILE_ACTIVITY_CODE);
+                Intent intent = new Intent(AppActivity.this, ProfilePage.class);
+                startActivityForResult(intent, PROFILE_ACTIVITY_CODE);
             }
         });
 
@@ -194,35 +222,66 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(user != null) {
-                    if (aControl.getAlertInit() == false) {
-                        if (aControl.getAlreadyAlerted() == false) {
-                            startService();
-                            aControl.toggleAlertInitiator();
+                getPersonalContacts();
+                if(contactList.size() > 0) {
+                    if (user != null) {
+                        if (aControl.getAlertInit() == false) {
+                            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+                            if (aControl.getAlreadyAlerted() == false) {
+                                startService();
+                                aControl.toggleAlertInitiator();
+                            } else {
+                                Intent intent = new Intent(AppActivity.this, AlertCloseConfirmActivity.class);
+                                intent.setAction(ALERT_BROADCAST_STOP);
+                                startActivityForResult(intent, ALERT_CLOSE_REQUEST_CODE);
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "One alert is active", Toast.LENGTH_LONG).show();
+                            stopService();
+                            alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+                            aControl.toggleAlertInitiator();
                         }
                     } else {
-                        stopService();
-                        aControl.toggleAlertInitiator();
+                        AlertDialog dialog;
+                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AppActivity.this);
+                        dialogBuilder.setTitle("Alert failed");
+                        dialogBuilder.setMessage("Alert feature is not available for Guest Users");
+                        dialogBuilder.setCancelable(false);
+                        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog = dialogBuilder.create();
+                        dialog.show();
                     }
                 }else{
-                    AlertDialog dialog;
-                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AppActivity.this);
-                    dialogBuilder.setTitle("Alert failed");
-                    dialogBuilder.setMessage("Alert feature is not available for Guest Users");
-                    dialogBuilder.setCancelable(false);
-                    dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog = dialogBuilder.create();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
+                            .setCancelable(false)
+                            .setTitle("Cannot Raise Alert!")
+                            .setMessage("You have no personal contact in your list. Add at least one contact to raise alert")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
                     dialog.show();
                 }
             }
         });
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(INIT_BROADCAST_FILTER);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
     private void retrieveImageToImageView(){
@@ -394,11 +453,68 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 startActivity(new Intent(AppActivity.this, AboutUs.class));
                 return true;
             case R.id.app_settings_menu:
-                startActivity(new Intent(AppActivity.this, SettingsActivity.class));
+                if(aControl.getAlreadyAlerted() == false){
+                    startActivity(new Intent(AppActivity.this, SettingsActivity.class));
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
+                            .setCancelable(false)
+                            .setTitle("Cannot Open Settings Page")
+                            .setMessage("One alert is active. Please close alert to enter into the Settings page")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void getPersonalContacts(){
+        PersonalContact[] contactArr;
+        Gson gson = new Gson();
+
+        contactList = new ArrayList<>();
+        File file = new File(getFilesDir(), CONTACT_LOCAL_FILENAME);
+        if(file.exists()) {
+            String jsonStr = readJsonFile(CONTACT_LOCAL_FILENAME); //read local file from array
+            contactArr = gson.fromJson(jsonStr, PersonalContact[].class);
+
+            if (contactArr != null) {
+                for (PersonalContact item : contactArr) {
+                    if (item != null) {
+                        contactList.add(item);
+                    }
+                }
+            }
+        }
+    }
+    private String readJsonFile(String filename){
+        String listJson = "";
+        int n;
+        try {
+            FileInputStream fis = getApplicationContext().openFileInput(filename);
+            StringBuffer fileContent = new StringBuffer();
+
+            byte[] buffer = new byte[4096];
+            while((n = fis.read(buffer)) != -1){
+                fileContent.append(new String(buffer, 0, n));
+            }
+            fis.close();
+            listJson = fileContent.toString();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listJson;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -439,6 +555,21 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             for(Fragment fragment : getSupportFragmentManager().getFragments()){
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
+        }
+        if(requestCode == ALERT_CLOSE_REQUEST_CODE){
+            if(resultCode == ALERT_CLOSE_RESULT_CODE){
+                alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(aControl.getAlreadyAlerted() == false){
+            alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+        }else{
+            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
         }
     }
 }

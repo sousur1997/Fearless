@@ -106,9 +106,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="D:\Safety app Design\App_Icon_Backgroud.png" />
-                                      <entry key="foregroundImage" value="D:\Safety app Design\Fearless_App_Icon_design.png" />
-                                      <entry key="previewDensity" value="XXXHIGH" />
+                                      <entry key="backgroundColor" value="effffd" />
+                                      <entry key="backgroundImage" value="D:\Safety app Design\f_logo_bg.png" />
+                                      <entry key="foregroundImage" value="D:\Safety app Design\f_logo_transparent1.png" />
                                     </map>
                                   </option>
                                 </PersistentState>

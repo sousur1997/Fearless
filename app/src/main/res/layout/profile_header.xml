@@ -22,7 +22,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline16"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline25" />
+        app:layout_constraintTop_toTopOf="@+id/guideline25"
+        android:transitionName="profile_image_transition"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
@@ -93,6 +94,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/comforta_font"
         android:text="Your Email"
+        android:transitionName="email_transition"
         android:textAlignment="viewStart"
         android:textColor="@android:color/background_light"
         android:textSize="14sp"

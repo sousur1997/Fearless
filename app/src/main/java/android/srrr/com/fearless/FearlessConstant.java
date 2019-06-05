@@ -31,4 +31,7 @@ public class FearlessConstant {
     public static final String CONTACT_COLLECTION = "PersonalContacts";
     public static final int MAX_CONTACT_TO_ADD = 10;
     public static final int SOS_NUMBER_COUNT = 9;
+    public static final int ALERT_CLOSE_RESULT_CODE = 222;
+    public static final int ALERT_CLOSE_REQUEST_CODE = 223;
+    public static final String INIT_BROADCAST_FILTER = "init_broadcast_filter";
 }

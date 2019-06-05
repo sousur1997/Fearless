@@ -191,9 +191,9 @@ public class AlertService extends Service implements LocationListener{
 
         String tempAddress = getCurrentAddress(location.getLatitude(), location.getLongitude());
         if(tempAddress == null && !isNetworkConnected()) { //if the address is found, otherwise network is not connected
-            address = "Current address is not found, Get location from this link\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
+            address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
         }else{
-            address = "Current address: " + tempAddress + "\nView on Google Map: https://maps.google.com/?q="+latitude+","+longitude+"";
+            address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"\nCurrent address:" + tempAddress;
         }
 
         if(automaticMessageRepeat) {
@@ -375,9 +375,15 @@ public class AlertService extends Service implements LocationListener{
 
         for(int i = 0; i<contact_count; i++){
             try {
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
-                //Toast.makeText(getApplicationContext(), "SMS send to " + contactList.get(i).getPhone(), Toast.LENGTH_LONG).show();
+                //***Important code. Will may charge money for SMS
+                /*SmsManager smsManager = SmsManager.getDefault();
+                if(message.length() > 160){
+                    ArrayList<String> parts = smsManager.divideMessage(message);
+                    smsManager.sendMultipartTextMessage(contactList.get(i).getPhone(), null, parts, null, null);
+                }else{
+                    smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
+                }*/
+                Toast.makeText(getApplicationContext(), "SMS send to " + contactList.get(i).getPhone(), Toast.LENGTH_LONG).show();
             }catch(Exception e) {
                 e.printStackTrace();
             }

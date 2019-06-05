@@ -11,6 +11,7 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.google.firebase.database.core.Constants;
@@ -18,6 +19,7 @@ import com.google.firebase.database.core.Constants;
 import static android.srrr.com.fearless.FearlessConstant.ACTUAL_START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_BROADCAST;
+import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 
@@ -54,6 +56,10 @@ public class AlertInitiator extends Service {
             if (intent.getAction().equals(STOP_ALERT)) {
                 alertTask.cancel(true);
                 flag_canceled = true;
+
+                Intent i = new Intent(INIT_BROADCAST_FILTER);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+
                 stopForeground(true);
                 stopSelf();
             } else if(intent.getAction().equals(START_ALERT)){
