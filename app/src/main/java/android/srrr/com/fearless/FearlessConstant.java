@@ -9,7 +9,15 @@ public class FearlessConstant {
     public static final String ALERT_INIT_BROADCAST = "alert_init_broadcast";
     public static final String ALERT_BROADCAST_STOP = "alert_broadcast_stop";
     public static final String ALERT_BROADCAST_CALL = "alert_broadcast_call";
+
     public static final String ALERT_CHANNEL = "AlertServiceChannel";
+    public static final String ALL_SCREEN_CHANNEL = "allScreenChannel";
+
+    public static final String START_ALL_SCR = "All_Screen_Service";
+    public static final String STOP_ALL_SCR = "All_Screen_Service_Stop";
+    public static final String ALERT_RAISE_BROADCAST = "alert_raise_broadcast";
+    public static final String ALERT_INIT_START = "alert_init_start";
+
     public static final int SELECT_FILE = 2;
     public static final int ALL_PERMISSION = 500;
     public static final int PROFILE_ACTIVITY_CODE = 202;
@@ -34,4 +42,14 @@ public class FearlessConstant {
     public static final int ALERT_CLOSE_RESULT_CODE = 222;
     public static final int ALERT_CLOSE_REQUEST_CODE = 223;
     public static final String INIT_BROADCAST_FILTER = "init_broadcast_filter";
+    public static final String ALL_SCR_START_BROADCAST_FILTER = "all_screen_start_broadcast_filter";
+
+    public static final String CONTACT_NAME_EXTRA = "contactName";
+    public static final String CONTACT_PHONE_EXTRA = "contactPhone";
+    public static final String CONTACT_NAME_CHANGE_EXTRA = "contactNameChange";
+    public static final String CONTACT_PHONE_CHANGE_EXTRA = "contactPhoneChange";
+    public static final String CONTACT_LIST_INDEX_EXTRA = "listIndex";
+    public static final int CONTACT_UPDATE_REQUEST = 301;
+
+    public static final int SETTINGS_ACTIVITY_REQUEST = 600;
 }

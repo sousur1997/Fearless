@@ -1,20 +1,13 @@
 package android.srrr.com.fearless;
 
-import android.Manifest;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
-import android.media.RingtoneManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
+import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
 
 public class AppSetup extends Application {
 
@@ -37,6 +30,11 @@ public class AppSetup extends Application {
             alertServiceChannel.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(alertServiceChannel);
+
+            //Notification channel for all screen notification.
+            NotificationChannel allScreenNotificationChannel = new NotificationChannel(ALL_SCREEN_CHANNEL, "All Screen Notify Channel", NotificationManager.IMPORTANCE_HIGH);
+            allScreenNotificationChannel.setSound(null, null);
+            notificationManager.createNotificationChannel(allScreenNotificationChannel);
         }
     }
 }

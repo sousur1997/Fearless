@@ -353,20 +353,22 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        File jsonFile = new File(getActivity().getFilesDir(), HISTORY_LIST_FILE);
-        if(jsonFile.exists()){
-            jsonFile.delete();
-        }
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            for (DataSnapshot snapChild : snapshot.getChildren()) {
-                AlertEvent event = snapChild.getValue(AlertEvent.class);
-                historyList.add(event);
+        if(getActivity() != null) {
+            File jsonFile = new File(getActivity().getFilesDir(), HISTORY_LIST_FILE);
+            if (jsonFile.exists()) {
+                jsonFile.delete();
             }
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot snapChild : snapshot.getChildren()) {
+                    AlertEvent event = snapChild.getValue(AlertEvent.class);
+                    historyList.add(event);
+                }
+            }
+            //make the JSON from updated list by taking from the server, also update file
+            String historyListJson = gson.toJson(historyList);
+            writeHistoryListFile(HISTORY_LIST_FILE, historyListJson);
+            refreshLayout.setRefreshing(false);
         }
-        //make the JSON from updated list by taking from the server, also update file
-        String historyListJson = gson.toJson(historyList);
-        writeHistoryListFile(HISTORY_LIST_FILE, historyListJson);
-        refreshLayout.setRefreshing(false);
     }
 
     @Override

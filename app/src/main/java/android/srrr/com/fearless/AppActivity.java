@@ -1,7 +1,10 @@
 package android.srrr.com.fearless;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +30,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -64,15 +69,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_STOP;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_REQUEST_CODE;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_RESULT_CODE;
+import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
+import static android.srrr.com.fearless.FearlessConstant.ALL_SCR_START_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
+import static android.srrr.com.fearless.FearlessConstant.SETTINGS_ACTIVITY_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
+import static android.srrr.com.fearless.FearlessConstant.START_ALL_SCR;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
+import static android.srrr.com.fearless.FearlessConstant.STOP_ALL_SCR;
 
-public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -103,12 +114,16 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private AlertControl aControl;
     private BroadcastReceiver receiver;
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
         contactList = new ArrayList<>();
 
+        sharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(AppActivity.this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         aControl = AlertControl.getInstance(getApplicationContext());
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
@@ -198,6 +213,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             retrieveImageToImageView(); //retrieve image and set as profile image
 
             logged_in = true;
+
+            //start All screen notification when logged in.
+            if(sharedPreferences.getBoolean("key_all_scr_noti", true)){
+                startAllScrNoti();
+            }
+
         }else{
             login_menu_item.setIcon(R.drawable.ic_login);
             login_menu_item.setTitle("Login");
@@ -229,6 +250,9 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                             alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
                             if (aControl.getAlreadyAlerted() == false) {
                                 startService();
+                                if(isServiceRunning(AllScreenService.class)) { //if service is active, then close it
+                                    stopAllScrNoti();
+                                }
                                 aControl.toggleAlertInitiator();
                             } else {
                                 Intent intent = new Intent(AppActivity.this, AlertCloseConfirmActivity.class);
@@ -282,6 +306,29 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
+        IntentFilter all_filter = new IntentFilter();
+        all_filter.addAction(ALL_SCR_START_BROADCAST_FILTER);
+
+        BroadcastReceiver all_scrReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(all_scrReceiver, all_filter);
+    }
+
+    private void startAllScrNoti(){
+        Intent all_scr_alert = new Intent(this, AllScreenService.class);
+        all_scr_alert.setAction(START_ALL_SCR);
+        ContextCompat.startForegroundService(this, all_scr_alert);
+    }
+
+    public void stopAllScrNoti(){
+        Intent all_scr_alert = new Intent(this, AllScreenService.class);
+        all_scr_alert.setAction(STOP_ALL_SCR);
+        ContextCompat.startForegroundService(this, all_scr_alert);
     }
 
     private void retrieveImageToImageView(){
@@ -454,7 +501,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 return true;
             case R.id.app_settings_menu:
                 if(aControl.getAlreadyAlerted() == false){
-                    startActivity(new Intent(AppActivity.this, SettingsActivity.class));
+                    startActivityForResult(new Intent(AppActivity.this, SettingsActivity.class), SETTINGS_ACTIVITY_REQUEST);
                 }else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
                             .setCancelable(false)
@@ -517,6 +564,17 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         return listJson;
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals("key_all_scr_noti")){
+            if(sharedPreferences.getBoolean(key, true)){
+                startAllScrNoti();
+            }else{
+                stopAllScrNoti();
+            }
+        }
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -551,7 +609,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         if(requestCode == PROFILE_ACTIVITY_CODE){
             retrieveImageToImageView();
         }
-        if(requestCode == PICK_CONTACT){
+        if(requestCode == PICK_CONTACT || requestCode == CONTACT_UPDATE_REQUEST){
             for(Fragment fragment : getSupportFragmentManager().getFragments()){
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
@@ -561,6 +619,19 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
             }
         }
+        if(requestCode == SETTINGS_ACTIVITY_REQUEST){
+
+        }
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

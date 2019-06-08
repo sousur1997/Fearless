@@ -1,11 +1,13 @@
 package android.srrr.com.fearless;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_LIST_INDEX_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_NAME_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_PHONE_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.MAX_CONTACT_TO_ADD;
 import static android.srrr.com.fearless.FearlessConstant.SOS_NUMBER_COUNT;
 
@@ -26,6 +32,12 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Object> listData;
     private Context context;
     private ContactUpdateListener listener;
+    private ActivityResultCallback callback;
+
+    public interface ActivityResultCallback{
+        void resultCallback(Object object, int index);
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +53,13 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case R.layout.contact_item_layout:
                 view = inflater.inflate(R.layout.contact_item_layout, parent, false);
                 holder = new PersonalContactHolder(view);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PersonalContact personalContact = new PersonalContact(((PersonalContactHolder) holder).C_Name.getText().toString(), ((PersonalContactHolder) holder).C_number.getText().toString());
+                        callback.resultCallback(personalContact, holder.getAdapterPosition());
+                    }
+                });
                 break;
             case R.layout.sos_item_layout:
                 view = inflater.inflate(R.layout.sos_item_layout, parent, false);
@@ -57,9 +76,10 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return listData;
     }
 
-    public ContactListAdapter(Context context, ArrayList<Object> list, ContactUpdateListener listener){
+    public ContactListAdapter(Context context, ActivityResultCallback callback, ArrayList<Object> list, ContactUpdateListener listener){
         this.context = context;
         this.listData = list;
+        this.callback = callback;
         this.listener = listener; //set up the contact listener
     }
 
@@ -164,6 +184,15 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         //if the items are new, not in the local file, the listener will not be used
         if(newItem){
+            listener.onContactUpdate();
+        }
+    }
+
+    public void updateItem(Object item, int index){
+        if(item instanceof PersonalContact){
+            ((PersonalContact)listData.get(index)).setName(((PersonalContact) item).getName());
+            ((PersonalContact)listData.get(index)).setPhone(((PersonalContact) item).getPhone());
+            notifyItemChanged(index);
             listener.onContactUpdate();
         }
     }

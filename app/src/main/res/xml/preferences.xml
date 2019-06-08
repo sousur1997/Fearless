@@ -3,6 +3,11 @@
     <PreferenceCategory android:title="General">
         <SwitchPreference
             android:defaultValue="true"
+            android:key="key_all_scr_noti"
+            android:summary="Enable this to show notification from any screen"
+            android:title="Show Start Alert Notification" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="key_automatic_message_repeat"
             android:summary="Enable this to send Alert Messages Repeatedly"
             android:title="Automatic Message Repeat" />

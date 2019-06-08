@@ -18,6 +18,8 @@ import static android.srrr.com.fearless.FearlessConstant.ACTUAL_STOP_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_CALL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_STOP;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_BROADCAST;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_START;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_RAISE_BROADCAST;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 
 public class NotificationActionReceiver extends BroadcastReceiver {
@@ -32,6 +34,16 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             alert_init_stop.setAction(STOP_ALERT);
             ContextCompat.startForegroundService(context, alert_init_stop);
             alertControl.toggleAlertInitiator();
+
+            Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            context.sendBroadcast(it);
+        }
+
+        if(intent.getAction().equals(ALERT_RAISE_BROADCAST)){
+            //start alert initiator service
+            Intent alert_init_start = new Intent(context, AllScreenService.class);
+            alert_init_start.setAction(ALERT_INIT_START);
+            ContextCompat.startForegroundService(context, alert_init_start);
 
             Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             context.sendBroadcast(it);

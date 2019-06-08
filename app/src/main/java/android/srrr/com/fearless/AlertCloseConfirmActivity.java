@@ -1,6 +1,7 @@
 package android.srrr.com.fearless;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_RESULT_CODE
 import static android.srrr.com.fearless.FearlessConstant.ALERT_JSON_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_COLLECTION;
 import static android.srrr.com.fearless.FearlessConstant.PENDING_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.START_ALL_SCR;
 
 public class AlertCloseConfirmActivity extends AppCompatActivity {
     private TextView info;
@@ -59,6 +61,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
     private String userId;
 
     private ConstraintLayout verifyLayout;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         setContentView(R.layout.alert_complete_display);
 
         aControl = AlertControl.getInstance(getApplicationContext());
+        sharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         info = findViewById(R.id.info_text);
         closeBtn = findViewById(R.id.alert_close_btn);
@@ -81,7 +85,6 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         if(mAuth != null)
             userId = mAuth.getCurrentUser().getUid();
 
-
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +97,10 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                         ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
                         endTask = new ServiceEndTask();
                         endTask.execute();
+
+                        if(sharedPreferences.getBoolean("key_all_scr_noti", true)) {
+                            startAllScreenService();
+                        }
                     }
                 }
             }
@@ -125,6 +132,12 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
             closeBtn.setVisibility(View.INVISIBLE);
             syncBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void startAllScreenService(){
+        Intent acc_Scr_service = new Intent(this, AllScreenService.class);
+        acc_Scr_service.setAction(START_ALL_SCR);
+        ContextCompat.startForegroundService(this, acc_Scr_service);
     }
 
     private void syncHistory(){

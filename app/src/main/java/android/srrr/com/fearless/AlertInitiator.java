@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -19,8 +20,11 @@ import com.google.firebase.database.core.Constants;
 import static android.srrr.com.fearless.FearlessConstant.ACTUAL_START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_BROADCAST;
+import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_START;
+import static android.srrr.com.fearless.FearlessConstant.ALL_SCR_START_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
+import static android.srrr.com.fearless.FearlessConstant.START_ALL_SCR;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 
 public class AlertInitiator extends Service {
@@ -30,6 +34,7 @@ public class AlertInitiator extends Service {
     private boolean flag_canceled = false;
 
     private AlertControl alertControl;
+    private SharedPreferences sharedPreferences;
 
     public AlertInitiator() {
     }
@@ -38,6 +43,7 @@ public class AlertInitiator extends Service {
     public void onCreate() {
         super.onCreate();
 
+        sharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         IntentFilter filter = new IntentFilter();
         filter.setPriority(100);
         receiver = new NotificationActionReceiver();
@@ -60,10 +66,18 @@ public class AlertInitiator extends Service {
                 Intent i = new Intent(INIT_BROADCAST_FILTER);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(i);
 
+                if(sharedPreferences.getBoolean("key_all_scr_noti", true)) {
+                    startAllScreenService();
+                }
+
                 stopForeground(true);
                 stopSelf();
             } else if(intent.getAction().equals(START_ALERT)){
                 flag_canceled = false;
+
+                Intent i = new Intent(ALL_SCR_START_BROADCAST_FILTER);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+
                 Intent notificationIntent = new Intent(this, AppActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -93,6 +107,12 @@ public class AlertInitiator extends Service {
         Intent alert_init_intent = new Intent(this, AlertService.class);
         alert_init_intent.setAction(ACTUAL_START_ALERT);
         ContextCompat.startForegroundService(this, alert_init_intent);
+    }
+
+    public void startAllScreenService(){
+        Intent acc_Scr_service = new Intent(this, AllScreenService.class);
+        acc_Scr_service.setAction(START_ALL_SCR);
+        ContextCompat.startForegroundService(this, acc_Scr_service);
     }
 
     private class NotificationVibrate extends AsyncTask<Void, Void, Void>{

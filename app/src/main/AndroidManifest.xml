@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature
@@ -29,9 +29,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".SettingsActivity"
-            android:theme="@style/AppInnerTheme">
-        </activity>
+        <activity android:name=".BootActivity"
+            android:theme="@style/AppInnerTheme"></activity>
+        <activity
+            android:name=".ContactUpdateActivity"
+            android:theme="@style/profile_setup_theme" />
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".MapPathActivity"
             android:theme="@style/AppInnerTheme" />
@@ -47,9 +52,11 @@
         <activity android:name=".SliderActivity" />
         <activity
             android:name=".AppActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppInnerTheme" />
 
         <service android:name=".LocationServiceGPS" />
+        <service android:name=".AllScreenService" />
 
         <activity android:name=".TestMenuActivity" />
         <activity android:name=".LoginActivity" />
@@ -100,6 +107,14 @@
         <activity
             android:name=".AboutUs"
             android:theme="@style/AppInnerTheme" />
+
+        <receiver android:name=".StartServiceOnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

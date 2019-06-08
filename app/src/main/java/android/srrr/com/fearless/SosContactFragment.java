@@ -64,14 +64,20 @@ import java.util.Map;
 import static android.Manifest.permission.CALL_PHONE;
 import static android.srrr.com.fearless.FearlessConstant.CALL_PERMISSION;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_COLLECTION;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_LIST_INDEX_EXTRA;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_NAME_CHANGE_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_NAME_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_PHONE_CHANGE_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_PHONE_EXTRA;
+import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPLOAD_PENDING;
 import static android.srrr.com.fearless.FearlessConstant.MAX_CONTACT_TO_ADD;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT_PERMISSION;
 import static android.srrr.com.fearless.FearlessConstant.REQUEST_MULTIPLE_PERMISSIONS;
 
-public class SosContactFragment extends Fragment implements ContactUpdateListener {
+public class SosContactFragment extends Fragment implements ContactUpdateListener, ContactListAdapter.ActivityResultCallback {
 
     private RecyclerView contact_List_view;
     private ArrayList<Object> contact_item_list;
@@ -106,27 +112,6 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sos_contact, container, false);
     }
-/*
-    private boolean runtime_contact_permission() {
-        if (Build.VERSION.SDK_INT >= 21 && ContextCompat.checkSelfPermission(
-                getActivity().getApplicationContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{CALL_PHONE}, CALL_PERMISSION);
-            return true;
-        }
-        return false;
-    }*/
-/*
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == PICK_CONTACT_PERMISSION){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-            }else{
-                runtime_contact_permission();
-            }
-        }
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -162,6 +147,16 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
                 }
             }
         }
+
+        if(requestCode == CONTACT_UPDATE_REQUEST){
+            if(resultCode == Activity.RESULT_OK){
+                PersonalContact personalContact = new PersonalContact(data.getStringExtra(CONTACT_NAME_CHANGE_EXTRA), data.getStringExtra(CONTACT_PHONE_CHANGE_EXTRA));
+                int index = data.getIntExtra(CONTACT_LIST_INDEX_EXTRA, -1);
+                if(index != -1) {
+                    adapter.updateItem(personalContact, index);
+                }
+            }
+        }
     }
 
     @Override
@@ -183,8 +178,32 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
         int id = item.getItemId();
         if(id == R.id.add_new_contact_menu_item){
             if(user != null){
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                getActivity().startActivityForResult(intent, PICK_CONTACT);
+                if(user.isEmailVerified()) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    getActivity().startActivityForResult(intent, PICK_CONTACT);
+                }else{
+                    AlertDialog dialog;
+                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                    dialogBuilder.setTitle("Cannot Add Personal Contacts");
+                    dialogBuilder.setMessage("Please verify your email to add personal contacts");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setPositiveButton("Verify Now", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getActivity(), EmailVerification.class);
+                            intent.putExtra("caller", "Profile");
+                            startActivity(intent);
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog = dialogBuilder.create();
+                    dialog.show();
+                }
             }else{
                 AlertDialog dialog;
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -319,7 +338,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
             }
         });
 
-        adapter = new ContactListAdapter(getActivity(), contact_item_list, this);
+        adapter = new ContactListAdapter(getActivity(), this, contact_item_list, this);
         contact_List_view.setHasFixedSize(true);
         contact_List_view.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         contact_List_view.setAdapter(adapter);
@@ -576,5 +595,14 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
     @Override
     public void onContactUpdate() {
         updateLocalContactFile();
+    }
+
+    @Override
+    public void resultCallback(Object object, int index) {
+        Intent intent = new Intent(getActivity(), ContactUpdateActivity.class);
+        intent.putExtra(CONTACT_NAME_EXTRA, ((PersonalContact)object).getName());
+        intent.putExtra(CONTACT_PHONE_EXTRA, ((PersonalContact)object).getPhone());
+        intent.putExtra(CONTACT_LIST_INDEX_EXTRA, index);
+        getActivity().startActivityForResult(intent, CONTACT_UPDATE_REQUEST);
     }
 }
