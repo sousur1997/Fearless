@@ -1,5 +1,7 @@
 package android.srrr.com.fearless;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -91,10 +93,12 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                 if(aControl.getAlreadyAlerted() == true) {
                     Intent intent = getIntent();
                     if (intent.getAction().equals(ALERT_BROADCAST_STOP)) {
-                        Intent alert_stop = new Intent(AlertCloseConfirmActivity.this, AlertService.class);
-                        alert_stop.setAction(ACTUAL_STOP_ALERT);
-                        setResult(ALERT_CLOSE_RESULT_CODE, intent);
-                        ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
+                        if(isServiceRunning(AlertService.class)) {
+                            Intent alert_stop = new Intent(AlertCloseConfirmActivity.this, AlertService.class);
+                            alert_stop.setAction(ACTUAL_STOP_ALERT);
+                            setResult(ALERT_CLOSE_RESULT_CODE, intent);
+                            ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
+                        }
                         endTask = new ServiceEndTask();
                         endTask.execute();
 
@@ -112,6 +116,16 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
                 syncHistory();
             }
         });
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class ServiceEndTask extends AsyncTask<Void, Void, Void>{

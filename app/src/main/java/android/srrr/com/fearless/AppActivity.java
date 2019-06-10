@@ -96,7 +96,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private NavigationView navView;
     private BottomAppBar bAppBar;
 
-    private MenuItem acc_setup, work_setup, login_menu_item, register_item, acc_setu_grp_item;
+    private MenuItem acc_setup, work_setup, login_menu_item, register_item, acc_setu_grp_item, setting_item;
     private Menu nav_menu;
     private boolean logged_in = false;
     private PreferenceManager prefManager;
@@ -128,7 +128,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
-        aControl.setAlertInitiator(false);
+        //aControl.setAlertInitiator(false);
         //aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
@@ -138,6 +138,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab = findViewById(R.id.alert_fab);
 
         if(aControl.getAlreadyAlerted() == false){
+            alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+        }else{
+            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+        }
+
+        if(aControl.getAlertInit() == false){
             alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
         }else{
             alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
@@ -201,6 +207,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         login_menu_item = nav_menu.findItem(R.id.signout_item);
         register_item = nav_menu.findItem(R.id.sign_up_item);
         acc_setu_grp_item = nav_menu.findItem(R.id.acc_setup_group_item);
+        setting_item = nav_menu.findItem(R.id.app_settings_menu);
 
         //if user is logged in, set the menu item as Sign Out
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
@@ -210,13 +217,16 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             acc_setu_grp_item.setVisible(true); //when logged in, show the account update group
             profile_image.setEnabled(true); //we can click on the image icon
             profile_email.setText(user.getEmail());
+            setting_item.setVisible(true);
             retrieveImageToImageView(); //retrieve image and set as profile image
 
             logged_in = true;
 
             //start All screen notification when logged in.
-            if(sharedPreferences.getBoolean("key_all_scr_noti", true)){
-                startAllScrNoti();
+            if(aControl.getAlertInit() == false && aControl.getAlreadyAlerted() == false) {
+                if (sharedPreferences.getBoolean("key_all_scr_noti", true)) {
+                    startAllScrNoti();
+                }
             }
 
         }else{
@@ -226,6 +236,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             acc_setu_grp_item.setVisible(false); //when not logged in, hide the account update group
             profile_image.setEnabled(false); //we cannot click on the image icon
             profile_email.setText(getResources().getString(R.string.please_login));
+            setting_item.setVisible(false);
 
             logged_in = false;
         }
@@ -247,7 +258,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 if(contactList.size() > 0) {
                     if (user != null) {
                         if (aControl.getAlertInit() == false) {
-                            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+                            //alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
                             if (aControl.getAlreadyAlerted() == false) {
                                 startService();
                                 if(isServiceRunning(AllScreenService.class)) { //if service is active, then close it
@@ -482,19 +493,21 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             case R.id.signout_item:
                 if(logged_in) {
                     signOut();
+                    stopAllScrNoti();
                 }else{
                     startActivity(new Intent(AppActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    finish();
                 }
                 return true;
             case R.id.account_setup_item:
                 startActivity(new Intent(AppActivity.this, ProfileSetup.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
-
                 return true;
             case R.id.workplace_setup_item:
                 startActivity(new Intent(AppActivity.this, WorkplaceSetup.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return true;
             case R.id.sign_up_item:
                 startActivity(new Intent(AppActivity.this, RegisterActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                finish();
                 return true;
             case R.id.about_us_page:
                 startActivity(new Intent(AppActivity.this, AboutUs.class));
@@ -566,11 +579,13 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("key_all_scr_noti")){
-            if(sharedPreferences.getBoolean(key, true)){
-                startAllScrNoti();
-            }else{
-                stopAllScrNoti();
+        if(aControl.getAlertInit() == false && aControl.getAlreadyAlerted() == false) {
+            if (key.equals("key_all_scr_noti")) {
+                if (sharedPreferences.getBoolean(key, true)) {
+                    startAllScrNoti();
+                } else {
+                    stopAllScrNoti();
+                }
             }
         }
     }

@@ -32,7 +32,7 @@ public class AppSetup extends Application {
             notificationManager.createNotificationChannel(alertServiceChannel);
 
             //Notification channel for all screen notification.
-            NotificationChannel allScreenNotificationChannel = new NotificationChannel(ALL_SCREEN_CHANNEL, "All Screen Notify Channel", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel allScreenNotificationChannel = new NotificationChannel(ALL_SCREEN_CHANNEL, "All Screen Notify Channel", NotificationManager.IMPORTANCE_LOW);
             allScreenNotificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(allScreenNotificationChannel);
         }

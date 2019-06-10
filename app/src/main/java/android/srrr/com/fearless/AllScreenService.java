@@ -68,7 +68,7 @@ public class AllScreenService extends Service {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentIntent(pendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setPriority(NotificationCompat.PRIORITY_LOW)
                         .addAction(R.drawable.ic_alert_new_fab_icon, "Alert", startAlertIntent)
                         .setColor(getResources().getColor(R.color.menu_bar_color))
                         .setCategory(Notification.CATEGORY_EMAIL)

@@ -61,7 +61,7 @@ public class AlertEvent {
     }
 
     public String getReadableTime(){
-        String pattern = "EEEE MMMM yyyy hh:mm:ss a";
+        String pattern = "dd MMMM yyyy (EEEE) hh:mm a";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, new Locale("en", "IN"));
         Date date = new Date(Long.parseLong(timestamp));
         String dateStr = dateFormat.format(date);

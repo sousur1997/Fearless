@@ -8,7 +8,7 @@ public class StartServiceOnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())){
-            Intent i = new Intent(context, BootActivity.class);
+            Intent i = new Intent(context, AppActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }

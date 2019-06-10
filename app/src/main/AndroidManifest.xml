@@ -29,8 +29,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".BootActivity"
-            android:theme="@style/AppInnerTheme"></activity>
         <activity
             android:name=".ContactUpdateActivity"
             android:theme="@style/profile_setup_theme" />
