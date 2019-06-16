@@ -12,6 +12,7 @@ public class FearlessConstant {
 
     public static final String ALERT_CHANNEL = "AlertServiceChannel";
     public static final String ALL_SCREEN_CHANNEL = "allScreenChannel";
+    public static final String INITIATOR_CHANNEL = "initiator_noti_channel";
 
     public static final String START_ALL_SCR = "All_Screen_Service";
     public static final String STOP_ALL_SCR = "All_Screen_Service_Stop";

@@ -128,7 +128,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
         prefManager = new PreferenceManager(getApplicationContext()); //setup the preference manager to store data
 
-        //aControl.setAlertInitiator(false);
+        aControl.setAlertInitiator(false);
         //aControl.setAlreadyAlerted(false);
 
         toolbar = findViewById(R.id.toolbar);
@@ -254,9 +254,9 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         alert_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPersonalContacts();
-                if(contactList.size() > 0) {
-                    if (user != null) {
+                if(user != null) {
+                    getPersonalContacts();
+                    if (contactList.size() > 0) {
                         if (aControl.getAlertInit() == false) {
                             //alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
                             if (aControl.getAlreadyAlerted() == false) {
@@ -276,36 +276,43 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                             aControl.toggleAlertInitiator();
                         }
                     } else {
-                        AlertDialog dialog;
-                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AppActivity.this);
-                        dialogBuilder.setTitle("Alert failed");
-                        dialogBuilder.setMessage("Alert feature is not available for Guest Users");
-                        dialogBuilder.setCancelable(false);
-                        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog = dialogBuilder.create();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
+                                .setCancelable(false)
+                                .setTitle("Cannot Raise Alert!")
+                                .setMessage("You have no personal contact in your list. Add at least one contact to raise alert")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
                         dialog.show();
                     }
                 }else{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
-                            .setCancelable(false)
-                            .setTitle("Cannot Raise Alert!")
-                            .setMessage("You have no personal contact in your list. Add at least one contact to raise alert")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog dialog = builder.create();
+                    AlertDialog dialog;
+                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AppActivity.this);
+                    dialogBuilder.setTitle("Alert failed");
+                    dialogBuilder.setMessage("Alert feature is not available for Guest Users");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog = dialogBuilder.create();
                     dialog.show();
                 }
             }
         });
+
+        /*alert_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService();
+            }
+        });*/
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(INIT_BROADCAST_FILTER);
@@ -436,37 +443,20 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void signOut(){
-        if(aControl.getAlreadyAlerted() == true){ //when alert is already active, does not signout
-            AlertDialog dialog;
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setTitle("Sign out Failed");
-            dialogBuilder.setMessage("One alert is active now. Please close it before signing out");
-            dialogBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+        FirebaseAuth.getInstance().signOut();
+        //Clear the preference variables:
+        prefManager.setBool("verify_email_sent", false);
+        Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
 
-            dialog = dialogBuilder.create();
-            dialog.setCancelable(false);
-            dialog.show();
-        }else {
-            FirebaseAuth.getInstance().signOut();
-            //Clear the preference variables:
-            prefManager.setBool("verify_email_sent", false);
-            Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_LONG).show();
-
-            //delete the history file, and contact file:
-            fileDelete(HISTORY_LIST_FILE);
-            fileDelete(CONTACT_LOCAL_FILENAME);
+        //delete the history file, and contact file:
+        fileDelete(HISTORY_LIST_FILE);
+        fileDelete(CONTACT_LOCAL_FILENAME);
 
 
-            //after signing out, restart the current activity
-            Intent loginIntent = getIntent();
-            finish();
-            startActivity(loginIntent);
-        }
+        //after signing out, restart the current activity
+        Intent loginIntent = getIntent();
+        finish();
+        startActivity(loginIntent);
     }
 
     private void fileDelete(String filename){
@@ -492,8 +482,25 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         switch (item.getItemId()){
             case R.id.signout_item:
                 if(logged_in) {
-                    signOut();
-                    stopAllScrNoti();
+                    if (aControl.getAlreadyAlerted() == false && aControl.getAlertInit() == false) {
+                        signOut();
+                        stopAllScrNoti();
+                    }else{
+                        AlertDialog dialog;
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                        dialogBuilder.setTitle("Sign out Failed");
+                        dialogBuilder.setMessage("One alert is active now. Please close it before signing out");
+                        dialogBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog = dialogBuilder.create();
+                        dialog.setCancelable(false);
+                        dialog.show();
+                    }
                 }else{
                     startActivity(new Intent(AppActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                     finish();

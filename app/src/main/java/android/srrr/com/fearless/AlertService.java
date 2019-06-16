@@ -1,6 +1,7 @@
 package android.srrr.com.fearless;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -25,6 +26,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_COMPLETE;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_JSON_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.STOP_ALL_SCR;
 
 public class AlertService extends Service implements LocationListener{
     private NotificationActionReceiver receiver;
@@ -126,7 +129,7 @@ public class AlertService extends Service implements LocationListener{
             if (intent.getAction().equals(ACTUAL_STOP_ALERT)) {
                 //when alert end
                 createCacheWithJson(generateEventJSON());
-                alertControl.toggleAlreadyAlerted();
+                alertControl.setAlreadyAlerted(false);
 
                 stopForeground(true);
                 stopSelf();
@@ -173,6 +176,12 @@ public class AlertService extends Service implements LocationListener{
                 }
 
                 startForeground(2, notification);
+
+                if(isServiceRunning(AllScreenService.class)){
+                    Intent stopAllScr = new Intent(AlertService.this, AllScreenService.class);
+                    stopAllScr.setAction(STOP_ALL_SCR);
+                    ContextCompat.startForegroundService(getApplicationContext(), stopAllScr);
+                }
             }
         }
         return START_REDELIVER_INTENT;
@@ -388,5 +397,15 @@ public class AlertService extends Service implements LocationListener{
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package android.srrr.com.fearless;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,10 +31,14 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         alertControl = AlertControl.getInstance(context);
         if (intent.getAction().equals(ALERT_INIT_BROADCAST)) {
-            Intent alert_init_stop = new Intent(context, AlertInitiator.class);
-            alert_init_stop.setAction(STOP_ALERT);
-            ContextCompat.startForegroundService(context, alert_init_stop);
-            alertControl.toggleAlertInitiator();
+            if(isServiceRunning(context, AlertInitiator.class)) {
+                if(!isServiceRunning(context, AlertService.class)) {
+                    Intent alert_init_stop = new Intent(context, AlertInitiator.class);
+                    alert_init_stop.setAction(STOP_ALERT);
+                    ContextCompat.startForegroundService(context, alert_init_stop);
+                    alertControl.toggleAlertInitiator();
+                }
+            }
 
             Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             context.sendBroadcast(it);
@@ -48,5 +53,15 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             context.sendBroadcast(it);
         }
+    }
+
+    private boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

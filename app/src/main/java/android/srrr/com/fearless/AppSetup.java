@@ -8,6 +8,7 @@ import android.os.Build;
 import android.provider.Settings;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
+import static android.srrr.com.fearless.FearlessConstant.INITIATOR_CHANNEL;
 
 public class AppSetup extends Application {
 
@@ -35,6 +36,11 @@ public class AppSetup extends Application {
             NotificationChannel allScreenNotificationChannel = new NotificationChannel(ALL_SCREEN_CHANNEL, "All Screen Notify Channel", NotificationManager.IMPORTANCE_LOW);
             allScreenNotificationChannel.setSound(null, null);
             notificationManager.createNotificationChannel(allScreenNotificationChannel);
+
+            //Notification channel for all screen notification.
+            NotificationChannel initNotification = new NotificationChannel(INITIATOR_CHANNEL, "Initiator Notify Channel", NotificationManager.IMPORTANCE_HIGH);
+            initNotification.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
+            notificationManager.createNotificationChannel(initNotification);
         }
     }
 }

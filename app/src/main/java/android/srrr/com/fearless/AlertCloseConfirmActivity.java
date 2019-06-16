@@ -84,6 +84,8 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        endTask = new ServiceEndTask();
+
         if(mAuth != null)
             userId = mAuth.getCurrentUser().getUid();
 
@@ -92,20 +94,30 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(aControl.getAlreadyAlerted() == true) {
                     Intent intent = getIntent();
-                    if (intent.getAction().equals(ALERT_BROADCAST_STOP)) {
+                    //if (intent.getAction().equals(ALERT_BROADCAST_STOP)) {
                         if(isServiceRunning(AlertService.class)) {
                             Intent alert_stop = new Intent(AlertCloseConfirmActivity.this, AlertService.class);
                             alert_stop.setAction(ACTUAL_STOP_ALERT);
                             setResult(ALERT_CLOSE_RESULT_CODE, intent);
                             ContextCompat.startForegroundService(AlertCloseConfirmActivity.this, alert_stop);
                         }
-                        endTask = new ServiceEndTask();
-                        endTask.execute();
+                        setResult(ALERT_CLOSE_RESULT_CODE, intent);
+                        aControl.setAlreadyAlerted(false);
+                        //endTask.execute();
+
+                        jsonFileContent = readCacheJson(); //read json after returning back from service
+                        pendingEventListManage(jsonFileContent);
+
+                        info.setText("Please sync alert history to the server. . .");
+
+                        //hide the close button and show sync button
+                        closeBtn.setVisibility(View.INVISIBLE);
+                        syncBtn.setVisibility(View.VISIBLE);
 
                         if(sharedPreferences.getBoolean("key_all_scr_noti", true)) {
                             startAllScreenService();
                         }
-                    }
+                    //}
                 }
             }
         });
@@ -134,6 +146,7 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             jsonFileContent = readCacheJson(); //read json after returning back from service
             pendingEventListManage(jsonFileContent);
+            Log.e("----LOG----", "Background Task");
             return null;
         }
 

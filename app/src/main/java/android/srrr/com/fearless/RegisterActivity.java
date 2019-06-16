@@ -166,9 +166,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.sign_up_btn: //call the registerUser if signup button is clicked
                 registerUser();
+
                 break;
         }
     }

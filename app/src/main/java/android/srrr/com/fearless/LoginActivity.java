@@ -73,13 +73,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             }
         });
-
-        forget_tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgetPasswordManage();
-            }
-        });
     }
 
     private void forgetPasswordManage(){
@@ -163,9 +156,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.pass_forget:
-                //password forget
+                forgetPasswordManage();
                 break;
             case R.id.login_btn:
                 //Login

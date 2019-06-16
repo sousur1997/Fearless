@@ -31,13 +31,16 @@
         tools:replace="android:appComponentFactory">
         <activity
             android:name=".ContactUpdateActivity"
-            android:theme="@style/profile_setup_theme" />
+            android:theme="@style/profile_setup_theme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/AppInnerTheme" />
+            android:theme="@style/AppInnerTheme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".MapPathActivity"
-            android:theme="@style/AppInnerTheme" />
+            android:theme="@style/AppInnerTheme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".MainActivity"
             android:theme="@style/SplashTheme">
@@ -57,11 +60,14 @@
         <service android:name=".AllScreenService" />
 
         <activity android:name=".TestMenuActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".RegisterActivity"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ProfilePage"
-            android:theme="@style/Profile_Theme" />
+            android:theme="@style/Profile_Theme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ProfileSetup"
             android:theme="@style/profile_setup_theme" />
@@ -86,7 +92,8 @@
         <activity android:name=".MoveLocationSettings" />
         <activity
             android:name=".EmailVerification"
-            android:theme="@style/profile_setup_theme" />
+            android:theme="@style/profile_setup_theme"
+            android:launchMode="singleTop"/>
 
         <service
             android:name=".AlertInitiator"
@@ -101,9 +108,11 @@
 
         <activity
             android:name=".AlertCloseConfirmActivity"
-            android:theme="@style/profile_setup_theme" />
+            android:theme="@style/profile_setup_theme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".AboutUs"
+            android:launchMode="singleTop"
             android:theme="@style/AppInnerTheme" />
 
         <receiver android:name=".StartServiceOnBootReceiver">
