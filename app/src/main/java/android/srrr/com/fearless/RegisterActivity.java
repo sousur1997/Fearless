@@ -27,6 +27,10 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_USERINFO_COLLECTION;
+import static android.srrr.com.fearless.FearlessConstant.LOG_SIGN_UP;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -39,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ConstraintLayout register_layout;
     private PreferenceManager prefManager;
     private TextView skip_text_view;
+    private FirebaseFirestore firestore;
+    private FearlessLog fearlessLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         register_progress.setVisibility(View.INVISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         skip_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +85,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             }
         });
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void registerUser(){
@@ -128,11 +137,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     //Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_LONG).show();
                     Snackbar.make(register_layout, "Registration Successful", Snackbar.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(RegisterActivity.this, EmailVerification.class);
-                    intent.putExtra("caller", "Registration").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-
+                    //put the email id into the account
+                    final User newUser = new User(mAuth.getCurrentUser().getEmail(), "", "", "", "", "", "", "");
+                    String userId = mAuth.getUid();
+                    firestore.collection(FIRESTORE_USERINFO_COLLECTION).document(userId).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                fearlessLog.sendLog(LOG_SIGN_UP); //send log to the server
+                                Intent intent = new Intent(RegisterActivity.this, EmailVerification.class);
+                                intent.putExtra("caller", "Registration").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
                 }else{
                     //Toast.makeText(getApplicationContext(), "Unable to register", Toast.LENGTH_LONG).show();
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){

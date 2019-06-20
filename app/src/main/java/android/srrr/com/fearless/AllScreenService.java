@@ -65,7 +65,7 @@ public class AllScreenService extends Service {
                 notification = new NotificationCompat.Builder(this, ALL_SCREEN_CHANNEL)
                         .setContentTitle("Fearless")
                         .setContentText("Tap Alert to raise one alert")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.notification_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_LOW)

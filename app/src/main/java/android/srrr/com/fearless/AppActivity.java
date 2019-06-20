@@ -75,6 +75,8 @@ import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
+import static android.srrr.com.fearless.FearlessConstant.LOG_LOGOUT;
+import static android.srrr.com.fearless.FearlessConstant.LOG_SIGN_UP;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
 import static android.srrr.com.fearless.FearlessConstant.SETTINGS_ACTIVITY_REQUEST;
@@ -115,6 +117,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     private BroadcastReceiver receiver;
 
     private SharedPreferences sharedPreferences;
+    private FearlessLog fearlessLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -307,13 +310,6 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        /*alert_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startService();
-            }
-        });*/
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(INIT_BROADCAST_FILTER);
 
@@ -335,6 +331,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(all_scrReceiver, all_filter);
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void startAllScrNoti(){
@@ -443,6 +441,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void signOut(){
+        fearlessLog.sendLog(LOG_LOGOUT); //send log to the server
         FirebaseAuth.getInstance().signOut();
         //Clear the preference variables:
         prefManager.setBool("verify_email_sent", false);
@@ -536,8 +535,9 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-
                 return true;
+            case R.id.nav_item_help:
+
             default:
                 return false;
         }

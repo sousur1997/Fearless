@@ -58,6 +58,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_USERINFO_COLLECTION;
+import static android.srrr.com.fearless.FearlessConstant.LOG_ACCOUNT_SETUP;
 
 public class ProfileSetup extends AppCompatActivity {
 
@@ -72,6 +73,7 @@ public class ProfileSetup extends AppCompatActivity {
     private String userId;
     private ConstraintLayout prof_layout;
     private ProgressBar saveProgress;
+    private FearlessLog fearlessLog;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -169,6 +171,8 @@ public class ProfileSetup extends AppCompatActivity {
                 date_dialog.show();
             }
         });
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void setupSpinner(List<String> state_list){
@@ -231,6 +235,7 @@ public class ProfileSetup extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //success
+                    fearlessLog.sendLog(LOG_ACCOUNT_SETUP); //send log to the server
                     saveProgress.setVisibility(View.INVISIBLE);
                     save.setText("Save");
                     save.setEnabled(true);

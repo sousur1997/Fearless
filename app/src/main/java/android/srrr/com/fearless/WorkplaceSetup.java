@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.srrr.com.fearless.FearlessConstant.FIRESTORE_WORKPLACE_COLLECTION;
+import static android.srrr.com.fearless.FearlessConstant.LOG_WORKPLACE_SETUP;
 
 public class WorkplaceSetup extends AppCompatActivity {
     private PreferenceManager prefManager;
@@ -50,6 +51,7 @@ public class WorkplaceSetup extends AppCompatActivity {
     private String userId;
     private ConstraintLayout prof_layout;
     private ProgressBar saveProgress;
+    private FearlessLog fearlessLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +117,8 @@ public class WorkplaceSetup extends AppCompatActivity {
                 UpdateWorkspaceToFirebase();
             }
         });
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void setupSpinner(List<String> state_list){
@@ -177,6 +181,7 @@ public class WorkplaceSetup extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //success
+                    fearlessLog.sendLog(LOG_WORKPLACE_SETUP); //send log to the server
                     saveProgress.setVisibility(View.INVISIBLE);
                     save.setText("Save");
                     save.setEnabled(true);

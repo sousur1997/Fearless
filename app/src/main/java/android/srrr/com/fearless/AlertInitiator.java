@@ -92,7 +92,7 @@ public class AlertInitiator extends Service {
         Notification notification = new NotificationCompat.Builder(this, INITIATOR_CHANNEL)
                 .setContentTitle("Alert is initiated")
                 .setContentText("If alert is started accidentally, please STOP it now.")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.notification_icon)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .addAction(R.drawable.close_icon, "Stop Alert", stopServiceIntent)

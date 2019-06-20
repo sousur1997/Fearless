@@ -72,6 +72,8 @@ import static android.srrr.com.fearless.FearlessConstant.CONTACT_PHONE_CHANGE_EX
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_PHONE_EXTRA;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPLOAD_PENDING;
+import static android.srrr.com.fearless.FearlessConstant.LOG_CONTACT_UPDATE;
+import static android.srrr.com.fearless.FearlessConstant.LOG_WORKPLACE_SETUP;
 import static android.srrr.com.fearless.FearlessConstant.MAX_CONTACT_TO_ADD;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT_PERMISSION;
@@ -95,6 +97,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
     private ArrayList<PersonalContact> contactArrayList;
     private PreferenceManager manager;
     private ArrayList<PersonalContact> initialList;
+    private FearlessLog fearlessLog;
 
     public SosContactFragment() {
         // Required empty public constructor
@@ -104,6 +107,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        fearlessLog = FearlessLog.getInstance();
     }
 
     @Override
@@ -370,6 +374,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
+                                    fearlessLog.sendLog(LOG_CONTACT_UPDATE); //send log to the server
                                     manager.setBool(CONTACT_UPLOAD_PENDING, false);
                                     refreshLayout.setRefreshing(false);
                                     uploadItem.setVisible(false);

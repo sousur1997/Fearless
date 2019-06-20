@@ -24,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
+import static android.srrr.com.fearless.FearlessConstant.LOG_LOGIN;
+import static android.srrr.com.fearless.FearlessConstant.LOG_SIGN_UP;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText email_ed, pass_ed;
@@ -33,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private ConstraintLayout login_layout;
     private TextView skip_text_view;
+    private FearlessLog fearlessLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             }
         });
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void forgetPasswordManage(){
@@ -120,6 +126,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 login_btn.setText("Login");
                 if(task.isSuccessful()){
                     //user successfully logged in
+                    fearlessLog.sendLog(LOG_LOGIN); //send log to the server
                     Snackbar.make(login_layout, "Successfully Logged In", Snackbar.LENGTH_LONG).show();
 
                     Intent intent = new Intent(LoginActivity.this, AppActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -156,7 +156,7 @@ public class AlertService extends Service implements LocationListener{
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ALERT_CHANNEL)
                         .setContentTitle("Alert is active")
                         .setContentText(message)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.mipmap.notification_icon)
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .addAction(R.drawable.close_icon, "Cancel", stopServiceIntent)

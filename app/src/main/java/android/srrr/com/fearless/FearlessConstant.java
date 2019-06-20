@@ -53,4 +53,15 @@ public class FearlessConstant {
     public static final int CONTACT_UPDATE_REQUEST = 301;
 
     public static final int SETTINGS_ACTIVITY_REQUEST = 600;
+
+    public static final String LOG_COLLECTION = "LogCollection";
+
+    //Log Messages
+    public static final String LOG_SIGN_UP = "Registered into Fearless";
+    public static final String LOG_LOGIN = "Logged in into the system";
+    public static final String LOG_LOGOUT = "Logged Out from the system";
+    public static final String LOG_EMAIL_VERIFY_REQUEST = "Requested to verify email";
+    public static final String LOG_CONTACT_UPDATE = "Contact Lists Updated";
+    public static final String LOG_ACCOUNT_SETUP = "Provide/Update Personal Information";
+    public static final String LOG_WORKPLACE_SETUP = "Provide/Update Workplace Information";
 }

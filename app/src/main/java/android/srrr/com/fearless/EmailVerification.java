@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static android.srrr.com.fearless.FearlessConstant.LOG_EMAIL_VERIFY_REQUEST;
+
 public class EmailVerification extends AppCompatActivity {
     ImageView smiley;
     TextView verify_text_tv;
@@ -29,6 +31,7 @@ public class EmailVerification extends AppCompatActivity {
     private ConstraintLayout ver_layout;
     private ProgressBar verify_prog;
     private PreferenceManager pref_manager;
+    private FearlessLog fearlessLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +96,9 @@ public class EmailVerification extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 verify_prog.setVisibility(View.INVISIBLE);
                                 if (task.isSuccessful()) {
-                                    Snackbar.make(ver_layout, "Verification Email will be sent within few hours ", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(ver_layout, "Verification Email will be sent within few moments ", Snackbar.LENGTH_LONG).show();
                                     pref_manager.setBool("verify_email_sent", true); //mark as verification email sent
+                                    fearlessLog.sendLog(LOG_EMAIL_VERIFY_REQUEST); //send log to the server
                                 } else {
                                     Snackbar.make(ver_layout, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                                 }
@@ -110,6 +114,8 @@ public class EmailVerification extends AppCompatActivity {
                 }
             }
         });
+
+        fearlessLog = FearlessLog.getInstance();
     }
 
     private void SwitchActivity(){
