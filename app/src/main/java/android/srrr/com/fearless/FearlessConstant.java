@@ -64,4 +64,5 @@ public class FearlessConstant {
     public static final String LOG_CONTACT_UPDATE = "Contact Lists Updated";
     public static final String LOG_ACCOUNT_SETUP = "Provide/Update Personal Information";
     public static final String LOG_WORKPLACE_SETUP = "Provide/Update Workplace Information";
+    
 }
