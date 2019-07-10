@@ -23,6 +23,7 @@ public class Adapter extends PagerAdapter {
     private List<Model> model;
     private LayoutInflater layoutInflater;
     private Context context;
+    private String address;
 
     public Adapter(List<Model> model, Context context) {
         this.model = model;
@@ -55,6 +56,8 @@ public class Adapter extends PagerAdapter {
         name.setText(model.get(position).getTitle());
         text.setText(model.get(position).getDescription());
 
+        address = model.get(position).getEmail();
+
         mail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +65,7 @@ public class Adapter extends PagerAdapter {
                 /*this contains an arraylist which contains the email address,subject
                   this is currently set to a dummy value
                  */
-                String address = model.get(position).getEmail();
+                address = model.get(position).getEmail();
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setData(Uri.parse("mailto:"));
                 intent.putExtra(Intent.EXTRA_EMAIL,new String[]{address});
@@ -73,6 +76,10 @@ public class Adapter extends PagerAdapter {
 
             }
         });
+
+        if(address == null){
+            mail.setVisibility(View.INVISIBLE);
+        }
 
         container.addView(view,0);
         return view;

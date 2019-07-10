@@ -11,13 +11,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView fearless_logo, start_btn;
+    private ImageView fearless_logo;
     private Animation logoAnimation, progress_animation;
     private ProgressBar loader;
     private PreferenceManager pref_manager;
@@ -30,10 +29,8 @@ public class MainActivity extends AppCompatActivity {
         pref_manager = new PreferenceManager(getApplicationContext()); //initialize preference manager
 
         if(pref_manager.getBool("app_first_time", true) == false) { //if this not is first time
-            Toast.makeText(getApplicationContext(), "Not first time", Toast.LENGTH_LONG).show();
             switchActivity();
         }else {
-            Toast.makeText(getApplicationContext(), "First time", Toast.LENGTH_LONG).show();
             pref_manager.setBool("app_first_time", false); //mark as the application is not opened for first time
             fearless_logo = findViewById(R.id.fearless_lgo);
             loader = findViewById(R.id.app_loader);
@@ -77,14 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
             //start the animation for logo
             fearless_logo.startAnimation(logoAnimation);
-
-            start_btn = findViewById(R.id.start_btn);
-            start_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SliderActivity.class));
-                }
-            });
         }
     }
 

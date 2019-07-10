@@ -22,6 +22,7 @@
     <color name="list_bg">#F7F7F7</color>
     <color name="colorText">#224272</color>
 
+    <color name="card_back_0">#F0673E</color>
     <color name="card_back_1">#FF6180</color>
     <color name="card_back_2">#62DBEC</color>
     <color name="card_back_3">#C1F1C4</color>

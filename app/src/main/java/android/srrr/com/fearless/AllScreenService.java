@@ -14,7 +14,7 @@ import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
+import android.util.Log;
 
 import static android.srrr.com.fearless.FearlessConstant.ALERT_INIT_START;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_RAISE_BROADCAST;
@@ -29,6 +29,7 @@ public class AllScreenService extends Service {
     private Notification notification;
     private NotificationActionReceiver receiver;
     private AlertControl aControl;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -63,15 +64,15 @@ public class AllScreenService extends Service {
                 PendingIntent startAlertIntent = PendingIntent.getBroadcast(this, 0, allScrIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 notification = new NotificationCompat.Builder(this, ALL_SCREEN_CHANNEL)
-                        .setContentTitle("Fearless")
                         .setContentText("Tap Alert to raise one alert")
                         .setSmallIcon(R.mipmap.notification_icon)
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.f_logo_noti_circle))
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_LOW)
                         .addAction(R.drawable.ic_alert_new_fab_icon, "Alert", startAlertIntent)
                         .setColor(getResources().getColor(R.color.menu_bar_color))
                         .setCategory(Notification.CATEGORY_EMAIL)
+                        .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0))
                         .build();
 
                 //notification.when = System.currentTimeMillis();
@@ -79,6 +80,7 @@ public class AllScreenService extends Service {
                 startForeground(3, notification);
             }
         }
+
         return START_REDELIVER_INTENT;
     }
     public void startService(){
@@ -96,6 +98,11 @@ public class AllScreenService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.e("-----Log-----", "Service Removed");
+        super.onTaskRemoved(rootIntent);
     }
 }

@@ -57,7 +57,8 @@
             android:theme="@style/AppInnerTheme" />
 
         <service android:name=".LocationServiceGPS" />
-        <service android:name=".AllScreenService" />
+        <service android:name=".AllScreenService"
+            android:stopWithTask="false"/>
 
         <activity android:name=".TestMenuActivity" />
         <activity android:name=".LoginActivity"
@@ -98,18 +99,19 @@
         <service
             android:name=".AlertInitiator"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:stopWithTask="false"/>
         <service
             android:name=".AlertService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:stopWithTask="false"/>
 
         <receiver android:name=".NotificationActionReceiver" />
 
         <activity
             android:name=".AlertCloseConfirmActivity"
-            android:theme="@style/profile_setup_theme"
-            android:launchMode="singleTop"/>
+            android:theme="@style/profile_setup_theme" />
         <activity
             android:name=".AboutUs"
             android:launchMode="singleTop"

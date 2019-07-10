@@ -3,12 +3,14 @@ package android.srrr.com.fearless;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -73,11 +75,15 @@ public class AlertService extends Service implements LocationListener{
     private SharedPreferences preferences;
     private ArrayList<PersonalContact> contactList;
 
+    private CountDownTimer countDownTimer;
+    private boolean alertStopped;
+
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
         super.onCreate();
         singleFlag = true;
+        alertStopped = false;
         contactList = new ArrayList<>();
         getPersonalContacts(); //read the personal contacts to send SMS and call
 
@@ -120,6 +126,41 @@ public class AlertService extends Service implements LocationListener{
 
         messageTimer = null;
         historyUpdateTimer = null;
+
+        //set 30 mins timer. If alert is not stopped, send notification after 30 mins
+        countDownTimer = new CountDownTimer(30*60*1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(alertStopped)
+                    cancel();
+            }
+
+            @Override
+            public void onFinish() {
+                askNotification();
+                start(); //start again for next 30 minutes
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    private void askNotification(){
+        Intent notificationIntent = new Intent(this, AppActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ALERT_CHANNEL)
+                .setContentTitle("Alert is still active")
+                .setContentText("Are you safe now? If you feel safe, close the alert")
+                .setSmallIcon(R.mipmap.notification_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.alert_noti_logo))
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setColor(getResources().getColor(R.color.menu_bar_color));
+
+        Notification notification = builder.build();
+        NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(5, notification);
     }
 
     @SuppressLint("MissingPermission")
@@ -128,6 +169,7 @@ public class AlertService extends Service implements LocationListener{
         if(intent != null) {
             if (intent.getAction().equals(ACTUAL_STOP_ALERT)) {
                 //when alert end
+                alertStopped = true;
                 createCacheWithJson(generateEventJSON());
                 alertControl.setAlreadyAlerted(false);
 
@@ -157,10 +199,11 @@ public class AlertService extends Service implements LocationListener{
                         .setContentTitle("Alert is active")
                         .setContentText(message)
                         .setSmallIcon(R.mipmap.notification_icon)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.alert_noti_logo))
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .addAction(R.drawable.close_icon, "Cancel", stopServiceIntent)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle())
                         .setColor(getResources().getColor(R.color.menu_bar_color));
 
                 if(callEnable){
@@ -202,7 +245,7 @@ public class AlertService extends Service implements LocationListener{
         if(tempAddress == null && !isNetworkConnected()) { //if the address is found, otherwise network is not connected
             address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
         }else{
-            address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"\nCurrent address:" + tempAddress;
+            address = "I am in Risk, I'm currently at" + tempAddress;
         }
 
         if(automaticMessageRepeat) {
@@ -385,14 +428,14 @@ public class AlertService extends Service implements LocationListener{
         for(int i = 0; i<contact_count; i++){
             try {
                 //***Important code. Will may charge money for SMS
-                /*SmsManager smsManager = SmsManager.getDefault();
+                SmsManager smsManager = SmsManager.getDefault();
                 if(message.length() > 160){
                     ArrayList<String> parts = smsManager.divideMessage(message);
                     smsManager.sendMultipartTextMessage(contactList.get(i).getPhone(), null, parts, null, null);
                 }else{
                     smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
-                }*/
-                Toast.makeText(getApplicationContext(), "SMS send to " + contactList.get(i).getPhone(), Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(getApplicationContext(), "SMS Sent ", Toast.LENGTH_LONG).show();
             }catch(Exception e) {
                 e.printStackTrace();
             }

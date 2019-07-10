@@ -168,11 +168,18 @@ public class ProfileSetup extends AppCompatActivity {
                         dob.setText(date_value);
                     }
                 }, year, month, day);
+                date_dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 date_dialog.show();
             }
         });
 
         fearlessLog = FearlessLog.getInstance();
+    }
+
+    private void resetState(){
+        saveProgress.setVisibility(View.INVISIBLE);
+        save.setText("Save");
+        save.setEnabled(true);
     }
 
     private void setupSpinner(List<String> state_list){
@@ -221,6 +228,21 @@ public class ProfileSetup extends AppCompatActivity {
     }
 
     private void UpdateUserToFirebase(){
+        //check info formats and show errors if any
+        if(phone_ed.getText().toString().length() != 10){
+            phone_ed.setError("Mobile number must be ten digit long");
+            phone_ed.requestFocus();
+            resetState();
+            return;
+        }
+
+        if(pin.getText().toString().length() != 6){
+            pin.setError("Pin must be six digit long");
+            pin.requestFocus();
+            resetState();
+            return;
+        }
+
         String name = full_name.getText().toString();
         String phone = phone_ed.getText().toString();
         String city = this.city.getText().toString();

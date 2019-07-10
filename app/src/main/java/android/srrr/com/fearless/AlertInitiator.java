@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -59,7 +60,7 @@ public class AlertInitiator extends Service {
 
             @Override
             public void onFinish() {
-                Toast.makeText(getApplicationContext(), "New Alert Raised", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "New Alert is Raised", Toast.LENGTH_LONG).show();
                 stopForeground(true);
                 stopSelf();
                 alertControl.toggleAlertInitiator();
@@ -77,7 +78,6 @@ public class AlertInitiator extends Service {
         alertVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         alertControl = AlertControl.getInstance(getApplicationContext());
-        Toast.makeText(getApplicationContext(), "On Service", Toast.LENGTH_LONG).show();
 
         Intent i = new Intent(ALL_SCR_START_BROADCAST_FILTER);
         LocalBroadcastManager.getInstance(this).sendBroadcast(i);
@@ -93,11 +93,13 @@ public class AlertInitiator extends Service {
                 .setContentTitle("Alert is initiated")
                 .setContentText("If alert is started accidentally, please STOP it now.")
                 .setSmallIcon(R.mipmap.notification_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.f_logo_noti_circle))
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .addAction(R.drawable.close_icon, "Stop Alert", stopServiceIntent)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setColor(getResources().getColor(R.color.menu_bar_color))
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle())
                 .build();
 
         startForeground(1, notification);

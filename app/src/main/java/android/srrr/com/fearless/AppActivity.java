@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PersistableBundle;
@@ -73,6 +74,7 @@ import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALL_SCR_START_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
+import static android.srrr.com.fearless.FearlessConstant.HELP_URL;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
 import static android.srrr.com.fearless.FearlessConstant.LOG_LOGOUT;
@@ -537,7 +539,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 }
                 return true;
             case R.id.nav_item_help:
-
+                Uri uri = Uri.parse(HELP_URL);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             default:
                 return false;
         }

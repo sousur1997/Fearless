@@ -166,7 +166,28 @@ public class WorkplaceSetup extends AppCompatActivity {
         return super.onKeyUp(keyCode, event);
     }
 
+    private void resetState(){
+        saveProgress.setVisibility(View.INVISIBLE);
+        save.setText("Save");
+        save.setEnabled(true);
+    }
+
     private void UpdateWorkspaceToFirebase(){
+        //check info formats and show errors if any
+        if(phone_ed.getText().toString().length() < 8){
+            phone_ed.setError("Phone number will be at lease 8 digit long");
+            phone_ed.requestFocus();
+            resetState();
+            return;
+        }
+
+        if(pin.getText().toString().length() != 6){
+            pin.setError("Pin must be six digit long");
+            pin.requestFocus();
+            resetState();
+            return;
+        }
+
         String wp_name = work_place.getText().toString();
         String phone = phone_ed.getText().toString();
         String city = this.city.getText().toString();
