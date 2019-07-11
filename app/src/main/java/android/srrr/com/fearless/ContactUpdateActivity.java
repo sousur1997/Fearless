@@ -43,19 +43,34 @@ public class ContactUpdateActivity extends AppCompatActivity {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(oldName.equals(contactNameEd.getText().toString()) && oldPhone.equals(contactPhoneEd.getText().toString()) ){
-                    finish();
-                    return; //if no change is found, do not do anything
-                }
-
-                //Otherwise send back to previous page with updated value
-                Intent sendBack = new Intent();
-                sendBack.putExtra(CONTACT_NAME_CHANGE_EXTRA, contactNameEd.getText().toString());
-                sendBack.putExtra(CONTACT_PHONE_CHANGE_EXTRA, contactPhoneEd.getText().toString());
-                sendBack.putExtra(CONTACT_LIST_INDEX_EXTRA, index);
-                setResult(Activity.RESULT_OK, sendBack);
-                finish();
+                updateTask();
             }
         });
+    }
+
+    private void updateTask(){
+        //if the mobile number is not in correct form, return an error
+        String phoneNumber = contactPhoneEd.getText().toString();
+        phoneNumber = phoneNumber.replaceAll("\\s+", "");
+        if(phoneNumber.length() != 10){
+            if(phoneNumber.length() != 13 && phoneNumber.startsWith("+91")) {
+                contactPhoneEd.setError("Phone number must be ten digit long");
+                contactPhoneEd.requestFocus();
+                return;
+            }
+        }
+
+        if(oldName.equals(contactNameEd.getText().toString()) && oldPhone.equals(contactPhoneEd.getText().toString()) ){
+            finish();
+            return; //if no change is found, do not do anything
+        }
+
+        //Otherwise send back to previous page with updated value
+        Intent sendBack = new Intent();
+        sendBack.putExtra(CONTACT_NAME_CHANGE_EXTRA, contactNameEd.getText().toString());
+        sendBack.putExtra(CONTACT_PHONE_CHANGE_EXTRA, contactPhoneEd.getText().toString());
+        sendBack.putExtra(CONTACT_LIST_INDEX_EXTRA, index);
+        setResult(Activity.RESULT_OK, sendBack);
+        finish();
     }
 }
