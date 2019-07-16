@@ -667,5 +667,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         }else{
             alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
         }
+
+        if(isServiceRunning(AlertService.class) || isServiceRunning(AlertInitiator.class)){
+            alert_fab.setImageDrawable(getDrawable(R.drawable.close_icon));
+        }else{
+            alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
+        }
     }
 }

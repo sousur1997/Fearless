@@ -220,6 +220,9 @@ public class AlertService extends Service implements LocationListener{
 
                 startForeground(2, notification);
 
+                //send first sms without location details
+                sendMessage("I'm in Risk!!! Trying to send current address within few moments", contactCount);
+
                 if(isServiceRunning(AllScreenService.class)){
                     Intent stopAllScr = new Intent(AlertService.this, AllScreenService.class);
                     stopAllScr.setAction(STOP_ALL_SCR);
@@ -248,7 +251,7 @@ public class AlertService extends Service implements LocationListener{
             if(tempAddress == null || tempAddress.equals("null")){
                 address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
             }else{
-                address = "I am in Risk, I'm currently at" + tempAddress;
+                address = "I am in Risk!!! My " + tempAddress;
             }
         }
 
@@ -366,8 +369,8 @@ public class AlertService extends Service implements LocationListener{
 
             if(addresses != null){
                 Address returnAddress = addresses.get(0);
-                StringBuilder addressStringBuilder = new StringBuilder("Current Location: ");
-                addressStringBuilder.append("Address:" + returnAddress.getAddressLine(0));
+                StringBuilder addressStringBuilder = new StringBuilder("current ");
+                addressStringBuilder.append("location: " + returnAddress.getAddressLine(0));
 
                 address = addressStringBuilder.toString();
             }
