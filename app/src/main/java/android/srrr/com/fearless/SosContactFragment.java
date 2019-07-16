@@ -614,11 +614,13 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
     @Override
     public void onResume() {
         super.onResume();
-        mAuth.getCurrentUser().reload().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                user.isEmailVerified();
-            }
-        });
+        if(user != null) {
+            user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    //user is reloaded
+                }
+            });
+        }
     }
 }
