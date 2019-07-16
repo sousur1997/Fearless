@@ -21,7 +21,7 @@
 
     <application
         android:name=".AppSetup"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:appComponentFactory="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,51 +32,64 @@
         <activity
             android:name=".ContactUpdateActivity"
             android:theme="@style/profile_setup_theme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/AppInnerTheme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MapPathActivity"
             android:theme="@style/AppInnerTheme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SliderActivity" />
+        <activity android:name=".SliderActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AppActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppInnerTheme" />
+            android:theme="@style/AppInnerTheme"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".LocationServiceGPS" />
         <service android:name=".AllScreenService"
             android:stopWithTask="false"/>
 
-        <activity android:name=".TestMenuActivity" />
+        <activity android:name=".TestMenuActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
         <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
         <activity
             android:name=".ProfilePage"
+            android:screenOrientation="portrait"
             android:theme="@style/Profile_Theme"
             android:launchMode="singleTop"/>
         <activity
             android:name=".ProfileSetup"
+            android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
             android:name=".TestLayoutActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".WorkplaceSetup"
+            android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
 
         <meta-data
@@ -90,9 +103,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".MoveLocationSettings" />
+        <activity android:name=".MoveLocationSettings"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".EmailVerification"
+            android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme"
             android:launchMode="singleTop"/>
 
@@ -111,10 +126,12 @@
 
         <activity
             android:name=".AlertCloseConfirmActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
             android:name=".AboutUs"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
 
         <receiver android:name=".StartServiceOnBootReceiver">
@@ -125,5 +142,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

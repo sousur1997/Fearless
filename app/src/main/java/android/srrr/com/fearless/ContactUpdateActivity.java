@@ -51,13 +51,24 @@ public class ContactUpdateActivity extends AppCompatActivity {
     private void updateTask(){
         //if the mobile number is not in correct form, return an error
         String phoneNumber = contactPhoneEd.getText().toString();
+
         phoneNumber = phoneNumber.replaceAll("\\s+", "");
-        if(phoneNumber.length() != 10){
-            if(phoneNumber.length() != 13 && phoneNumber.startsWith("+91")) {
-                contactPhoneEd.setError("Phone number must be ten digit long");
+        if(phoneNumber.length() > 10){
+            if(phoneNumber.length() == 13) {
+                if(!phoneNumber.startsWith("+91")) {
+                    contactPhoneEd.setError("Phone number will be either ten digits long or\n+91 can be added at the beginning");
+                    contactPhoneEd.requestFocus();
+                    return;
+                }
+            }else{
+                contactPhoneEd.setError("Phone number will be either ten digits long or\n+91 can be added at the beginning");
                 contactPhoneEd.requestFocus();
                 return;
             }
+        }else if(phoneNumber.length() < 10){
+            contactPhoneEd.setError("Phone number must be at least ten digits long");
+            contactPhoneEd.requestFocus();
+            return;
         }
 
         if(oldName.equals(contactNameEd.getText().toString()) && oldPhone.equals(contactPhoneEd.getText().toString()) ){

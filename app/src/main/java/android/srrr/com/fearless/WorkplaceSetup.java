@@ -174,18 +174,21 @@ public class WorkplaceSetup extends AppCompatActivity {
 
     private void UpdateWorkspaceToFirebase(){
         //check info formats and show errors if any
-        if(phone_ed.getText().toString().length() < 8){
-            phone_ed.setError("Phone number will be at lease 8 digit long");
-            phone_ed.requestFocus();
-            resetState();
-            return;
+        if(!phone_ed.getText().toString().isEmpty()) {
+            if (phone_ed.getText().toString().length() < 8) {
+                phone_ed.setError("Phone number will be at lease 8 digit long");
+                phone_ed.requestFocus();
+                resetState();
+                return;
+            }
         }
-
-        if(pin.getText().toString().length() != 6){
-            pin.setError("Pin must be six digit long");
-            pin.requestFocus();
-            resetState();
-            return;
+        if(!pin.getText().toString().isEmpty()) {
+            if (pin.getText().toString().length() != 6) {
+                pin.setError("Pin must be six digit long");
+                pin.requestFocus();
+                resetState();
+                return;
+            }
         }
 
         String wp_name = work_place.getText().toString();

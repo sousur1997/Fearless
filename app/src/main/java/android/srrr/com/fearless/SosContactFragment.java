@@ -610,4 +610,15 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
         intent.putExtra(CONTACT_LIST_INDEX_EXTRA, index);
         getActivity().startActivityForResult(intent, CONTACT_UPDATE_REQUEST);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAuth.getCurrentUser().reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                user.isEmailVerified();
+            }
+        });
+    }
 }

@@ -245,7 +245,11 @@ public class AlertService extends Service implements LocationListener{
         if(tempAddress == null && !isNetworkConnected()) { //if the address is found, otherwise network is not connected
             address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
         }else{
-            address = "I am in Risk, I'm currently at" + tempAddress;
+            if(tempAddress == null || tempAddress.equals("null")){
+                address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
+            }else{
+                address = "I am in Risk, I'm currently at" + tempAddress;
+            }
         }
 
         if(automaticMessageRepeat) {
@@ -428,13 +432,13 @@ public class AlertService extends Service implements LocationListener{
         for(int i = 0; i<contact_count; i++){
             try {
                 //***Important code. Will may charge money for SMS
-                /*SmsManager smsManager = SmsManager.getDefault();
+                SmsManager smsManager = SmsManager.getDefault();
                 if(message.length() > 160){
                     ArrayList<String> parts = smsManager.divideMessage(message);
                     smsManager.sendMultipartTextMessage(contactList.get(i).getPhone(), null, parts, null, null);
                 }else{
                     smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
-                }*/
+                }
                 Toast.makeText(getApplicationContext(), "SMS Sent ", Toast.LENGTH_LONG).show();
             }catch(Exception e) {
                 e.printStackTrace();

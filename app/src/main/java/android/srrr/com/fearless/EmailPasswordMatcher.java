@@ -8,7 +8,7 @@ public class EmailPasswordMatcher {
     private Pattern pattern;
     private Matcher matcher;
 
-    private static final String PASSWORD_MATCH_RE = "((?=.*[!@#$%^&])(?=.*[A-Za-z]{2,})(?=.*\\d).{8,14})";
+    private static final String PASSWORD_MATCH_RE = "((?=.*[(){}?><|*~!@#$%^&+/-])(?=.*[A-Za-z]{2,})(?=.*\\d).{8,14})";
     private static final String EMAIL_RE = "^(.+)@(.+)$";
 
     /*

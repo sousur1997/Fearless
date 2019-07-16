@@ -306,4 +306,12 @@ public class AlertCloseConfirmActivity extends AppCompatActivity {
         }
         return json;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isServiceRunning(AlertService.class)){
+            finish();
+        }
+    }
 }

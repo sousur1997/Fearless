@@ -91,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void registerUser(){
         String email = email_ed.getText().toString();
+        email = email.trim();
         String password = pass_ed.getText().toString();
         String conf_pass = confirm_ed.getText().toString();
 
