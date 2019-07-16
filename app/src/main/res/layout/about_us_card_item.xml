@@ -43,12 +43,12 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline105"
         app:layout_constraintEnd_toStartOf="@+id/guideline109"
         app:layout_constraintStart_toStartOf="@+id/guideline108"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toTopOf="@+id/guideline104" />
 
     <TextView
         android:id="@+id/loremText"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_centerInParent="true"
         android:layout_margin="5dp"
         android:layout_marginStart="8dp"
@@ -56,10 +56,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ellipsize="middle"
-        android:text="@string/lorem"
+        android:gravity="center"
+        android:text='Soumyadeep Sur","Lead Programmer/Designer of Android/Web\n" + "Commander-in-chief of this project. He has designed and implemented most of the features of the android app, and Fearless Admin/Web.","sousur1997@gmail.com'
         android:textAlignment="center"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline106"
         app:layout_constraintEnd_toStartOf="@+id/guideline109"
         app:layout_constraintStart_toStartOf="@+id/guideline108"
@@ -105,7 +106,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp"
-        app:layout_constraintGuide_percent="0.48" />
+        app:layout_constraintGuide_percent="0.45" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline106"
