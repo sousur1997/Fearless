@@ -60,7 +60,8 @@
             android:name=".AppActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppInnerTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            />
 
         <service android:name=".LocationServiceGPS" />
         <service android:name=".AllScreenService"

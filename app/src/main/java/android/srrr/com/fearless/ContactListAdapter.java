@@ -129,8 +129,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void sendSMS(String number){
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setData(Uri.parse("smsto:"+number));
+        Uri uri = Uri.parse("smsto:"+number);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         if(intent.resolveActivity(context.getPackageManager()) != null){
             context.startActivity(intent);
         }
