@@ -23,7 +23,10 @@ The application has a special feature that if the location is not been able to f
   
  # Developers and Contributors
   
-  Developed by: [Soumyadeep Sur](https://github.com/sousur1997/)
+  **Developed by:**
+  - [Soumyadeep Sur](https://github.com/sousur1997/)
+  - [Rohit Ghosal](https://https://github.com/devrg/)
+  - [Rittik Mondal(https://github.com/rittikmondal1997)
   
  # Android App Download Link
  [Download Here](https://fearless-238805.firebaseapp.com/beta.html)
