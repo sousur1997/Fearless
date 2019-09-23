@@ -77,11 +77,4 @@ public class FearlessConstant {
 
     //pubnub channel name
     public static final String CHANNEL_NAME = "alertChannel";
-
-    //custom action
-    public static final String NEARBY_ALERT_SEND = "fearless_alert_send";
-
-    //nearby alert activity loading file
-    public static final String NEARBY_ALERT_FILE = "nearby_alert_list_file.json";
-    public static final String NEARBY_ALERT_OBJECT_KEY = "nearby_alert_object_key";
 }

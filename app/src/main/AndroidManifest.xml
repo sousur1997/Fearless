@@ -13,15 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".NearbyAlertMapActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".NearbyAlertsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
+
         <activity
             android:name=".ContactUpdateActivity"
             android:launchMode="singleTop"
@@ -100,15 +97,15 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/gmap_api_key" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <receiver android:name=".NotificationActionReceiver" />
+
         <receiver android:name=".StartServiceOnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -116,20 +113,11 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".NearbyAlertBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="fearless_alert_send" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".NearbyAlertService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
+
         <service android:name=".LocationServiceGPS" />
         <service
             android:name=".AllScreenService"
