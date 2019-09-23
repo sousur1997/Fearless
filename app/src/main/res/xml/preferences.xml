@@ -52,5 +52,21 @@
             android:summary="Select the time interval to store location history"
             android:title="Location Update Interval" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="receive_alerts_preference"
+            android:summary="Click to enable/disable alert reception from other users. Restart the app to make the changes effective."
+            android:title="Receive alerts from other users" />
+
+        <ListPreference
+            android:defaultValue="200"
+            android:dialogTitle="Select Alert Receiving Radius "
+            android:entries="@array/settings_alert_receival_distance"
+            android:entryValues="@array/settings_alert_receival_distance_values"
+            android:key="key_receive_alert_distance"
+            android:summary="Select the distance to receive alerts from other users. Restart the app to make the changes effective."
+            android:title="Alert Receipt from other users"
+            android:dependency="receive_alerts_preference"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

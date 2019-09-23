@@ -59,7 +59,9 @@ public class LocationFetch implements LocationListener {
         criteria.setSpeedRequired(false);
         criteria.setCostAllowed(true);
         criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
         criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_LOW);
 
         locationManager = (LocationManager) app_context.getSystemService(Context.LOCATION_SERVICE);
 

@@ -2,11 +2,13 @@ package android.srrr.com.fearless;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -33,7 +35,20 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.models.consumer.PNStatus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,8 +66,11 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_BROADCAST_STOP;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_COMPLETE;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_JSON_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.CHANNEL_NAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
+import static android.srrr.com.fearless.FearlessConstant.PUBLISH_KEY;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALL_SCR;
+import static android.srrr.com.fearless.FearlessConstant.SUBSCRIBE_KEY;
 
 public class AlertService extends Service implements LocationListener{
     private NotificationActionReceiver receiver;
@@ -70,6 +88,9 @@ public class AlertService extends Service implements LocationListener{
     private String address;
 
     private double latitude, longitude;
+    private Long timestampLong;
+    private String timestamp;
+
 
     private PreferenceManager prefManager;
     private SharedPreferences preferences;
@@ -78,10 +99,18 @@ public class AlertService extends Service implements LocationListener{
     private CountDownTimer countDownTimer;
     private boolean alertStopped;
 
+    private PNConfiguration pnConfiguration;
+    private PubNub pubNub;
+
+    private JsonObject alertMessage;
+    private FirebaseUser firebaseUser;
+
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
         super.onCreate();
+        timestampLong = new Long(System.currentTimeMillis());
+        timestamp = timestampLong.toString();
         singleFlag = true;
         alertStopped = false;
         contactList = new ArrayList<>();
@@ -120,9 +149,10 @@ public class AlertService extends Service implements LocationListener{
         }
 
         alertEvent = new AlertEvent(historyUpdateOffset);
-
+//       This was the previous method of collecting location
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationInterval, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, locationInterval, 0, this);
 
         messageTimer = null;
         historyUpdateTimer = null;
@@ -143,6 +173,16 @@ public class AlertService extends Service implements LocationListener{
         };
 
         countDownTimer.start();
+
+        //pubnub initialize
+        pnConfiguration = new PNConfiguration();
+        pnConfiguration.setSubscribeKey(SUBSCRIBE_KEY);
+        pnConfiguration.setPublishKey(PUBLISH_KEY);
+        pubNub = new PubNub(pnConfiguration);
+
+        //get current user id
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        alertMessage = new JsonObject();
     }
 
     private void askNotification(){
@@ -221,7 +261,7 @@ public class AlertService extends Service implements LocationListener{
                 startForeground(2, notification);
 
                 //send first sms without location details
-                sendMessage("I'm in Risk!!! Trying to send current address within few moments", contactCount);
+//                sendMessage("I'm at Risk!!! Trying to send my current address within a few seconds!", contactCount);
 
                 if(isServiceRunning(AllScreenService.class)){
                     Intent stopAllScr = new Intent(AlertService.this, AllScreenService.class);
@@ -241,17 +281,19 @@ public class AlertService extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        //Toast.makeText(getApplicationContext(), "Lat:" + location.getLatitude() + "\nLng:"+location.getLongitude(), Toast.LENGTH_LONG).show();
-        latitude = location.getLatitude(); longitude = location.getLongitude();
+        locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
+        //Toast.makeText(getApplicationContext(), "Lat:" + location.getLatitude() + "\nLng:"+location.getLongitude(), Toast.LENGTH_LONG).show();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
         String tempAddress = getCurrentAddress(location.getLatitude(), location.getLongitude());
         if(tempAddress == null && !isNetworkConnected()) { //if the address is found, otherwise network is not connected
             address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
         }else{
             if(tempAddress == null || tempAddress.equals("null")){
-                address = "I am in Risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
+                address = "I am at risk, Location Link:\nhttps://maps.google.com/?q="+latitude+","+longitude+"";
             }else{
-                address = "I am in Risk!!! My " + tempAddress;
+                address = "I am at risk!!! My " + tempAddress;
             }
         }
 
@@ -261,7 +303,7 @@ public class AlertService extends Service implements LocationListener{
                     @Override
                     public void onBeforeCount() {
                         //Toast.makeText(getApplicationContext(), "Sending message: " + address, Toast.LENGTH_LONG).show();
-                        sendMessage(address, contactCount);
+                       //sendMessage(address, contactCount);
                     }
 
                     @Override
@@ -279,7 +321,7 @@ public class AlertService extends Service implements LocationListener{
         }else {
             //send single SMS and stop
             if (singleFlag) {
-                sendMessage(address, contactCount);
+                //sendMessage(address, contactCount);
                 singleFlag = false;
             }
         }
@@ -303,6 +345,24 @@ public class AlertService extends Service implements LocationListener{
             };
             historyUpdateTimer.count();
         }
+
+        timestampLong = new Long(System.currentTimeMillis());
+        timestamp = timestampLong.toString(); //get the UNIX timestamp
+        alertMessage.addProperty("uid",firebaseUser.getUid());
+        alertMessage.addProperty("timestamp",timestamp);
+        alertMessage.addProperty("latitude",latitude);
+        alertMessage.addProperty("longitude",longitude);
+
+
+        pubNub.publish()
+                .message(alertMessage)
+                .channel(CHANNEL_NAME)
+                .async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        //check if the message is published correctly
+                    }
+                });
     }
 
     @Override
@@ -321,6 +381,7 @@ public class AlertService extends Service implements LocationListener{
         Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(settingsIntent);
+//          showGPSDisabledAlertToUser();
     }
 
     @Override
@@ -458,4 +519,5 @@ public class AlertService extends Service implements LocationListener{
         }
         return false;
     }
+
 }

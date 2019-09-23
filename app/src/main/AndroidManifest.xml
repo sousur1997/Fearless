@@ -3,22 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="android.srrr.com.fearless">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <uses-feature android:name="android.hardware.location.gps" />
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
-
     <application
         android:name=".AppSetup"
         android:allowBackup="false"
@@ -30,56 +14,60 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
         <activity
-            android:name=".ContactUpdateActivity"
-            android:theme="@style/profile_setup_theme"
+            android:name=".NearbyAlertsActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppInnerTheme" />
+
+        <activity
+            android:name=".ContactUpdateActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/profile_setup_theme" />
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/AppInnerTheme"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".MapPathActivity"
-            android:theme="@style/AppInnerTheme"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppInnerTheme" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SliderActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SliderActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AppActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppInnerTheme"
             android:screenOrientation="portrait"
-            />
-
-        <service android:name=".LocationServiceGPS" />
-        <service android:name=".AllScreenService"
-            android:stopWithTask="false"/>
-
-        <activity android:name=".TestMenuActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
-        <activity android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:theme="@style/AppInnerTheme" />
+        <activity
+            android:name=".TestMenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilePage"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Profile_Theme"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Profile_Theme" />
         <activity
             android:name=".ProfileSetup"
             android:screenOrientation="portrait"
@@ -92,39 +80,14 @@
             android:name=".WorkplaceSetup"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/gmap_api_key" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <activity android:name=".MoveLocationSettings"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MoveLocationSettings"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EmailVerification"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/profile_setup_theme"
-            android:launchMode="singleTop"/>
-
-        <service
-            android:name=".AlertInitiator"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false"/>
-        <service
-            android:name=".AlertService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false"/>
-
-        <receiver android:name=".NotificationActionReceiver" />
-
+            android:theme="@style/profile_setup_theme" />
         <activity
             android:name=".AlertCloseConfirmActivity"
             android:screenOrientation="portrait"
@@ -134,6 +97,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/gmap_api_key" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <receiver android:name=".NotificationActionReceiver" />
 
         <receiver android:name=".StartServiceOnBootReceiver">
             <intent-filter>
@@ -142,5 +113,46 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+        <service
+            android:name=".NearbyAlertService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <service android:name=".LocationServiceGPS" />
+        <service
+            android:name=".AllScreenService"
+            android:stopWithTask="false" />
+        <service
+            android:name=".AlertInitiator"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
+        <service
+            android:name=".AlertService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+    <uses-feature android:name="android.hardware.location.gps" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 </manifest>

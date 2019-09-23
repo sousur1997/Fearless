@@ -10,6 +10,7 @@ public class FearlessConstant {
     public static final String ALERT_BROADCAST_STOP = "alert_broadcast_stop";
     public static final String ALERT_BROADCAST_CALL = "alert_broadcast_call";
 
+    public static final String NEARBY_ALERT_CHANNEL = "NearbyAlertChannel";
     public static final String ALERT_CHANNEL = "AlertServiceChannel";
     public static final String ALL_SCREEN_CHANNEL = "allScreenChannel";
     public static final String INITIATOR_CHANNEL = "initiator_noti_channel";
@@ -18,6 +19,8 @@ public class FearlessConstant {
     public static final String STOP_ALL_SCR = "All_Screen_Service_Stop";
     public static final String ALERT_RAISE_BROADCAST = "alert_raise_broadcast";
     public static final String ALERT_INIT_START = "alert_init_start";
+    public static final String START_NEARBY_SERVICE = "Nearby_alert_start";
+    public static final String STOP_NEARBY_SERVICE = "Nearby_alert_stop";
 
     public static final int SELECT_FILE = 2;
     public static final int ALL_PERMISSION = 500;
@@ -65,6 +68,13 @@ public class FearlessConstant {
     public static final String LOG_ACCOUNT_SETUP = "Provide/Update Personal Information";
     public static final String LOG_WORKPLACE_SETUP = "Provide/Update Workplace Information";
 
+
     public static final String HELP_URL = "https://fearless-238805.web.app/help.html";
 
+    //pubnub keys
+    public static final String SUBSCRIBE_KEY = "sub-c-b68682f4-d6b6-11e9-8d6d-8621f881bfdb";
+    public static final String PUBLISH_KEY = "pub-c-fedf0f4f-2850-4550-a13b-b8090b5d4002";
+
+    //pubnub channel name
+    public static final String CHANNEL_NAME = "alertChannel";
 }

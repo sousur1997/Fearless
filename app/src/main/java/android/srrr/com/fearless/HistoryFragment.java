@@ -85,7 +85,7 @@ public class HistoryFragment extends Fragment implements ValueEventListener{
         refreshLayout = getView().findViewById(R.id.refresh_layout);
         history_view = getView().findViewById(R.id.history_list_view);
         historyBack = getView().findViewById(R.id.history_back_image);
-        historyBackTV = getView().findViewById(R.id.history_back_tv);
+        historyBackTV = getView().findViewById(R.id.nearby_alert_back_tv);
 
         historyList = new TreeSet<AlertEvent>(new AlertComparator());
 

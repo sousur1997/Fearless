@@ -4,13 +4,13 @@ apply plugin: 'io.fabric'
 android {
     signingConfigs {
         SignFearless {
-            storeFile file('D:\\Safety app Design\\Signed APK\\fearless_keystore.jks')
+            storeFile file('/home/r-pc/AndroidStudioProjects/Fearless/Fearless-key/fearless_keystore.jks')
             storePassword 'Fear$tore$Rrr'
             keyAlias = 'Fearless'
             keyPassword 'Fear$tore$Rrr'
         }
         debug {
-            storeFile file('D:\\Safety app Design\\Signed APK\\fearless_keystore.jks')
+            storeFile file('/home/r-pc/AndroidStudioProjects/Fearless/Fearless-key/fearless_keystore.jks')
             storePassword 'Fear$tore$Rrr'
             keyAlias = 'Fearless'
             keyPassword 'Fear$tore$Rrr'
@@ -33,6 +33,7 @@ android {
         }
     }
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -68,6 +69,7 @@ dependencies {
 
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.+'
 }
 
 apply plugin: 'com.google.gms.google-services'

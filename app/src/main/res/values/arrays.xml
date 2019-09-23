@@ -34,4 +34,18 @@
         <item>4 minutes</item>
         <item>5 minutes</item>
     </string-array>
+    <string-array name="settings_alert_receival_distance">
+        <item>100m</item>
+        <item>200m</item>
+        <item>300m</item>
+        <item>400m</item>
+        <item>500m</item>
+    </string-array>
+    <string-array name="settings_alert_receival_distance_values">
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+    </string-array>
 </resources>

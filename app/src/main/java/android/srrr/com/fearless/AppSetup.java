@@ -9,6 +9,7 @@ import android.provider.Settings;
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.INITIATOR_CHANNEL;
+import static android.srrr.com.fearless.FearlessConstant.NEARBY_ALERT_CHANNEL;
 
 public class AppSetup extends Application {
 
@@ -41,6 +42,12 @@ public class AppSetup extends Application {
             NotificationChannel initNotification = new NotificationChannel(INITIATOR_CHANNEL, "Initiator Notify Channel", NotificationManager.IMPORTANCE_HIGH);
             initNotification.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
             notificationManager.createNotificationChannel(initNotification);
+
+            //Notification channel for nearby alerts
+            NotificationChannel nearbyAlertNotification = new NotificationChannel(NEARBY_ALERT_CHANNEL, "Nearby Alerts channel", NotificationManager.IMPORTANCE_LOW);
+            initNotification.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
+            notificationManager.createNotificationChannel(nearbyAlertNotification);
+
         }
     }
 }

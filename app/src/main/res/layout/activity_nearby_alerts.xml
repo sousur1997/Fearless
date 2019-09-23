@@ -4,8 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/refresh_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
-        android:id="@+id/history_back_image"
+        android:id="@+id/nearby_alerts_back_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -20,7 +32,7 @@
         app:srcCompat="@mipmap/history_page_back" />
 
     <TextView
-        android:id="@+id/nearby_alert_back_tv"
+        android:id="@+id/nearby_alerts_back_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,7 +40,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/comforta_font"
-        android:text="No history found. Swipe down to refresh"
+        android:text="No nearby alerts right now!"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline98"
@@ -44,11 +56,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/history_list_view"
+            android:id="@+id/nearby_alerts_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="40dp">

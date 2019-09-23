@@ -41,6 +41,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
@@ -50,6 +51,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +67,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -72,6 +77,7 @@ import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_REQUEST_COD
 import static android.srrr.com.fearless.FearlessConstant.ALERT_CLOSE_RESULT_CODE;
 import static android.srrr.com.fearless.FearlessConstant.ALL_SCREEN_CHANNEL;
 import static android.srrr.com.fearless.FearlessConstant.ALL_SCR_START_BROADCAST_FILTER;
+import static android.srrr.com.fearless.FearlessConstant.CHANNEL_NAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.HELP_URL;
@@ -81,14 +87,19 @@ import static android.srrr.com.fearless.FearlessConstant.LOG_LOGOUT;
 import static android.srrr.com.fearless.FearlessConstant.LOG_SIGN_UP;
 import static android.srrr.com.fearless.FearlessConstant.PICK_CONTACT;
 import static android.srrr.com.fearless.FearlessConstant.PROFILE_ACTIVITY_CODE;
+import static android.srrr.com.fearless.FearlessConstant.PUBLISH_KEY;
 import static android.srrr.com.fearless.FearlessConstant.SETTINGS_ACTIVITY_REQUEST;
 import static android.srrr.com.fearless.FearlessConstant.START_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.START_ALL_SCR;
+import static android.srrr.com.fearless.FearlessConstant.START_NEARBY_SERVICE;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALERT;
 import static android.srrr.com.fearless.FearlessConstant.STOP_ALL_SCR;
+import static android.srrr.com.fearless.FearlessConstant.STOP_NEARBY_SERVICE;
+import static android.srrr.com.fearless.FearlessConstant.SUBSCRIBE_KEY;
+
+
 
 public class AppActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
-
     Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -227,8 +238,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
             logged_in = true;
 
-            //start All screen notification when logged in.
+            //start All screen notification and Nearby alert service when logged in.
             if(aControl.getAlertInit() == false && aControl.getAlreadyAlerted() == false) {
+                if(sharedPreferences.getBoolean("receive_alerts_preference",true)) {
+                    startNearbyAlertService();
+                }
                 if (sharedPreferences.getBoolean("key_all_scr_noti", true)) {
                     startAllScrNoti();
                 }
@@ -335,6 +349,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         LocalBroadcastManager.getInstance(this).registerReceiver(all_scrReceiver, all_filter);
 
         fearlessLog = FearlessLog.getInstance();
+
     }
 
     private void startAllScrNoti(){
@@ -343,10 +358,22 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         ContextCompat.startForegroundService(this, all_scr_alert);
     }
 
+    private void startNearbyAlertService(){
+        Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
+        nearbyAlert.setAction(START_NEARBY_SERVICE);
+        ContextCompat.startForegroundService(this, nearbyAlert);
+    }
+
     public void stopAllScrNoti(){
         Intent all_scr_alert = new Intent(this, AllScreenService.class);
         all_scr_alert.setAction(STOP_ALL_SCR);
         ContextCompat.startForegroundService(this, all_scr_alert);
+    }
+
+    public void stopNearbyAlertService(){
+        Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
+        nearbyAlert.setAction(STOP_NEARBY_SERVICE);
+        ContextCompat.startForegroundService(this, nearbyAlert);
     }
 
     private void retrieveImageToImageView(){
@@ -486,6 +513,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                     if (aControl.getAlreadyAlerted() == false && aControl.getAlertInit() == false) {
                         signOut();
                         stopAllScrNoti();
+                        stopNearbyAlertService();
                     }else{
                         AlertDialog dialog;
                         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -541,7 +569,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_item_help:
                 Uri uri = Uri.parse(HELP_URL);
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
-            default:
+                return true;
+            case R.id.nav_item_nearby_alert:
+                startActivity(new Intent(AppActivity.this, NearbyAlertsActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                return true;
+                default:
                 return false;
         }
     }
@@ -596,6 +628,14 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 } else {
                     stopAllScrNoti();
                 }
+            }
+        }
+        if(key.equals("receive_alerts_preference")){
+            if(sharedPreferences.getBoolean(key,true)) {
+                startNearbyAlertService();
+            }
+            else{
+                stopNearbyAlertService();
             }
         }
     }

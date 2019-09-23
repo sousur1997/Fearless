@@ -1,6 +1,9 @@
 package android.srrr.com.fearless;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -149,34 +153,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         loc_fetch.fetchCurrentLocation();
         lat = loc_fetch.fetchLatitude();
         lng = loc_fetch.fetchLongitude();
+//        centreMapOnLocation(lat, lng, "Your Current Location");
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showGPSDisabledAlertToUser();
-        } else {
-            if (lat != 0.0 && lng != 0.0) {
-                centreMapOnLocation(lat, lng, "Your Current Location");
-            }
+        }
+        if (lat != 0.0 && lng != 0.0) {
+            centreMapOnLocation(lat, lng, "Your Current Location");
         }
     }
 
     private void showGPSDisabledAlertToUser() {
-        Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(callGPSSettingIntent);
+        final Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("To access your location more precisely, we would like you to enable GPS from this settings menu. Please select 'High Accuracy' from the menu.")
+                .setCancelable(true)
+                .setPositiveButton("Yes, go ahead", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(callGPSSettingIntent);
+                    }
+                })
+                .setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void openMapWithLocation(String search_string) {
+        loc_fetch.fetchCurrentLocation();
+        lat = loc_fetch.fetchLatitude();
+        lng = loc_fetch.fetchLongitude();
+
+        //open the google map using the search string and latitude and longitude
+        Uri googleMapUri = Uri.parse("geo: " + lat + ", " + lng + "?q=" + search_string + "");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showGPSDisabledAlertToUser();
-        } else {
-            loc_fetch.fetchCurrentLocation();
-            lat = loc_fetch.fetchLatitude();
-            lng = loc_fetch.fetchLongitude();
-
-            //open the google map using the search string and latitude and longitude
-            Uri googleMapUri = Uri.parse("geo: " + lat + ", " + lng + "?q=" + search_string + "");
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
         }
     }
 
