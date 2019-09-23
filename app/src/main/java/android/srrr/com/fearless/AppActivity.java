@@ -364,6 +364,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         startService(nearbyAlert);
     }
 
+    private void startNearbyAlertService(){
+        Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
+        nearbyAlert.setAction(START_NEARBY_SERVICE);
+        ContextCompat.startForegroundService(this, nearbyAlert);
+    }
+
     public void stopAllScrNoti(){
         Intent all_scr_alert = new Intent(this, AllScreenService.class);
         all_scr_alert.setAction(STOP_ALL_SCR);
@@ -374,6 +380,12 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
         nearbyAlert.setAction(STOP_NEARBY_SERVICE);
         stopService(nearbyAlert);
+    }
+
+    public void stopNearbyAlertService(){
+        Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
+        nearbyAlert.setAction(STOP_NEARBY_SERVICE);
+        ContextCompat.startForegroundService(this, nearbyAlert);
     }
 
     private void retrieveImageToImageView(){
