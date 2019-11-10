@@ -29,11 +29,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="gmap_api_key">AIzaSyAVhWF7kmLWVm4uny71NxOWfCME7P6Diow</string>
+    <string name="gmap_api_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
-    <string name="pubnub_publish">pub-c-fedf0f4f-2850-4550-a13b-b8090b5d4002</string>
+    <string name="pubnub_publish">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
-    <string name="pubnub_subscribe">sub-c-b68682f4-d6b6-11e9-8d6d-8621f881bfdb</string>
+    <string name="pubnub_subscribe">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
     <string name="firebase_project_id">fearless-238805</string>
 
