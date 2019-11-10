@@ -513,7 +513,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 if(logged_in) {
                     if (aControl.getAlreadyAlerted() == false && aControl.getAlertInit() == false) {
                         signOut();
-                        stopAllScrNoti();
+                        if(isServiceRunning(AllScreenService.class))
+                            stopAllScrNoti();
                         stopNearbyAlertService();
                     }else{
                         AlertDialog dialog;
@@ -586,7 +587,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    stopAllScrNoti();
+                                    if(isServiceRunning(AllScreenService.class))
+                                        stopAllScrNoti();
                                     stopNearbyAlertService();
                                     finish();
                                 }
@@ -761,4 +763,5 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             alert_fab.setImageDrawable(getDrawable(R.drawable.ic_alert_new_fab_icon));
         }
     }
+
 }

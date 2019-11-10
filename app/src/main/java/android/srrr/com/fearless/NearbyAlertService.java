@@ -37,6 +37,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
@@ -125,14 +126,13 @@ public class NearbyAlertService extends Service {
                     public void status(PubNub pubnub, PNStatus pnStatus) {
 
                     }
-                    //the messages received from pubnub are modified here
+
                     @Override
                     public void message(PubNub pubnub, PNMessageResult pnMessageResult) {
                         Log.e("Subscription Result",pnMessageResult.getMessage().toString());
                         alertNotification = pnMessageResult.getMessage().toString();
                         sendNearbyMessageData(alertNotification);
 //                        checkIfOutdated();
-
                     }
 
                     @Override
@@ -157,6 +157,11 @@ public class NearbyAlertService extends Service {
 
                     @Override
                     public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+                    }
+
+                    @Override
+                    public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
                     }
                 });
