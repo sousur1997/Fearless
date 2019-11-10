@@ -4,13 +4,13 @@ apply plugin: 'io.fabric'
 android {
     signingConfigs {
         SignFearless {
-            storeFile file('/home/r-pc/AndroidStudioProjects/Fearless/Fearless-key/fearless_keystore.jks')
+            storeFile file('C:\\Users\\R\\StudioProjects\\Safety app Design\\Signed APK\\fearless_keystore.jks')
             storePassword 'Fear$tore$Rrr'
             keyAlias = 'Fearless'
             keyPassword 'Fear$tore$Rrr'
         }
         debug {
-            storeFile file('/home/r-pc/AndroidStudioProjects/Fearless/Fearless-key/fearless_keystore.jks')
+            storeFile file('C:\\Users\\R\\StudioProjects\\Safety app Design\\Signed APK\\fearless_keystore.jks')
             storePassword 'Fear$tore$Rrr'
             keyAlias = 'Fearless'
             keyPassword 'Fear$tore$Rrr'
@@ -22,7 +22,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.3.8-beta"
+        versionName "2.0.0-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
