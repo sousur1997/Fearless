@@ -194,9 +194,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showGPSDisabledAlertToUser();
-        }
+//        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            showGPSDisabledAlertToUser();
+//        }
     }
 
     private static boolean hasPermission(Context context, String... Permissions){

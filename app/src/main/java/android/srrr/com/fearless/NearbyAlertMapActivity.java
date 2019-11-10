@@ -1,17 +1,25 @@
 package android.srrr.com.fearless;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -24,7 +32,6 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
@@ -42,6 +49,7 @@ import static android.srrr.com.fearless.FearlessConstant.SUBSCRIBE_KEY;
 
 public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private SharedPreferences sharedPreferences;
     private GoogleMap map;
     private Toolbar toolbar;
     private NearbyAlertDataModel obj;
@@ -52,25 +60,29 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
     private PNConfiguration pnConfiguration;
     private PubNub pubNub;
     Handler mHandler;
-//    boolean flag;
+    private float distanceRadius;
+    private LatLng selfLocation;
+    private LocationFetch locationFetch;
+
+    private long interval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        sharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String distanceRadiusValue = sharedPreferences.getString("key_receive_alert_distance","200");
+        if(distanceRadiusValue!= null){ distanceRadius = Float.parseFloat(distanceRadiusValue);}
         nearbyAlertList = new CopyOnWriteArrayList<>();
         gson = new Gson();
-//        flag = false;
+        interval = 30000;
         super.onCreate(savedInstanceState);
-        //create a pubnub instance as we will listen to the channel for future updates for a particular alert event, if the location changes or not.
-        pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey(SUBSCRIBE_KEY);
-        pubNub = new PubNub(pnConfiguration);
         setContentView(R.layout.activity_nearby_alert_map);
         toolbar = findViewById(R.id.nearby_alert_map_view_toolbar);
         Intent intent = getIntent();
         index = intent.getIntExtra(FearlessConstant.NEARBY_ALERT_OBJECT_KEY, -1);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.alert_location_map);
         mapFragment.getMapAsync(this);
+        locationFetch = new LocationFetch(this);
         //attach a handler
         this.mHandler = new Handler();
 
@@ -92,27 +104,26 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
     }
 
     public void centreMapOnLocation(String title) {
+        locationFetch.fetchCurrentLocation();
+        selfLocation = new LatLng(locationFetch.fetchLatitude(),locationFetch.fetchLongitude());
         currentUserAlertList = new CopyOnWriteArrayList<>();
         //load the alert list from  the specified file
         loadFromFile();
         if (nearbyAlertList.size() > 0) {
             // if list size greater than zero, then update the location on map
             obj = nearbyAlertList.get(index);
-            if(currentUserAlertList.size() == 0) {
-                currentUserAlertList.add(new LatLng(obj.getLatitude(),obj.getLongitude()));
-            }
             toolbar.setTitle(obj.getReadableTime());
-            Log.e("user longitude", Double.toString(obj.getLatitude()));
-            Log.e("user longitude", Double.toString(obj.getLongitude()));
-            LatLng userLocation = new LatLng(obj.getLatitude(), obj.getLongitude());
-            PolylineOptions options = new PolylineOptions().addAll(currentUserAlertList).width(5).color(Color.BLUE).geodesic(true);
-
-            map.addPolyline(options);
-            map.addMarker(new MarkerOptions().position(currentUserAlertList.get(0)).title("Start Position"));
-            if(currentUserAlertList.size() > 1)
-                map.addMarker(new MarkerOptions().position(currentUserAlertList.get(currentUserAlertList.size()-1)).title("Last position"));
-
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUserAlertList.get(0), 18));
+            LatLng alertLocation = new LatLng(obj.getLatitude(), obj.getLongitude());
+            map.clear();
+            map.addMarker(new MarkerOptions().position(alertLocation).title("Alert Location"));
+            map.addMarker(new MarkerOptions().position(selfLocation).title("Self Location"));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(alertLocation, 18));
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(alertLocation)
+                    .strokeColor(0x22F5FC05)
+                    .fillColor(0x22F5FC05)
+                    .radius(distanceRadius);
+            map.addCircle(circleOptions);
         } else {
             //else destroy the activity
             finish();
@@ -157,69 +168,10 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            checkIfOutdated();
             centreMapOnLocation("Alert Location");
-            pubNub.addListener(new SubscribeCallback() {
-                @Override
-                public void status(PubNub pubnub, PNStatus pnStatus) {
-
-                }
-
-                @Override
-                public void message(PubNub pubnub, PNMessageResult pnMessageResult) {
-                    String tempJson = pnMessageResult.getMessage().toString();
-                    NearbyAlertDataModel tempData = gson.fromJson(tempJson, NearbyAlertDataModel.class);
-                    obj = tempData;
-                    LatLng tempLoc = new LatLng(tempData.getLatitude(),tempData.getLongitude());
-                    if(tempData.getUid().equals(obj.getUid())) {
-                        currentUserAlertList.add(tempLoc);
-                    }
-                }
-
-                @Override
-                public void presence(PubNub pubnub, PNPresenceEventResult pnPresenceEventResult) {
-
-                }
-
-                @Override
-                public void signal(PubNub pubnub, PNSignalResult pnSignalResult) {
-
-                }
-
-                @Override
-                public void user(PubNub pubnub, PNUserResult pnUserResult) {
-
-                }
-
-                @Override
-                public void space(PubNub pubnub, PNSpaceResult pnSpaceResult) {
-
-                }
-
-                @Override
-                public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
-
-                }
-
-                @Override
-                public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
-
-                }
-            });
             NearbyAlertMapActivity.this.mHandler.postDelayed(runnable, 30000);
         }
     };
 
-
-    private void checkIfOutdated() {
-        Long timestampLong = new Long(System.currentTimeMillis());
-        if (nearbyAlertList.size() > 0) {
-            for (NearbyAlertDataModel item : nearbyAlertList) {
-                if ((timestampLong - item.getTimestamp()) > 15 * 60 * 90) {        //if alert time is greater than 15 minutes, remove it from list.
-                    nearbyAlertList.remove(nearbyAlertList.indexOf(item));
-                }
-            }
-        }
-    }
 }
 

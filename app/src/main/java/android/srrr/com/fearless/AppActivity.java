@@ -80,6 +80,7 @@ import static android.srrr.com.fearless.FearlessConstant.ALL_SCR_START_BROADCAST
 import static android.srrr.com.fearless.FearlessConstant.CHANNEL_NAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_LOCAL_FILENAME;
 import static android.srrr.com.fearless.FearlessConstant.CONTACT_UPDATE_REQUEST;
+import static android.srrr.com.fearless.FearlessConstant.FEEDBACK_URL;
 import static android.srrr.com.fearless.FearlessConstant.HELP_URL;
 import static android.srrr.com.fearless.FearlessConstant.HISTORY_LIST_FILE;
 import static android.srrr.com.fearless.FearlessConstant.INIT_BROADCAST_FILTER;
@@ -357,11 +358,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         all_scr_alert.setAction(START_ALL_SCR);
         ContextCompat.startForegroundService(this, all_scr_alert);
     }
-
+    //starts the nearby alert service
     private void startNearbyAlertService(){
         Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
         nearbyAlert.setAction(START_NEARBY_SERVICE);
-        ContextCompat.startForegroundService(this, nearbyAlert);
+        startService(nearbyAlert);
     }
 
     public void stopAllScrNoti(){
@@ -369,11 +370,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         all_scr_alert.setAction(STOP_ALL_SCR);
         ContextCompat.startForegroundService(this, all_scr_alert);
     }
-
+    //stops the nearby alert service
     public void stopNearbyAlertService(){
         Intent nearbyAlert = new Intent(this, NearbyAlertService.class);
         nearbyAlert.setAction(STOP_NEARBY_SERVICE);
-        ContextCompat.startForegroundService(this, nearbyAlert);
+        stopService(nearbyAlert);
     }
 
     private void retrieveImageToImageView(){
@@ -570,9 +571,55 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 Uri uri = Uri.parse(HELP_URL);
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 return true;
+
+            case R.id.feedback_page:
+                Uri feedbackUri = Uri.parse(FEEDBACK_URL);
+                startActivity(new Intent(Intent.ACTION_VIEW, feedbackUri));
+                return true;
+
+            case R.id.power_off:
+                if(aControl.getAlreadyAlerted() == false) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
+                            .setCancelable(false)
+                            .setTitle("Do you want to exit this application?")
+                            .setMessage("Exiting this application will turn off all services including the one touch access.")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    stopAllScrNoti();
+                                    stopNearbyAlertService();
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
+                            .setCancelable(false)
+                            .setTitle("Cannot exit application!")
+                            .setMessage("One alert is active. Please close alert to enter into the Settings page")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                return true;
+
             case R.id.nav_item_nearby_alert:
                 startActivity(new Intent(AppActivity.this, NearbyAlertsActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return true;
+
                 default:
                 return false;
         }

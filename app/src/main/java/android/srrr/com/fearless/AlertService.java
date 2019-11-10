@@ -261,7 +261,7 @@ public class AlertService extends Service implements LocationListener{
                 startForeground(2, notification);
 
                 //send first sms without location details
-//                sendMessage("I'm at Risk!!! Trying to send my current address within a few seconds!", contactCount);
+                sendMessage("I'm at Risk!!! Trying to send my current address within a few seconds!", contactCount);
 
                 if(isServiceRunning(AllScreenService.class)){
                     Intent stopAllScr = new Intent(AlertService.this, AllScreenService.class);
@@ -303,7 +303,7 @@ public class AlertService extends Service implements LocationListener{
                     @Override
                     public void onBeforeCount() {
                         //Toast.makeText(getApplicationContext(), "Sending message: " + address, Toast.LENGTH_LONG).show();
-                       //sendMessage(address, contactCount);
+                       sendMessage(address, contactCount);
                     }
 
                     @Override
@@ -321,7 +321,7 @@ public class AlertService extends Service implements LocationListener{
         }else {
             //send single SMS and stop
             if (singleFlag) {
-                //sendMessage(address, contactCount);
+                sendMessage(address, contactCount);
                 singleFlag = false;
             }
         }
@@ -346,14 +346,16 @@ public class AlertService extends Service implements LocationListener{
             historyUpdateTimer.count();
         }
 
+        //add properties to the message that is going to be published in the alert channel
         timestampLong = new Long(System.currentTimeMillis());
         timestamp = timestampLong.toString(); //get the UNIX timestamp
         alertMessage.addProperty("uid",firebaseUser.getUid());
         alertMessage.addProperty("timestamp",timestamp);
         alertMessage.addProperty("latitude",latitude);
         alertMessage.addProperty("longitude",longitude);
+        alertMessage.addProperty("message","alert");
 
-
+        //publish the message in the channel
         pubNub.publish()
                 .message(alertMessage)
                 .channel(CHANNEL_NAME)
@@ -398,6 +400,25 @@ public class AlertService extends Service implements LocationListener{
 
         if(historyUpdateTimer != null)
             historyUpdateTimer.cancel(); //cancel the timer
+
+        timestampLong = new Long(System.currentTimeMillis());
+        timestamp = timestampLong.toString(); //get the UNIX timestamp
+        alertMessage.addProperty("uid",firebaseUser.getUid());
+        alertMessage.addProperty("timestamp",timestamp);
+        alertMessage.addProperty("latitude",latitude);
+        alertMessage.addProperty("longitude",longitude);
+        alertMessage.addProperty("message","alert_end");
+
+
+        pubNub.publish()
+                .message(alertMessage)
+                .channel(CHANNEL_NAME)
+                .async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        //check if the message is published correctly
+                    }
+                });
     }
 
     private String generateEventJSON(){
