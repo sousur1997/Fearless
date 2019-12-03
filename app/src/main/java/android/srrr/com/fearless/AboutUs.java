@@ -25,13 +25,10 @@ public class AboutUs extends AppCompatActivity {
 
         model = new ArrayList<Model>();
         //adds image,name,number and description to the model
-        model.add(new Model(R.mipmap.cu_logo, "Software Engg Project", "Fearless (A Safety Application) was initially developed as a Software Engineering assignment for M.Sc program, University of Calcutta.", null));
-        model.add(new Model(R.mipmap.ss_image,"Soumyadeep Sur","Lead Programmer/Designer of Android/Web\n" + "Commander-in-chief of this project. He has designed and implemented most of the features of the android app, and Fearless Admin/Web.","sousur1997@gmail.com"));
-        model.add(new Model(R.mipmap.rg_image,"Rohit Ghosal","Associate Programmer/Designer Android/Web\n" + "Second in command, associate developer/designer. Worked tirelessly to develop this app. ","ghosal.rohit@yahoo.com "));
-        model.add(new Model(R.mipmap.rm_image,"Rittik Mondal","Tester/Adviser\n" + "Tested the application in various ways. Advised a lot for the betterment of the project.","rittikmondal1997@gmail.com"));
-        model.add(new Model(R.mipmap.rs_image,"Rikan Saha","Member. Invested a handful amount of money and time.","rikansaha1998@gmail.com "));
+        model.add(new Model(R.mipmap.cu_logo, "About The App", "Fearless (A Safety Application) was initially developed as a Software Engineering assignment for M.Sc program, University of Calcutta.", null));
+        model.add(new Model(R.mipmap.developer,"Developers","Lead Developer:\n" + "Soumyadeep Sur\n\n" + "Associate Developer:\n" + "Rohit Ghosal\n\n" + "Tester/Advisor:\n" + "Rittik Mondal\n","applicationfearless@gmail.com"));
         model.add(new Model(R.mipmap.motivation,"Special thanks to:","Souvik Das\nOur guide who advised us to improve this application in various ways." + "\n\nDr. Nabendu Chaki\nProfessor, the principle motivator behind the project ",null));
-        model.add(new Model(R.mipmap.thanks,"And also\n","\nNabanita Dey\nSamprita Roy Choudhury\nDebolina Saha\n\nOur friends who tested and provided feedback on the app whenever asked.", null));
+        model.add(new Model(R.mipmap.thanks,"And also\n","\nRikan Saha\nNabanita Dey\nSamprita Roy Choudhury\nDebolina Saha\n\nOur friends who tested and provided feedback on the app whenever asked.", null));
         adapter = new Adapter(model,this);
 
         viewPager = findViewById(R.id.viewPager);
@@ -41,9 +38,6 @@ public class AboutUs extends AppCompatActivity {
         Integer temp[] = {
                 getResources().getColor(R.color.card_back_0),
                 getResources().getColor(R.color.card_back_1),
-                getResources().getColor(R.color.card_back_2),
-                getResources().getColor(R.color.card_back_3),
-                getResources().getColor(R.color.card_back_4),
                 getResources().getColor(R.color.card_back_5),
                 getResources().getColor(R.color.card_back_6),
 

@@ -606,7 +606,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                     AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)
                             .setCancelable(false)
                             .setTitle("Cannot exit application!")
-                            .setMessage("One alert is active. Please close alert to enter into the Settings page")
+                            .setMessage("One alert is active. Please close alert to exit the application!")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
