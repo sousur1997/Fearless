@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:179809652182:android:8d9fbe1fb6e88a75",
         "android_client_info": {
-          "package_name": "android.srrr.com.fearless"
+          "package_name": "safetyapp.srrr.com.fearless"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "179809652182-0s23dtbjpmsg2bp57k35qiab2bt4an41.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "android.srrr.com.fearless",
+            "package_name": "safetyapp.srrr.com.fearless",
             "certificate_hash": "c416623557d0a4db9a29b38e28a02248e55e062b"
           }
         },

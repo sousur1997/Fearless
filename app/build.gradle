@@ -18,7 +18,7 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "android.srrr.com.fearless"
+        applicationId "safetyapp.srrr.com.fearless"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1

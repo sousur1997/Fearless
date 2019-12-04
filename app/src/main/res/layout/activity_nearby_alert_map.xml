@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         android:id="@+id/alert_location_map"
         class="com.google.android.gms.maps.SupportMapFragment"
-        tools:context=".NearbyAlertMapActivity"
+        tools:context="safetyapp.srrr.com.fearless.NearbyAlertMapActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

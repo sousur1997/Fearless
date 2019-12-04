@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapPathActivity">
+    tools:context="safetyapp.srrr.com.fearless.MapPathActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/map_view_toolbar"
@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:id="@+id/path_map"
         class="com.google.android.gms.maps.SupportMapFragment"
-        tools:context=".MapPathActivity"
+        tools:context="safetyapp.srrr.com.fearless.MapPathActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

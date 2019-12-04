@@ -20,7 +20,7 @@
         map:cameraTargetLat="20.5"
         map:cameraTargetLng="78.9"
         map:cameraTilt="60"
-        tools:context=".HomeFragment" />
+        tools:context="safetyapp.srrr.com.fearless.HomeFragment" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"

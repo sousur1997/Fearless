@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="android.srrr.com.fearless">
+    package="safetyapp.srrr.com.fearless">
 
     <application
-        android:name=".AppSetup"
+        android:name="safetyapp.srrr.com.fearless.AppSetup"
         android:allowBackup="false"
         android:appComponentFactory="@string/app_name"
         android:icon="@mipmap/ic_launcher"
@@ -13,32 +13,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".NearbyAlertMapActivity"
+        <activity android:name="safetyapp.srrr.com.fearless.NearbyAlertMapActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".NearbyAlertsActivity"
+            android:name="safetyapp.srrr.com.fearless.NearbyAlertsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".ContactUpdateActivity"
+            android:name="safetyapp.srrr.com.fearless.ContactUpdateActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="safetyapp.srrr.com.fearless.SettingsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".MapPathActivity"
+            android:name="safetyapp.srrr.com.fearless.MapPathActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".MainActivity"
+            android:name="safetyapp.srrr.com.fearless.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -48,55 +48,55 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SliderActivity"
+            android:name="safetyapp.srrr.com.fearless.SliderActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AppActivity"
+            android:name="safetyapp.srrr.com.fearless.AppActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".TestMenuActivity"
+            android:name="safetyapp.srrr.com.fearless.TestMenuActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name="safetyapp.srrr.com.fearless.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name="safetyapp.srrr.com.fearless.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ProfilePage"
+            android:name="safetyapp.srrr.com.fearless.ProfilePage"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Profile_Theme" />
         <activity
-            android:name=".ProfileSetup"
+            android:name="safetyapp.srrr.com.fearless.ProfileSetup"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
-            android:name=".TestLayoutActivity"
+            android:name="safetyapp.srrr.com.fearless.TestLayoutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
         <activity
-            android:name=".WorkplaceSetup"
+            android:name="safetyapp.srrr.com.fearless.WorkplaceSetup"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
-            android:name=".MoveLocationSettings"
+            android:name="safetyapp.srrr.com.fearless.MoveLocationSettings"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EmailVerification"
+            android:name="safetyapp.srrr.com.fearless.EmailVerification"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
-            android:name=".AlertCloseConfirmActivity"
+            android:name="safetyapp.srrr.com.fearless.AlertCloseConfirmActivity"
             android:screenOrientation="portrait"
             android:theme="@style/profile_setup_theme" />
         <activity
-            android:name=".AboutUs"
+            android:name="safetyapp.srrr.com.fearless.AboutUs"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppInnerTheme" />
@@ -108,8 +108,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".NotificationActionReceiver" />
-        <receiver android:name=".StartServiceOnBootReceiver">
+        <receiver android:name="safetyapp.srrr.com.fearless.NotificationActionReceiver" />
+        <receiver android:name="safetyapp.srrr.com.fearless.StartServiceOnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.REBOOT" />
@@ -117,7 +117,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".NearbyAlertBroadcastReceiver"
+            android:name="safetyapp.srrr.com.fearless.NearbyAlertBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="fearless_alert_send" />
@@ -127,20 +127,20 @@
         </receiver>
 
         <service
-            android:name=".NearbyAlertService"
+            android:name="safetyapp.srrr.com.fearless.NearbyAlertService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".LocationServiceGPS" />
+        <service android:name="safetyapp.srrr.com.fearless.LocationServiceGPS" />
         <service
-            android:name=".AllScreenService"
+            android:name="safetyapp.srrr.com.fearless.AllScreenService"
             android:stopWithTask="false" />
         <service
-            android:name=".AlertInitiator"
+            android:name="safetyapp.srrr.com.fearless.AlertInitiator"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
         <service
-            android:name=".AlertService"
+            android:name="safetyapp.srrr.com.fearless.AlertService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" />
