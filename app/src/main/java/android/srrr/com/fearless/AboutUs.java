@@ -26,9 +26,9 @@ public class AboutUs extends AppCompatActivity {
         model = new ArrayList<Model>();
         //adds image,name,number and description to the model
         model.add(new Model(R.mipmap.cu_logo, "About The App", "Fearless (A Safety Application) was initially developed as a Software Engineering assignment for M.Sc program, University of Calcutta.", null));
-        model.add(new Model(R.mipmap.developer,"Developers","Lead Developer:\n" + "Soumyadeep Sur\n\n" + "Associate Developer:\n" + "Rohit Ghosal\n\n" + "Tester/Advisor:\n" + "Rittik Mondal\n","applicationfearless@gmail.com"));
-        model.add(new Model(R.mipmap.motivation,"Special thanks to:","Souvik Das\nOur guide who advised us to improve this application in various ways." + "\n\nDr. Nabendu Chaki\nProfessor, the principle motivator behind the project ",null));
-        model.add(new Model(R.mipmap.thanks,"And also\n","\nRikan Saha\nNabanita Dey\nSamprita Roy Choudhury\nDebolina Saha\n\nOur friends who tested and provided feedback on the app whenever asked.", null));
+        model.add(new Model(R.mipmap.ic_code,"Developers","Lead Developer:\n" + "Soumyadeep Sur\n" + "Associate Developer:\n" + "Rohit Ghosal\n" + "Tester/Advisor:\n" + "Rittik Mondal\n","applicationfearless@gmail.com"));
+        model.add(new Model(R.mipmap.ic_idea,"Special thanks to:","Souvik Das\nOur guide who advised us to improve this application in various ways." + "\n\nDr. Nabendu Chaki\nProfessor, the principle motivator behind the project ",null));
+        model.add(new Model(R.mipmap.ic_friends,"And also\n","\nNabanita Dey\nSamprita Roy Choudhury\nDebolina Saha\n\nOur friends who tested and provided feedback on the app whenever asked.", null));
         adapter = new Adapter(model,this);
 
         viewPager = findViewById(R.id.viewPager);

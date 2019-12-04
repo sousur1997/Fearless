@@ -120,8 +120,8 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(alertLocation, 18));
             CircleOptions circleOptions = new CircleOptions()
                     .center(alertLocation)
-                    .strokeColor(0x22F5FC05)
-                    .fillColor(0x22F5FC05)
+                    .strokeColor(0x22A72A52)
+                    .fillColor(0x22A72A52)
                     .radius(distanceRadius);
             map.addCircle(circleOptions);
         } else {

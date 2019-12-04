@@ -73,8 +73,8 @@ public class FearlessConstant {
     public static final String FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSewQMFsLwhKzhJJN7UaQXcK1YNKg9BNLbS3sRhHDwRQb2sgxQ/viewform";
 
     //pubnub keys
-    public static final String SUBSCRIBE_KEY = "sXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    public static final String PUBLISH_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String SUBSCRIBE_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String PUBLISH_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
     //pubnub channel name
     public static final String CHANNEL_NAME = "alertChannel";
