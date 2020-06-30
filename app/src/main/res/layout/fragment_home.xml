@@ -68,7 +68,7 @@
             android:id="@+id/covid_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/hospital_mini"
+            android:src="@drawable/coronavirus_white_24dp"
             fab:fab_label="Covid-19 Test Centres"
             fab:fab_size="mini" />
 
