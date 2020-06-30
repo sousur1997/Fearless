@@ -3,9 +3,15 @@ package safetyapp.srrr.com.fearless;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import safetyapp.srrr.com.fearless.R;
-import android.support.v7.app.AppCompatActivity;
+
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -29,6 +35,18 @@ public class SettingsActivity extends AppCompatActivity {
             }
             getFragmentManager().beginTransaction().add(R.id.settings_container, new SettingsFragment()).commit();
         }
+
+        boolean dark_toggle = sharedPreferences.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+//        Preference darkModeToggle =
+
+
     }
 
 
@@ -51,4 +69,5 @@ public class SettingsActivity extends AppCompatActivity {
         nearbyAlert.setAction(FearlessConstant.STOP_NEARBY_SERVICE);
         stopService(nearbyAlert);
     }
+
 }

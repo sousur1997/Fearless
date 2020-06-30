@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -146,7 +146,7 @@ public class SliderActivity extends AppCompatActivity {
         }
     }
 
-    public class MyViewPagerAdapter extends PagerAdapter{
+    public class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
         @NonNull

@@ -2,11 +2,15 @@ package safetyapp.srrr.com.fearless;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import safetyapp.srrr.com.fearless.R;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,6 +65,7 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
         setContentView(R.layout.activity_nearby_alert_map);
         toolbar = findViewById(R.id.nearby_alert_map_view_toolbar);
         Intent intent = getIntent();
+        toggleDarkMode();
         index = intent.getIntExtra(FearlessConstant.NEARBY_ALERT_OBJECT_KEY, -1);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.alert_location_map);
         mapFragment.getMapAsync(this);
@@ -73,6 +79,23 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        boolean dark_toggle = sharedPreferences.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            try{
+                boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.gmap_style));
+                if(!success){
+                    Log.e("Error","Map Parsing failed!");
+                }
+            }catch (Resources.NotFoundException e) {
+                Log.e("Error!","Can't find style", e);
+            }
+        }
+        else {
+            boolean success = googleMap.setMapStyle(null);
+            if(!success){
+                Log.e("Error","Map reset failed!");
+            }
+        }
         centreMapOnLocation("Current Location");
         runnable.run();
 
@@ -153,6 +176,16 @@ public class NearbyAlertMapActivity extends AppCompatActivity implements OnMapRe
             NearbyAlertMapActivity.this.mHandler.postDelayed(runnable, 30000);
         }
     };
+
+    private void toggleDarkMode() {
+        boolean dark_toggle = sharedPreferences.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
 
 }
 

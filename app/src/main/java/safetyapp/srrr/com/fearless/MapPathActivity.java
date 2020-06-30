@@ -1,17 +1,24 @@
 package safetyapp.srrr.com.fearless;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import safetyapp.srrr.com.fearless.R;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import androidx.appcompat.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -27,6 +34,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
     private Toolbar toolbar;
     private int index;
     private GoogleMap gMap;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
 
         Intent intent = getIntent();
         index = intent.getIntExtra(FearlessConstant.HISTORY_INDEX_KEY, -1);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(MapPathActivity.this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.path_map);
         mapFragment.getMapAsync(this);
@@ -98,7 +107,23 @@ public class MapPathActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-
+        boolean dark_toggle = sharedPref.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            try{
+                boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.gmap_style));
+                if(!success){
+                    Log.e("Error","Map Parsing failed!");
+                }
+            }catch (Resources.NotFoundException e) {
+                Log.e("Error!","Can't find style", e);
+            }
+        }
+        else {
+            boolean success = googleMap.setMapStyle(null);
+            if(!success){
+                Log.e("Error","Map reset failed!");
+            }
+        }
         if(index > -1){
             setupMapPath(index);
         }

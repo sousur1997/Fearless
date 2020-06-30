@@ -14,25 +14,23 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.PersistableBundle;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.bottomappbar.BottomAppBar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +40,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -128,6 +130,8 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         setSupportActionBar(bAppBar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toggleDarkMode();
 
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
@@ -311,6 +315,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+
     private void startAllScrNoti(){
         Intent all_scr_alert = new Intent(this, AllScreenService.class);
         all_scr_alert.setAction(FearlessConstant.START_ALL_SCR);
@@ -422,7 +427,7 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HistoryFragment(), "History");
+        adapter.addFragment(new HistoryFragment(),"History");
         adapter.addFragment(new HomeFragment(), "Home");
         adapter.addFragment(new SosContactFragment(), "Contacts");
         viewPager.setAdapter(adapter);
@@ -582,6 +587,11 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
 
                 default:
                 return false;
+
+            case R.id.terms:
+                Uri uri1 = Uri.parse(FearlessConstant.TERMS_URL);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri1));
+                return true;
         }
     }
 
@@ -626,6 +636,16 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
         return listJson;
     }
 
+    private void toggleDarkMode() {
+        boolean dark_toggle = sharedPreferences.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(aControl.getAlertInit() == false && aControl.getAlreadyAlerted() == false) {
@@ -644,6 +664,10 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
             else{
                 stopNearbyAlertService();
             }
+        }
+        if(key.equals("dark_mode")){
+            toggleDarkMode();
+            recreate();
         }
     }
 

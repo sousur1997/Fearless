@@ -23,10 +23,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.Settings;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
@@ -215,7 +215,7 @@ public class AlertService extends Service implements LocationListener{
                 PendingIntent stopServiceIntent = PendingIntent.getActivity(this, 0, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 String number = contactList.get(0).getPhone(); //Number of the first contact
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel:" + number));
                 PendingIntent callPendingIntent = PendingIntent.getActivity(this, 0, callIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -233,7 +233,7 @@ public class AlertService extends Service implements LocationListener{
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .addAction(R.drawable.close_icon, "Cancel", stopServiceIntent)
-                        .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle())
+                        .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                         .setColor(getResources().getColor(R.color.menu_bar_color));
 
                 if(callEnable){
@@ -246,6 +246,7 @@ public class AlertService extends Service implements LocationListener{
                 if(autoCall){
                     callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(callIntent);
+
                 }
 
                 startForeground(2, notification);

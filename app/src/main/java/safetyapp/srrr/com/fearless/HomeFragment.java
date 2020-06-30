@@ -6,18 +6,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,7 +52,7 @@ import static safetyapp.srrr.com.fearless.FearlessConstant.ALL_PERMISSION;
 public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     FloatingActionMenu floatingActionMenu;
-    FloatingActionButton pol_fab, hos_fab;
+    FloatingActionButton pol_fab, hos_fab, covid_fab;
     private GoogleMap gMap;
     private LocationManager locationManager;
     private Double lat, lng;
@@ -108,6 +112,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
         pol_fab = getView().findViewById(R.id.police_fab);
         hos_fab = getView().findViewById(R.id.hospital_fab);
+        covid_fab = getView().findViewById(R.id.covid_fab);
         main_coord = getActivity().findViewById(R.id.main_coordinator);
 
         loc_fetch = new LocationFetch(getActivity().getApplicationContext());
@@ -137,6 +142,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 openMapWithLocation("Police Station");
+            }
+        });
+
+        covid_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMapWithLocation("Covid-19 test centres");
             }
         });
 
@@ -234,7 +246,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-
+        boolean dark_toggle = sharedPref.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            try{
+                boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),R.raw.gmap_style));
+                if(!success){
+                    Log.e("Error","Map Parsing failed!");
+                }
+            }catch (Resources.NotFoundException e) {
+                Log.e("Error!","Can't find style", e);
+            }
+        }
+        else {
+            boolean success = googleMap.setMapStyle(null);
+            if(!success){
+                Log.e("Error","Map reset failed!");
+            }
+        }
         loc_fetch.fetchCurrentLocation();
         pointCurrentLocation();
         new LocationUpdateTask().execute();

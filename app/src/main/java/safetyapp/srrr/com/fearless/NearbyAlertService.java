@@ -11,9 +11,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import safetyapp.srrr.com.fearless.R;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -207,11 +207,11 @@ public class NearbyAlertService extends Service {
                     .setContentText("Click the notification to track location")
                     .setSmallIcon(R.mipmap.notification_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.f_logo_noti_circle))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setContentIntent(pendingIntent)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                    .setColor(getResources().getColor(R.color.menu_bar_color))
-                    .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle());
+                    .setColor(getResources().getColor(R.color.def_text_color))
+                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle());
 
             Notification notification = builder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;         // cancelable on double click

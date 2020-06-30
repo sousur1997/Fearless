@@ -55,7 +55,7 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="receive_alerts_preference"
-            android:summary="Click to enable/disable alert reception from other users. Restart the app to make the changes effective."
+            android:summary="Click to enable/disable alert reception from other users."
             android:title="Receive alerts from other users" />
 
         <ListPreference
@@ -64,9 +64,15 @@
             android:entries="@array/settings_alert_receival_distance"
             android:entryValues="@array/settings_alert_receival_distance_values"
             android:key="key_receive_alert_distance"
-            android:summary="Select the distance to receive alerts from other users. Restart the app to make the changes effective."
+            android:summary="Select the distance to receive alerts from other users."
             android:title="Alert Receipt from other users"
             android:dependency="receive_alerts_preference"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="dark_mode"
+            android:summary="Toggle Dark mode on/off"
+            android:title="Dark Mode" />
 
     </PreferenceCategory>
 </PreferenceScreen>

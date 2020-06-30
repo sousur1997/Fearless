@@ -29,11 +29,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="gmap_api_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="gmap_api_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
-    <string name="pubnub_publish">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="pubnub_publish">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
-    <string name="pubnub_subscribe">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="pubnub_subscribe">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
     <string name="firebase_project_id">fearless-238805</string>
 
@@ -47,6 +47,8 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
+    <string name="terms_and_conditions"><u> Our Terms and Conditions </u> </string>
+
     <string-array name="help_line_numbers">
         <item>112</item>
         <item>100</item>
@@ -57,6 +59,7 @@
         <item>181</item>
         <item>1072</item>
         <item>1906</item>
+        <item>1075</item>
     </string-array>
     <string-array name="help_line_labels">
         <item>National Emergency Number</item>
@@ -68,6 +71,7 @@
         <item>Women Helpline (Domestic Abuse)</item>
         <item>Railway Accident Emergency Service</item>
         <item>LPG Leak Helpline</item>
+        <item>COVID-19 Helpline</item>
     </string-array>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
@@ -100,4 +104,5 @@
     </string-array>
 
     <string-array name="multi_select_list_preference_default_value" />
+    <string name="darkMode">dark_mode</string>
 </resources>

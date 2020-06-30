@@ -3,9 +3,10 @@ package safetyapp.srrr.com.fearless;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

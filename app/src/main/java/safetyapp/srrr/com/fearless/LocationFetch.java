@@ -11,8 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
+import androidx.core.app.ActivityCompat;
 
 public class LocationFetch implements LocationListener {
     private Context app_context;

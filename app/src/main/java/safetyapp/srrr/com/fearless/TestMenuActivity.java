@@ -2,12 +2,13 @@ package safetyapp.srrr.com.fearless;
 
 import android.content.Intent;
 import safetyapp.srrr.com.fearless.R;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class TestMenuActivity extends AppCompatActivity{
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TestMenuActivity extends AppCompatActivity {
 
     Button login, register, main_app, profile_page, prof_setup, testLayBtn;
 

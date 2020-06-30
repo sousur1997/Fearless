@@ -2,8 +2,9 @@ package safetyapp.srrr.com.fearless;
 
 import android.content.Intent;
 import safetyapp.srrr.com.fearless.R;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MoveLocationSettings extends AppCompatActivity {
 

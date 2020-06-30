@@ -1,14 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/splash_status_bar</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:navigationBarColor">#0c0e2d</item>
+        <item name="android:action">@color/bgColor</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
@@ -32,7 +33,7 @@
         <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
     </style>
 
-    <style name="Profile_Theme" parent="AppInnerTheme">
+    <style name="Profile_Theme" parent="AppTheme">
         <item name="colorPrimaryDark">@color/home_status_color</item>
         <item name="android:colorPrimary">@color/app_theme_blue</item>
         <item name="colorAccent">@color/profile_header_text_color</item>
@@ -49,6 +50,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:navigationBarColor">@color/menu_bar_color</item>
+<!--        <item name="android:background">@color/bgColor</item>-->
     </style>
 
     <style name="title_color">
@@ -87,5 +89,10 @@
 
     <style name="load_image_progress">
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name = "nav_menu_theme">
+        <item name="android:background">@color/bgColor</item>
+        <item name="android:text">@color/def_text_color</item>
     </style>
 </resources>

@@ -2,13 +2,13 @@ package safetyapp.srrr.com.fearless;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
-import safetyapp.srrr.com.fearless.R;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText email_ed, pass_ed, confirm_ed;
     private EmailPasswordMatcher emailPasswordMatcher;
     private TextView login_tv;
+    private TextView agree_terms;
     private Button register_btn;
     private ProgressBar register_progress;
     private FirebaseAuth mAuth;
@@ -50,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confirm_ed = findViewById(R.id.con_pass_ed);
 
         login_tv = findViewById(R.id.goto_login);
+        agree_terms = findViewById(R.id.agree_terms);
         register_btn = findViewById(R.id.sign_up_btn);
         register_progress = findViewById(R.id.register_prog);
         register_layout = findViewById(R.id.register_layout);
@@ -60,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //set the click events
         login_tv.setOnClickListener(this);
         register_btn.setOnClickListener(this);
+        agree_terms.setOnClickListener(this);
 
         register_progress.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.progress_color), PorterDuff.Mode.SRC_IN);
         register_progress.setVisibility(View.INVISIBLE);
@@ -181,7 +185,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.sign_up_btn: //call the registerUser if signup button is clicked
                 registerUser();
-
+                break;
+            case R.id.agree_terms:      //read the terms and conditions
+                Uri uri1 = Uri.parse(FearlessConstant.TERMS_URL_2);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri1));
                 break;
         }
     }

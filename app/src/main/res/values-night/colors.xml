@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1B1114</color>
+    <color name="colorPrimaryDark">#2B2B30</color>
+    <color name="colorAccent">#2B9CFF</color>
+    <color name="start_button_text_color">#173324</color>
+    <color name="splash_status_bar">#1B1718</color>
+    <color name="menu_bar_color">#1B1114</color>
+    <color name="home_status_color">#4a00b5</color>
+    <color name="divider_color">#514843</color>
+    <color name="full_transparent">#00ffffff</color>
+    <color name="app_theme_blue">#6200ed</color>
+    <color name="progress_color">#403D3D</color>
+    <color name="profile_header_text_color">#2781F1</color>
+    <color name="alert_fab_color">#FAAB1A</color>
+    <color name="alert_fab_icon_color">#232F34</color>
+    <color name="verify_badge_color">#16B960</color>
+    <color name="action_text_color">#0BD55F</color>
+    <color name="not_verified_badge_color">#fc4a56</color>
+    <color name="card_view_color">#424242</color>
+    <color name="card_view_color_pressed">#636262</color>
+    <color name="list_bg">#3E3C3C</color>
+    <color name="colorText">#B1D0FF</color>
+
+    <color name="bgColor">#2B2828</color>
+    <color name="def_text_color">#FFFFFF</color>
+
+    <color name="card_back_0">#202020</color>
+    <color name="card_back_1">#202020</color>
+    <color name="card_back_2">#202020</color>
+    <color name="card_back_3">#202020</color>
+    <color name="card_back_4">#202020</color>
+    <color name="card_back_5">#202020</color>
+    <color name="card_back_6">#202020</color>
+
+    <!-- Screens background color-->
+    <color name="bg_screen1">#f64c73</color>
+    <color name="bg_screen2">#20d2bb</color>
+    <color name="bg_screen3">#3395ff</color>
+    <color name="bg_screen4">#c873f4</color>
+    <color name="bg_screen5">#34495e</color>
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1">#d1395c</color>
+    <color name="dot_dark_screen2">#14a895</color>
+    <color name="dot_dark_screen3">#2278d4</color>
+    <color name="dot_dark_screen4">#a854d4</color>
+    <color name="dot_dark_screen5">#2c3e50</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#f98da5</color>
+    <color name="dot_light_screen2">#8cf9eb</color>
+    <color name="dot_light_screen3">#93c6fd</color>
+    <color name="dot_light_screen4">#e4b5fc</color>
+    <color name="dot_light_screen5">#95a5a6</color>
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen4</item>
+        <item>@color/dot_light_screen5</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen4</item>
+        <item>@color/dot_dark_screen5</item>
+    </array>
+</resources>

@@ -71,10 +71,12 @@ public class FearlessConstant {
 
     public static final String HELP_URL = "https://fearless-238805.web.app/help.html";
     public static final String FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSewQMFsLwhKzhJJN7UaQXcK1YNKg9BNLbS3sRhHDwRQb2sgxQ/viewform";
+    public static final String TERMS_URL = "https://fearless-238805.firebaseapp.com/privacy_policy.html";
+    public static final String TERMS_URL_2 = "https://fearless-238805.firebaseapp.com/terms_and_conditions.html";
 
     //pubnub keys
-    public static final String SUBSCRIBE_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    public static final String PUBLISH_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String SUBSCRIBE_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String PUBLISH_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
     //pubnub channel name
     public static final String CHANNEL_NAME = "alertChannel";
@@ -85,4 +87,6 @@ public class FearlessConstant {
     //nearby alert activity loading file
     public static final String NEARBY_ALERT_FILE = "nearby_alert_list_file.json";
     public static final String NEARBY_ALERT_OBJECT_KEY = "nearby_alert_object_key";
+
+
 }

@@ -14,10 +14,11 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
-import safetyapp.srrr.com.fearless.R;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.widget.Toast;
 
 public class AlertInitiator extends Service {
@@ -87,7 +88,7 @@ public class AlertInitiator extends Service {
                 .addAction(R.drawable.close_icon, "Stop Alert", stopServiceIntent)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setColor(getResources().getColor(R.color.menu_bar_color))
-                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle())
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                 .build();
 
         startForeground(1, notification);

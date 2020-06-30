@@ -1,15 +1,15 @@
 package safetyapp.srrr.com.fearless;
 
 import android.app.Notification;
-import safetyapp.srrr.com.fearless.R;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.GeofencingClient;
@@ -78,9 +78,9 @@ public class AllScreenService extends Service {
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_LOW)
                         .addAction(R.drawable.ic_alert_new_fab_icon, "Alert", startAlertIntent)
-                        .setColor(getResources().getColor(R.color.menu_bar_color))
+                        .setColor(getResources().getColor(R.color.bgColor))
                         .setCategory(Notification.CATEGORY_EMAIL)
-                        .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0))
+                        .setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0))
                         .build();
 
                 //notification.when = System.currentTimeMillis();

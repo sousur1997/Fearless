@@ -1,13 +1,15 @@
 package safetyapp.srrr.com.fearless;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
-import safetyapp.srrr.com.fearless.R;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ public class NearbyAlertsActivity extends AppCompatActivity {
     private TextView nearbyAlertTextView;
     private SwipeRefreshLayout refreshLayout;
     private Gson gson;
+    private SharedPreferences sharedPreferences;
     Handler mHandler;
 
 
@@ -43,6 +46,7 @@ public class NearbyAlertsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_alerts);
+        sharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mToolbar = findViewById(R.id.toolbar3);
         mToolbar.setTitle("Nearby Alerts");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -57,6 +61,7 @@ public class NearbyAlertsActivity extends AppCompatActivity {
         nearbyAlertTextView = findViewById(R.id.nearby_alerts_back_tv);
         refreshLayout = findViewById(R.id.refresh_layout);
         refreshLayout.setEnabled(false);
+        toggleDarkMode();
         gson = new Gson();
         createRecyclerView();
         this.mHandler = new Handler();
@@ -177,6 +182,16 @@ public class NearbyAlertsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void toggleDarkMode() {
+        boolean dark_toggle = sharedPreferences.getBoolean("dark_mode",false);
+        if(dark_toggle) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
 }
