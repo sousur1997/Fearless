@@ -25,13 +25,13 @@
     <color name="bgColor">#2B2828</color>
     <color name="def_text_color">#FFFFFF</color>
 
-    <color name="card_back_0">#202020</color>
-    <color name="card_back_1">#202020</color>
-    <color name="card_back_2">#202020</color>
-    <color name="card_back_3">#202020</color>
-    <color name="card_back_4">#202020</color>
-    <color name="card_back_5">#202020</color>
-    <color name="card_back_6">#202020</color>
+    <color name="card_back_0">#F0673E</color>
+    <color name="card_back_1">#FFA33E</color>
+    <color name="card_back_2">#62DBEC</color>
+    <color name="card_back_3">#C1F1C4</color>
+    <color name="card_back_4">#8E0DFF</color>
+    <color name="card_back_5">#f8ef43</color>
+    <color name="card_back_6">#A6FF7D</color>
 
     <!-- Screens background color-->
     <color name="bg_screen1">#f64c73</color>

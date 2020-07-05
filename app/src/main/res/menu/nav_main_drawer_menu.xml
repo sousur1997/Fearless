@@ -20,6 +20,10 @@
         <item android:id="@+id/feedback_page"
             android:icon="@drawable/ic_feedback_white_24dp"
             android:title="Feedback" />
+        <item
+            android:id="@+id/contact_us"
+            android:icon="@drawable/ic_email"
+            android:title="Contact Us" />
         <item android:id="@+id/terms"
             android:icon="@drawable/ic_action_document"
             android:title="Privacy Policy" />

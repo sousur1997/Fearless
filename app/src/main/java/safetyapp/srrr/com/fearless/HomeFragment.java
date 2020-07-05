@@ -124,9 +124,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
-            Toast.makeText(getActivity().getApplicationContext(), "The user is: " + user.getEmail(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Welcome " + user.getEmail(), Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getActivity().getApplicationContext(), "You are not logged in", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "You are not logged in!", Toast.LENGTH_LONG).show();
         }
 
         if(!hasPermission(getActivity().getApplicationContext(), Permissions)){

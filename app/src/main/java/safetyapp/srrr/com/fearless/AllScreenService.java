@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import androidx.core.content.ContextCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.android.gms.location.GeofencingClient;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,9 +72,10 @@ public class AllScreenService extends Service {
                 allScrIntent.setAction(ALERT_RAISE_BROADCAST);
                 PendingIntent startAlertIntent = PendingIntent.getBroadcast(this, 0, allScrIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
                 notification = new NotificationCompat.Builder(this, ALL_SCREEN_CHANNEL)
                         .setContentText("Tap Alert to raise one alert")
-                        .setSmallIcon(R.mipmap.notification_icon)
+                        .setSmallIcon(R.drawable.f_logo_vector)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.f_logo_noti_circle))
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_LOW)

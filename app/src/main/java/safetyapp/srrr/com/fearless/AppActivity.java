@@ -541,6 +541,14 @@ public class AppActivity extends AppCompatActivity implements NavigationView.OnN
                 startActivity(new Intent(Intent.ACTION_VIEW, feedbackUri));
                 return true;
 
+            case R.id.contact_us:
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_EMAIL,new String[]{FearlessConstant.CONTACT_MAIL});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Fearless feedback");
+                startActivity(intent.createChooser(intent,"Send email via"));
+                return true;
+
             case R.id.power_off:
                 if(aControl.getAlreadyAlerted() == false) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AppActivity.this)

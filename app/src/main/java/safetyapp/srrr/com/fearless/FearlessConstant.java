@@ -71,12 +71,13 @@ public class FearlessConstant {
 
     public static final String HELP_URL = "https://fearless-238805.web.app/help.html";
     public static final String FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSewQMFsLwhKzhJJN7UaQXcK1YNKg9BNLbS3sRhHDwRQb2sgxQ/viewform";
+    public static final String CONTACT_MAIL = "applicationfearless@gmail.com";
     public static final String TERMS_URL = "https://fearless-238805.firebaseapp.com/privacy_policy.html";
     public static final String TERMS_URL_2 = "https://fearless-238805.firebaseapp.com/terms_and_conditions.html";
 
     //pubnub keys
-    public static final String SUBSCRIBE_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-    public static final String PUBLISH_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String SUBSCRIBE_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    public static final String PUBLISH_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     //pubnub channel name
     public static final String CHANNEL_NAME = "alertChannel";
