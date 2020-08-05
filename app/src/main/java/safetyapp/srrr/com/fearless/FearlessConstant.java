@@ -76,8 +76,8 @@ public class FearlessConstant {
     public static final String TERMS_URL_2 = "https://fearless-238805.firebaseapp.com/terms_and_conditions.html";
 
     //pubnub keys
-    public static final String SUBSCRIBE_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-    public static final String PUBLISH_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    public static final String SUBSCRIBE_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    public static final String PUBLISH_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     //pubnub channel name
     public static final String CHANNEL_NAME = "alertChannel";

@@ -29,11 +29,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="gmap_api_key">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+    <string name="gmap_api_key">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
 
-    <string name="pubnub_publish">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+    <string name="pubnub_publish">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
 
-    <string name="pubnub_subscribe">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+    <string name="pubnub_subscribe">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
 
     <string name="firebase_project_id">fearless-238805</string>
 
@@ -51,7 +51,6 @@
 
     <string-array name="help_line_numbers">
         <item>112</item>
-        <item>1075</item>
         <item>100</item>
         <item>101</item>
         <item>102</item>
@@ -63,7 +62,6 @@
     </string-array>
     <string-array name="help_line_labels">
         <item>National Emergency Number</item>
-        <item>COVID-19 Helpline</item>
         <item>Police</item>
         <item>Fire</item>
         <item>Ambulance</item>

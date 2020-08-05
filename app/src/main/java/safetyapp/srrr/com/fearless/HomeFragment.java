@@ -52,7 +52,7 @@ import static safetyapp.srrr.com.fearless.FearlessConstant.ALL_PERMISSION;
 public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     FloatingActionMenu floatingActionMenu;
-    FloatingActionButton pol_fab, hos_fab, covid_fab;
+    FloatingActionButton pol_fab, hos_fab;
     private GoogleMap gMap;
     private LocationManager locationManager;
     private Double lat, lng;
@@ -112,7 +112,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
         pol_fab = getView().findViewById(R.id.police_fab);
         hos_fab = getView().findViewById(R.id.hospital_fab);
-        covid_fab = getView().findViewById(R.id.covid_fab);
         main_coord = getActivity().findViewById(R.id.main_coordinator);
 
         loc_fetch = new LocationFetch(getActivity().getApplicationContext());
@@ -142,13 +141,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 openMapWithLocation("Police Station");
-            }
-        });
-
-        covid_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMapWithLocation("Covid-19 test centres");
             }
         });
 
