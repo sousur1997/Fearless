@@ -507,7 +507,7 @@ public class AlertService extends Service implements LocationListener{
 
         for(int i = 0; i<contact_count; i++){
             try {
-                //***Important code. Will may charge money for SMS
+                //***Important code. Will charge money for SMS***//
                 SmsManager smsManager = SmsManager.getDefault();
                 if(message.length() > 160){
                     ArrayList<String> parts = smsManager.divideMessage(message);

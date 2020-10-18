@@ -1,5 +1,6 @@
 package safetyapp.srrr.com.fearless;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -41,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static android.Manifest.permission.ACCESS_BACKGROUND_LOCATION;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
@@ -62,7 +67,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     private LocationFetch loc_fetch;
 
-    String[] Permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, CALL_PHONE, READ_CONTACTS, SEND_SMS};
+    String[] Permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_CONTACTS, SEND_SMS, ACCESS_BACKGROUND_LOCATION};
+    String[] LocationPermissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION};
 
     public HomeFragment() {
         // Required empty public constructor
@@ -71,6 +77,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onResume() {
         super.onResume();
+        if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("False")){
+            showPermissionClarification();
+            new LocationUpdateTask().execute();
+        }
+        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("Denied")) {
+            neverAskAgain();
+        }
+
+       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && hasPermission(getActivity().getApplicationContext(), getActivity(), LocationPermissions).equals("True")) {
+            showGPSDisabledAlertToUser();
+        }*/
+
     }
 
     @Override
@@ -128,9 +146,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             Toast.makeText(getActivity().getApplicationContext(), "You are not logged in!", Toast.LENGTH_LONG).show();
         }
 
-        if(!hasPermission(getActivity().getApplicationContext(), Permissions)){
-            requestPermissions(Permissions, ALL_PERMISSION);
+        if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("False")){
+            showPermissionClarification();
             new LocationUpdateTask().execute();
+        }
+        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("Denied")) {
+            neverAskAgain();
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.g_map);
@@ -158,7 +179,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         lng = loc_fetch.fetchLongitude();
 //        centreMapOnLocation(lat, lng, "Your Current Location");
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && hasPermission(getActivity().getApplicationContext(), getActivity(), LocationPermissions).equals("True")) {
             showGPSDisabledAlertToUser();
         }
         if (lat != 0.0 && lng != 0.0) {
@@ -167,13 +188,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void showGPSDisabledAlertToUser() {
-        final Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("To access your location more precisely, we would like you to enable GPS from this settings menu. Please select 'High Accuracy' from the menu.")
                 .setCancelable(true)
                 .setPositiveButton("Yes, go ahead", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        final Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(callGPSSettingIntent);
                     }
                 })
@@ -202,16 +223,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 //        }
     }
 
-    private static boolean hasPermission(Context context, String... Permissions){
+    private static String hasPermission(Context context, Activity activity, String... Permissions){
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && Permissions != null){
             for(String permission : Permissions){
-                if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
-                    return false;
+                if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    if (PermissionUtility.neverAskAgain(activity, permission)) {
+                        return "Denied";
+                    }
+                    else {
+                        return "False";
+                    }
                 }
             }
         }
-        return true;
+        return "True";
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -220,7 +248,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         if(requestCode == ALL_PERMISSION){
             for(int i = 0; i<grantResults.length; i++){
                 if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
-                    hasPermission(getActivity().getApplicationContext(), Permissions);
+                    hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions);
+
+                }
+                else{
+                    for(String permission: Permissions) {
+                        PermissionUtility.setShouldShowStatus(getActivity(), permission);
+                    }
+
                 }
             }
         }
@@ -277,4 +312,76 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             pointCurrentLocation();
         }
     }
+
+    private void showPermissionClarification() {
+        ((TextView) new AlertDialog.Builder(getActivity())
+                .setTitle("Hello User!")
+                .setCancelable(false)
+                .setPositiveButton("I Understand", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        requestPermissions(Permissions, ALL_PERMISSION);
+                        dialogInterface.cancel();
+                    }
+                })
+                .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getActivity().finish();
+                    }
+                })
+                .setMessage(Html.fromHtml("<p>This app needs the following permissions to ensure your safety.</p>"
+                        +"<p><h3>Location</h3> This permission is needed to show you nearby emergency services and to send this information to your contacts during an emergency. Also you will be notified if any Fearless user is in trouble nearby. (You can change this in settings) <h6>Please allow the location access 'Allow all the time' because your location will be sent to your contacts continuously in an emergency even if your phone is locked.</h6> </p>"
+                        +"<p><h3>Contacts</h3> This permission is needed to add your most trusted contacts to the app to inform them during any emergency. </p>"
+                        +"<p><h3>SMS</h3> This permission is needed to inform your trusted contacts (which you have added to this app) about your location during an emergency. <h6>**Operator charges will apply to send SMS!**</h6> </p>"
+                ))
+                .show()
+                // Need to be called after show(), in order to generate hyperlinks
+                .findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
+
+    }
+
+    private void neverAskAgain() {
+        ((TextView) new AlertDialog.Builder(getActivity())
+                .setTitle("Hello User!")
+                .setCancelable(false)
+                .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent();
+                        intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                        dialogInterface.cancel();
+                    }
+                })
+                .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getActivity().finish();
+                    }
+                })
+                .setMessage(Html.fromHtml("<p>This app needs the following permissions to ensure your safety.</p>"
+                        +"<p><h3>Location</h3> This permission is needed to show you nearby emergency services and to send this information to your contacts during an emergency. Also you will be notified if any Fearless user is in trouble nearby. (You can change this in settings) <h6>Please allow the location access 'Allow all the time' because your location will be sent to your contacts continuously in an emergency even if your phone is locked.</h6> </p>"
+                        +"<p><h3>Contacts</h3> This permission is needed to add your most trusted contacts to the app to inform them during any emergency. </p>"
+                        +"<p><h3>SMS</h3> This permission is needed to inform your trusted contacts (which you have added to this app) about your location during an emergency. <h6>**Operator charges will apply to send SMS!**</h6> </p>"
+                        +"<p><h3>As you have denied it, you can go to settings and allow the app permissions to continue.</h3> </p>"
+                ))
+                .show()
+                // Need to be called after show(), in order to generate hyperlinks
+                .findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
+
+    }
+
+
 }
+
+
+
+
+
+
+

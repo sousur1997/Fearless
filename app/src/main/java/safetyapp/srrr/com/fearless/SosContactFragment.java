@@ -262,7 +262,7 @@ public class SosContactFragment extends Fragment implements ContactUpdateListene
         deleteIcon = ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.delete_icon);
 
         //runtime_contact_permission();
-        AccessContact();
+        //AccessContact();
 
         contact_item_list.add("Helpline (SOS) Numbers"); //header before SOS numbers
         for(int i = 0; i<name.length; i++){

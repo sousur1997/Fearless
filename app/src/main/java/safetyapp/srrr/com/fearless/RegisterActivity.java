@@ -1,5 +1,7 @@
 package safetyapp.srrr.com.fearless;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -9,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             }
         });
-
+        showPrivacyPolicyAgreement();
         fearlessLog = FearlessLog.getInstance();
     }
 
@@ -167,6 +172,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
 
         //registration successful. Now set the boolean into shared preference
+
         prefManager.setBool("initial_profile_setup", false);
         prefManager.setBool("initial_work_setup", false);
         prefManager.setBool("sign_up_flag", true);
@@ -191,5 +197,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(Intent.ACTION_VIEW, uri1));
                 break;
         }
+    }
+
+    private void showPrivacyPolicyAgreement() {
+        ((TextView) new AlertDialog.Builder(this)
+                .setTitle("Important Notice")
+                .setCancelable(false)
+                .setPositiveButton("I Agree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .setNegativeButton("I Disagree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setMessage(Html.fromHtml("<p>To use our application, you need to agree to our terms of service and privacy policy found <a href=\"https://fearless-238805.firebaseapp.com/terms_and_conditions.html\">here</a> and <a href=\"https://fearless-238805.firebaseapp.com/privacy_policy.html\">here</a>.</p>"))
+                .show()
+                // Need to be called after show(), in order to generate hyperlinks
+                .findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

@@ -93,8 +93,8 @@ public class LocationFetch implements LocationListener {
 
     @Override
     public void onProviderDisabled(String provider) {
-        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        /*Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        app_context.startActivity(settingsIntent);
+        app_context.startActivity(settingsIntent);*/
     }
 }
