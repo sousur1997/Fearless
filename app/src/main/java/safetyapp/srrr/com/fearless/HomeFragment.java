@@ -85,10 +85,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
             neverAskAgain();
         }
 
-       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && hasPermission(getActivity().getApplicationContext(), getActivity(), LocationPermissions).equals("True")) {
-            showGPSDisabledAlertToUser();
-        }*/
-
     }
 
     @Override
@@ -231,7 +227,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
                     if (PermissionUtility.neverAskAgain(activity, permission)) {
                         return "Denied";
                     }
-                    else {
+                    else if (!PermissionUtility.neverAskAgain(activity, permission)){
                         return "False";
                     }
                 }

@@ -511,9 +511,9 @@ public class AlertService extends Service implements LocationListener{
                 SmsManager smsManager = SmsManager.getDefault();
                 if(message.length() > 160){
                     ArrayList<String> parts = smsManager.divideMessage(message);
-                    smsManager.sendMultipartTextMessage(contactList.get(i).getPhone(), null, parts, null, null);
+                    //smsManager.sendMultipartTextMessage(contactList.get(i).getPhone(), null, parts, null, null);
                 }else{
-                    smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
+                    //smsManager.sendTextMessage(contactList.get(i).getPhone(), null, message, null, null);
                 }
                 Toast.makeText(getApplicationContext(), "SMS Sent ", Toast.LENGTH_LONG).show();
             }catch(Exception e) {
