@@ -29,11 +29,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="gmap_api_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="gmap_api_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
-    <string name="pubnub_publish">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="pubnub_publish">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 diop
-    <string name="pubnub_subscribe">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="pubnub_subscribe">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
 
     <string name="firebase_project_id">fearless-238805</string>
 

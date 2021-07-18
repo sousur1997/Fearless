@@ -67,7 +67,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     private LocationFetch loc_fetch;
 
-    String[] Permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_CONTACTS, SEND_SMS, ACCESS_BACKGROUND_LOCATION};
+    String[] Permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_CONTACTS, SEND_SMS};
+    String[] PermissionsQ = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_CONTACTS, SEND_SMS, ACCESS_BACKGROUND_LOCATION};
     String[] LocationPermissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION};
 
     public HomeFragment() {
@@ -77,12 +78,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onResume() {
         super.onResume();
-        if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("False")){
+        String[] permissionList;
+        if(Build.VERSION.SDK_INT >= 29) permissionList = PermissionsQ;
+        else permissionList = Permissions;
+
+        if(hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList).equals("False")){
             showPermissionClarification();
             new LocationUpdateTask().execute();
         }
-        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("Denied")) {
-            neverAskAgain();
+        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList ).equals("Denied")) {
+            Log.e("Message", hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList ));
+            neverAsk();
         }
 
     }
@@ -141,13 +147,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
         }else{
             Toast.makeText(getActivity().getApplicationContext(), "You are not logged in!", Toast.LENGTH_LONG).show();
         }
-
-        if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("False")){
+        String[] permissionList;
+        if(Build.VERSION.SDK_INT >= 29) permissionList = PermissionsQ;
+        else permissionList = Permissions;
+        if(hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList).equals("False")){
             showPermissionClarification();
             new LocationUpdateTask().execute();
         }
-        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), Permissions ).equals("Denied")) {
-            neverAskAgain();
+        else if(hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList).equals("Denied")) {
+            Log.e("Message", hasPermission(getActivity().getApplicationContext(), getActivity(), permissionList ));
+            neverAsk();
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.g_map);
@@ -222,12 +231,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     private static String hasPermission(Context context, Activity activity, String... Permissions){
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && Permissions != null){
-            for(String permission : Permissions){
-                if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+            for (String permission : Permissions) {
+                if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
                     if (PermissionUtility.neverAskAgain(activity, permission)) {
                         return "Denied";
-                    }
-                    else if (!PermissionUtility.neverAskAgain(activity, permission)){
+                    } else if (!PermissionUtility.neverAskAgain(activity, permission)) {
                         return "False";
                     }
                 }
@@ -310,13 +318,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void showPermissionClarification() {
+        String[] permissionList;
+        if(Build.VERSION.SDK_INT >= 29) permissionList = PermissionsQ;
+        else permissionList = Permissions;
         ((TextView) new AlertDialog.Builder(getActivity())
                 .setTitle("Hello User!")
                 .setCancelable(false)
                 .setPositiveButton("I Understand", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        requestPermissions(Permissions, ALL_PERMISSION);
+                        requestPermissions(permissionList, ALL_PERMISSION);
                         dialogInterface.cancel();
                     }
                 })
@@ -338,7 +349,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
-    private void neverAskAgain() {
+    private void neverAsk() {
         ((TextView) new AlertDialog.Builder(getActivity())
                 .setTitle("Hello User!")
                 .setCancelable(false)
